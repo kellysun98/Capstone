@@ -7,8 +7,8 @@ declare var ol: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  latitude: number = 18.5204;
-  longitude: number = 73.8567;
+  latitude: number;
+  longitude: number;
 
   map: any;
 
@@ -37,7 +37,7 @@ export class AppComponent {
         })
       ],
       view: new ol.View({
-        center: ol.proj.fromLonLat([73.8567, 18.5204]),
+        center: ol.proj.fromLonLat([-79.3883, 43.6548]),
         zoom: 8
       })
     });
@@ -58,4 +58,37 @@ export class AppComponent {
     view.setCenter(ol.proj.fromLonLat([this.longitude, this.latitude]));
     view.setZoom(8);
   }
-}
+
+  setMarker(){
+    var Markers = [{lat: this.latitude, lng: this.longitude}];
+    var features = [];
+    for (var i = 0; i < Markers.length; i++) {
+      var item = Markers[i];
+      var longitude = item.lng;
+      var latitude = item.lat;
+  
+      var iconFeature = new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'))
+      });
+  
+      var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon(({
+              anchor: [0.5, 1],
+              src: "../map.png"
+          }))
+      });
+  
+      iconFeature.setStyle(iconStyle);
+      features.push(iconFeature);
+  
+  }
+  
+  var vectorSource = new ol.source.Vector({
+      features: features
+  });
+  
+  var vectorLayer = new ol.layer.Vector({
+      source: vectorSource
+  });
+  this.map.addLayer(vectorLayer);
+}}
