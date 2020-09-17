@@ -74,7 +74,7 @@ export class AppComponent {
       var iconStyle = new ol.style.Style({
           image: new ol.style.Icon(({
               anchor: [0.5, 1],
-              src: "../map.png"
+              src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
           }))
       });
   
