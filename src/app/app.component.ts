@@ -9,6 +9,8 @@ declare var ol: any;
 export class AppComponent {
   latitude: number;
   longitude: number;
+  end_lat: number;
+  end_long: number;
 
   map: any;
 
@@ -60,7 +62,7 @@ export class AppComponent {
   }
 
   setMarker(){
-    var Markers = [{lat: this.latitude, lng: this.longitude}];
+    var Markers = [{lat: this.latitude, lng: this.longitude}, {lat:this.end_lat, lng: this.end_long}];
     var features = [];
     for (var i = 0; i < Markers.length; i++) {
       var item = Markers[i];
