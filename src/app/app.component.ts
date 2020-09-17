@@ -7,10 +7,10 @@ declare var ol: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  latitude: number;
-  longitude: number;
-  end_lat: number;
-  end_long: number;
+  latitude: number = 43.6548;
+  longitude: number = -79.3883;
+  end_lat: number = 43.8561;
+  end_long: number = -79.3370;
 
   map: any;
 
@@ -98,14 +98,16 @@ export class AppComponent {
   }
 
   drawLine(){
-    var points = [[-89.8802, 32.5804], [-95.04286, 46.9235]];
+    var points = [[this.longitude, this.latitude], [this.end_long, this.end_lat]];
 
-    for (var i = 0; i < points.length; i++) {
+    /**for (var i = 0; i < points.length; i++) {
       var item = points[i];
       points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
-    }
+    }**/
     var featureLine = new ol.Feature({
-      geometry: new ol.geom.LineString(points)
+      geometry: new ol.geom.LineString(
+        [ol.proj.fromLonLat(points[0]), ol.proj.fromLonLat(points[1])]
+      )
     });
   
     var vectorLine = new ol.source.Vector({});
@@ -120,5 +122,15 @@ export class AppComponent {
     });
   
   this.map.addlayer(vectorLineLayer);
+}
+
+drawLine2(){
+  var start_point = new ol.Geometry.Point(0,10);
+  var end_point = new ol.Geometry.Point(30,0);
+
+  var vector = new ol.Layer.Vector();
+  vector.addFeatures([new ol.Feature.Vector(new ol.Geometry.LineString([start_point, end_point]))]);
+  this.map.addLayers([vector]);
+
 }
 }

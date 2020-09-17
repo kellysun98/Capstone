@@ -18,8 +18,8 @@
   <label for="longitude">Latitude:</label>
   <input id="end_long" type="number" [(ngModel)]="end_long" placeholder="Longitude">
 </div>
-  <button (click)="setMarker()">Go</button>
+  <button (click)="drawLine2()" (click)="setMarker()">Go</button>
 </div>
 <br>
-<div id="map" class="map"></div>
+<div id="map" class map></div>
 <div id="mouse-position"></div>
