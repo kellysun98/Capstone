@@ -58,7 +58,7 @@ export class AppComponent {
   setCenter() {
     var view = this.map.getView();
     view.setCenter(ol.proj.fromLonLat([this.longitude, this.latitude]));
-    view.setZoom(8);
+    view.setZoom(10);
   }
 
   setMarker(){
@@ -71,17 +71,19 @@ export class AppComponent {
   
       var iconFeature = new ol.Feature({
           geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'))
-      });
-  
+      });    
+      
       var iconStyle = new ol.style.Style({
           image: new ol.style.Icon(({
               anchor: [0.5, 1],
               src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
           }))
       });
-  
+    
       iconFeature.setStyle(iconStyle);
       features.push(iconFeature);
+
+      //features.push(featureLine);
   
   }
   
@@ -93,4 +95,30 @@ export class AppComponent {
       source: vectorSource
   });
   this.map.addLayer(vectorLayer);
-}}
+  }
+
+  drawLine(){
+    var points = [[-89.8802, 32.5804], [-95.04286, 46.9235]];
+
+    for (var i = 0; i < points.length; i++) {
+      var item = points[i];
+      points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
+    }
+    var featureLine = new ol.Feature({
+      geometry: new ol.geom.LineString(points)
+    });
+  
+    var vectorLine = new ol.source.Vector({});
+    vectorLine.addFeature(featureLine);
+    
+    var vectorLineLayer = new ol.layer.Vector({
+        source: vectorLine,
+        style: new ol.style.Style({
+            fill: new ol.style.Fill({ color: '#00FF00', weight: 4 }),
+            stroke: new ol.style.Stroke({ color: '#00FF00', width: 2 })
+        })
+    });
+  
+  this.map.addlayer(vectorLineLayer);
+}
+}
