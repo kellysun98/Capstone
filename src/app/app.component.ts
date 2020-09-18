@@ -1,4 +1,12 @@
 import { Component } from '@angular/core';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import VectorLayer from 'ol/layer/Vector';
+import Style from 'ol/style/Style';
+import Icon from 'ol/style/Icon';
+import OSM from 'ol/source/OSM';
+import * as olProj from 'ol/proj';
+import TileLayer from 'ol/layer/Tile';
 
 declare var ol: any;
 @Component({
@@ -48,7 +56,6 @@ export class AppComponent {
       console.log(args.coordinate);
       var lonlat = ol.proj.transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
       console.log(lonlat);
-
       var lon = lonlat[0];
       var lat = lonlat[1];
       alert(`lat: ${lat} long: ${lon}`);
@@ -87,50 +94,83 @@ export class AppComponent {
   
   }
   
-  var vectorSource = new ol.source.Vector({
+    var vectorSource = new ol.source.Vector({
       features: features
   });
   
-  var vectorLayer = new ol.layer.Vector({
+    // tslint:disable-next-line:prefer-const
+    var vectorLayer = new ol.layer.Vector({
       source: vectorSource
   });
-  this.map.addLayer(vectorLayer);
+    this.map.addLayer(vectorLayer);
   }
 
+  // tslint:disable-next-line:typedef
   drawLine(){
-    var points = [[this.longitude, this.latitude], [this.end_long, this.end_lat]];
+    var features = []
+    var points =  [{lat: this.latitude, lng: this.longitude}, {lat:this.end_lat, lng: this.end_long}];
 
-    /**for (var i = 0; i < points.length; i++) {
+    for (var i = 0; i < points.length; i++) {
       var item = points[i];
-      points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
-    }**/
-    var featureLine = new ol.Feature({
-      geometry: new ol.geom.LineString(
-        [ol.proj.fromLonLat(points[0]), ol.proj.fromLonLat(points[1])]
-      )
-    });
-  
-    var vectorLine = new ol.source.Vector({});
-    vectorLine.addFeature(featureLine);
+      var longitude = item.lng;
+      var latitude = item.lat;
+      points[i] = ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857');
+      var iconFeature = new ol.Feature({
+        geometry: new ol.geom.Point[i](ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'))
+    });  
+
+      // tslint:disable-next-line:prefer-const
+      var iconStyle = new ol.style.Style({
+      image: new ol.style.Icon(({
+          anchor: [0.5, 1],
+          src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
+      }))
+  });
+
+      iconFeature.setStyle(iconStyle);
+      features.push(iconFeature);
+     
+
+    }
+    // var featureLine = new ol.Feature({
+    //   geometry: new ol.geom.LineString(
+    //     [points[0], points[1]]
+    //   )
+    // });
+    // var vectorLine = new ol.source.Vector({});
+    // vectorLine.addFeature(featureLine);
     
-    var vectorLineLayer = new ol.layer.Vector({
-        source: vectorLine,
-        style: new ol.style.Style({
-            fill: new ol.style.Fill({ color: '#00FF00', weight: 4 }),
-            stroke: new ol.style.Stroke({ color: '#00FF00', width: 2 })
-        })
-    });
-  
-  this.map.addlayer(vectorLineLayer);
+    // var vectorLineLayer = new ol.layer.Vector({
+    //     source: vectorLine,
+    //     style: new ol.style.Style({
+    //         fill: new ol.style.Fill({ color: '#00FF00', weight: 4 }),
+    //         stroke: new ol.style.Stroke({ color: '#00FF00', width: 2 })
+    //     })
+    // });
+    // this.map.addlayer(vectorLineLayer);
 }
 
 drawLine2(){
-  var start_point = new ol.Geometry.Point(0,10);
-  var end_point = new ol.Geometry.Point(30,0);
+  var points = [ [-79.3883, 43.6548], [-79.337, 43.8561] ];
 
-  var vector = new ol.Layer.Vector();
-  vector.addFeatures([new ol.Feature.Vector(new ol.Geometry.LineString([start_point, end_point]))]);
-  this.map.addLayers([vector]);
+for (var i = 0; i < points.length; i++) {
+    points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
+}
 
+var featureLine = new ol.Feature({
+    geometry: new ol.geom.LineString(points)
+});
+
+var vectorLine = new ol.source.Vector({});
+vectorLine.addFeature(featureLine);
+
+var vectorLineLayer = new ol.layer.Vector({
+    source: vectorLine,
+    style: new ol.style.Style({
+        fill: new ol.style.Fill({ color: '#000000', weight: 10 }),
+        stroke: new ol.style.Stroke({ color: '#000000', width: 10 })
+    })
+});
+  this.map.addLayer(vectorLineLayer);
 }
 }
