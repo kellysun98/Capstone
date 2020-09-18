@@ -15,7 +15,15 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 	class nodeController{
+		@GetMapping('/')
+		public List<Float> {
+			List<List<Float>> InitNode = new ArrayList<>();
+			InitNode.add(
+				[@RequestParam('longitude'), @RequestParam('latitude')], //requesting param from users' input for starting coordinates
+				[@RequestParam('end_long'), @RequestParam('end_lat')]) //ending coordinates
+			return InitNode
 		
+		}
 	}
 
 }
