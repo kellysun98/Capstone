@@ -5,6 +5,10 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+
 public class Planner {
     public JXMapViewer mapViewer;
     public JFrame frame;
@@ -164,13 +168,11 @@ public class Planner {
         return solutions;
     }
 
-
+/** 
     public static void main(String[] args){
-
         String osmFile = "./data/toronto.osm";
-        //Graph torontoGraph = new Graph(osmFile,"./data/Cyclists.csv");
+        Graph torontoGraph = new Graph(osmFile);
         Planner planner = new Planner(torontoGraph);
         planner.initializeMapViewer();
-
-    }
+    }*/
 }

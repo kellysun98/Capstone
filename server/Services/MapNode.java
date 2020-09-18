@@ -12,7 +12,7 @@ public class MapNode implements Comparable<MapNode>{
     public double estimatedCost;
 
     public MapNode (Element e){
-        id = Double.parseDouble(e.getAttribute("id"));
+//        id = Double.parseDouble(e.getAttribute("id"));
         longitude = Double.parseDouble(e.getAttribute("lon"));
         latitude = Double.parseDouble(e.getAttribute("lat"));
         edges = new ArrayList<>();
