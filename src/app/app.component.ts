@@ -7,7 +7,7 @@ import Icon from 'ol/style/Icon';
 import OSM from 'ol/source/OSM';
 import * as olProj from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 declare var ol: any;
 @Component({
@@ -74,7 +74,8 @@ export class AppComponent {
   }
 
   setMarker(){
-    this.http.get("http://localhost:8080/api")
+    let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
+    this.http.get("http://localhost:8080/api", {params:params})
     .subscribe((response) => {
         this.response = response;
         console.log(this.response);
@@ -162,7 +163,7 @@ export class AppComponent {
 }
 
 drawLine2(){
-  var points = [ [-79.3883, 43.6548], [-79.337, 43.8561] ];
+  var points = [ [this.longitude, this.latitude], [this.end_long, this.end_lat] ];
 
 for (var i = 0; i < points.length; i++) {
     points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');

@@ -29,7 +29,7 @@ public class DemoApplication {
 	}
 
 	public Element getElement(String lon, String lat) {
-		Graph torontoGraph = new Graph("./data/toronto.osm");
+		torontoGraph = new Graph("./data/toronto.osm");
 		NodeList nList = torontoGraph.osmDoc.getElementsByTagName("node");
 		Element final_e = null;
 		for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -38,7 +38,7 @@ public class DemoApplication {
 				Element eElement = (Element) node;
 				String lon_osm = eElement.getAttribute("lon");
 				String lat_osm = eElement.getAttribute("lat");
-				if (lon_osm.substring(0, 7) == lon || lat_osm.substring(0, 7) == lat) {
+				if (lon_osm.substring(0, 8) == lon.substring(0,8) || lat_osm.substring(0, 7) == lat.substring(0,7)) {
 					final_e = (Element) eElement;
 					break;
 				}
