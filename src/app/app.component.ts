@@ -7,6 +7,7 @@ import Icon from 'ol/style/Icon';
 import OSM from 'ol/source/OSM';
 import * as olProj from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
+import { HttpClient } from '@angular/common/http';
 
 declare var ol: any;
 @Component({
@@ -15,12 +16,16 @@ declare var ol: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  latitude: number = 43.6548;
-  longitude: number = -79.3883;
-  end_lat: number = 43.8561;
-  end_long: number = -79.3370;
-
+  latitude: number;
+  longitude: number;
+  end_lat: number;
+  end_long: number;
   map: any;
+  response: any;
+
+  constructor(private http:HttpClient){
+
+  }
 
   ngOnInit() {
     var mousePositionControl = new ol.control.MousePosition({
@@ -69,6 +74,12 @@ export class AppComponent {
   }
 
   setMarker(){
+    this.http.get("http://localhost:8080/api")
+    .subscribe((response) => {
+        this.response = response;
+        console.log(this.response);
+    })
+
     var Markers = [{lat: this.latitude, lng: this.longitude}, {lat:this.end_lat, lng: this.end_long}];
     var features = [];
     for (var i = 0; i < Markers.length; i++) {
@@ -173,4 +184,5 @@ var vectorLineLayer = new ol.layer.Vector({
 });
   this.map.addLayer(vectorLineLayer);
 }
+
 }
