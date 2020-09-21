@@ -4,11 +4,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import javax.imageio.metadata.IIOMetadataNode;
+import java.io.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+
 
 public class Graph {
     public Document osmDoc;
@@ -23,26 +28,26 @@ public class Graph {
     public double MPERLON;
 
     public Graph() {
-        this("./data/toronto.osm");
+        this("./data/toronto.osm","./data/Cyclists.csv");
     }
 
-    public Graph(String osmFilePath) {
+    public Graph(String osmFilePath, String accidentsFilePath) {
 
-//        accidents = new HashMap<>();
+        accidents = new HashMap<>();
         nodes = new HashMap<>();
         routeNodes = new HashMap<>();
         routes = new HashMap<>();
 //        polygons = new ArrayList<>();
 
-        NodeList nList = osmDoc.getElementsByTagName("node");
-//        getFocus();
+        loadFiles(osmFilePath, accidentsFilePath);
+        getFocus();
         MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
-//        MapEdge.graph = this;
+        MapEdge.graph = this;
 //        buildGraph();
     }
 
 
-    public void loadFiles(String osmFilePath){
+    public void loadFiles(String osmFilePath, String accidentsFilePath){
         // load osm file
         try {
             File file = new File(osmFilePath);
@@ -57,7 +62,6 @@ public class Graph {
         }
 
         // load toronto police csv file
-        /**
         BufferedReader br = null;
         String line = "";
         DecimalFormat df = new DecimalFormat("#.###");
@@ -84,7 +88,7 @@ public class Graph {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
 //        // load uber json file
 //        JSONParser parser = new JSONParser();
@@ -177,8 +181,8 @@ public class Graph {
             }
         }
 //        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
-    }*/
-/**
+    }**/
+
     private void getFocus() {
         NodeList boundsList = osmDoc.getElementsByTagName("bounds");
         Element bounds = (Element) boundsList.item(0);
@@ -187,8 +191,7 @@ public class Graph {
         double minLon = Double.parseDouble(bounds.getAttribute("minlon"));
         double maxLon = Double.parseDouble(bounds.getAttribute("maxlon"));
         focus = new double[]{(minLon + maxLon) / 2, (minLat + maxLat) / 2};
-    }*/
-
+    }
 
     public double getDistance(MapNode sourceNode, MapNode destinationNode) {
         double dx = (destinationNode.longitude - sourceNode.longitude) * MPERLON;

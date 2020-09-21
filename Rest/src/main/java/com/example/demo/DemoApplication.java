@@ -29,7 +29,8 @@ public class DemoApplication {
 	}
 
 	public Element getElement(String lon, String lat) {
-		torontoGraph = new Graph("./data/toronto.osm");
+		torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
+		torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
 		NodeList nList = torontoGraph.osmDoc.getElementsByTagName("node");
 		Element final_e = null;
 		for (int temp = 0; temp < nList.getLength(); temp++) {

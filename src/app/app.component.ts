@@ -74,6 +74,7 @@ export class AppComponent {
   }
 
   setMarker(){
+    console.log(this.longitude.toString());
     let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
     this.http.get("http://localhost:8080/api", {params:params})
     .subscribe((response) => {
@@ -104,86 +105,41 @@ export class AppComponent {
 
       //features.push(featureLine);
   
-  }
+    }
   
     var vectorSource = new ol.source.Vector({
       features: features
-  });
+    });
   
     // tslint:disable-next-line:prefer-const
     var vectorLayer = new ol.layer.Vector({
       source: vectorSource
-  });
+    });
     this.map.addLayer(vectorLayer);
   }
-
-  // tslint:disable-next-line:typedef
-  drawLine(){
-    var features = []
-    var points =  [{lat: this.latitude, lng: this.longitude}, {lat:this.end_lat, lng: this.end_long}];
-
-    for (var i = 0; i < points.length; i++) {
-      var item = points[i];
-      var longitude = item.lng;
-      var latitude = item.lat;
-      points[i] = ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857');
-      var iconFeature = new ol.Feature({
-        geometry: new ol.geom.Point[i](ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'))
-    });  
-
-      // tslint:disable-next-line:prefer-const
-      var iconStyle = new ol.style.Style({
-      image: new ol.style.Icon(({
-          anchor: [0.5, 1],
-          src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
-      }))
-  });
-
-      iconFeature.setStyle(iconStyle);
-      features.push(iconFeature);
-     
-
-    }
-    // var featureLine = new ol.Feature({
-    //   geometry: new ol.geom.LineString(
-    //     [points[0], points[1]]
-    //   )
-    // });
-    // var vectorLine = new ol.source.Vector({});
-    // vectorLine.addFeature(featureLine);
-    
-    // var vectorLineLayer = new ol.layer.Vector({
-    //     source: vectorLine,
-    //     style: new ol.style.Style({
-    //         fill: new ol.style.Fill({ color: '#00FF00', weight: 4 }),
-    //         stroke: new ol.style.Stroke({ color: '#00FF00', width: 2 })
-    //     })
-    // });
-    // this.map.addlayer(vectorLineLayer);
-}
 
 drawLine2(){
   var points = [ [this.longitude, this.latitude], [this.end_long, this.end_lat] ];
 
-for (var i = 0; i < points.length; i++) {
-    points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
-}
+  for (var i = 0; i < points.length; i++) {
+      points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
+  }
 
-var featureLine = new ol.Feature({
-    geometry: new ol.geom.LineString(points)
-});
+  var featureLine = new ol.Feature({
+      geometry: new ol.geom.LineString(points)
+  });
 
-var vectorLine = new ol.source.Vector({});
-vectorLine.addFeature(featureLine);
+  var vectorLine = new ol.source.Vector({});
+  vectorLine.addFeature(featureLine);
 
-var vectorLineLayer = new ol.layer.Vector({
-    source: vectorLine,
-    style: new ol.style.Style({
-        fill: new ol.style.Fill({ color: '#000000', weight: 10 }),
-        stroke: new ol.style.Stroke({ color: '#000000', width: 10 })
-    })
-});
-  this.map.addLayer(vectorLineLayer);
+  var vectorLineLayer = new ol.layer.Vector({
+      source: vectorLine,
+      style: new ol.style.Style({
+          fill: new ol.style.Fill({ color: '#000000', weight: 10 }),
+          stroke: new ol.style.Stroke({ color: '#000000', width: 10 })
+      })
+  });
+    this.map.addLayer(vectorLineLayer);
 }
 
 }
