@@ -16,10 +16,10 @@ declare var ol: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  latitude: number;
-  longitude: number;
-  end_lat: number;
-  end_long: number;
+  latitude: number = 43.6531;
+  longitude: number = -79.3811;
+  end_lat: number = 43.6467;
+  end_long: number = -79.3950;
   map: any;
   response: any;
 

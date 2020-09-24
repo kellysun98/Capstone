@@ -112,8 +112,8 @@ public class Graph {
 //            e.printStackTrace();
 //        }
     }
-/**
-    private void buildGraph() {
+
+    public void buildGraph() {
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -181,7 +181,7 @@ public class Graph {
             }
         }
 //        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
-    }**/
+    }
 
     private void getFocus() {
         NodeList boundsList = osmDoc.getElementsByTagName("bounds");
