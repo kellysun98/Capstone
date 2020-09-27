@@ -5,5 +5,8 @@
           {{data.name}}
         </label>
       </div>
+      <p class="error" *ngIf="this.form.controls['checkArray'].errors?.required">
+        Checkbox is required, select atleast one value.
+      </p >
     <input type="submit" value="Submit">
 </form>

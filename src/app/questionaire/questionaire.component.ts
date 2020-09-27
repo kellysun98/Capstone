@@ -31,7 +31,9 @@ export class QuestionaireComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<QuestionaireComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData, public fb: FormBuilder) {
+    @Inject(MAT_DIALOG_DATA) public data: DialogData, 
+    private fb: FormBuilder) 
+    {
       this.form = this.fb.group({
         checkArray: this.fb.array([])
     })
@@ -56,6 +58,10 @@ export class QuestionaireComponent implements OnInit {
         i++;
       });
     }
+  }
+
+  submitForm(){
+    console.log(this.form.value)
   }
 
   ngOnInit() {
