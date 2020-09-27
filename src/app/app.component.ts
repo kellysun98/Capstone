@@ -10,6 +10,8 @@ import TileLayer from 'ol/layer/Tile';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {MatDialogModule} from '@angular/material/dialog';
 import { QuestionaireComponent } from './questionaire/questionaire.component' 
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 
 declare var ol: any;
 @Component({
@@ -68,6 +70,29 @@ export class AppComponent {
       var lat = lonlat[1];
       alert(`lat: ${lat} long: ${lon}`);
     });
+
+    var points = [[-79.44, 43.66], [-79.36, 43.67] ,[-79.35, 43.65],[-79.42, 43.63]];
+    var points1 = [[-80.44, 43.66], [-80.36, 43.67] ,[-80.35, 43.65],[-80.42, 43.63]];
+    
+    var poly= new ol.geom.Polygon([points]);
+    poly.transform('EPSG:4326', 'EPSG:3857');    
+    var poly1= new ol.geom.Polygon([points1]);
+    poly1.transform('EPSG:4326', 'EPSG:3857');    
+    var featureLine = new ol.Feature(poly);
+    var featureLine1 = new ol.Feature(poly1);
+  
+    var vectorLine = new ol.source.Vector({});
+    vectorLine.addFeature(featureLine);
+    vectorLine.addFeature(featureLine1);
+  
+    var vectorLineLayer = new ol.layer.Vector({
+        source: vectorLine,
+        style: new ol.style.Style({
+            fill: new ol.style.Fill({ color: 'rgba(128,0,128,0.5)'}),
+            stroke: new ol.style.Stroke({ color: 'rgba(0,0,0,0.7)', width: 2 })
+        })
+    });
+      this.map.addLayer(vectorLineLayer);
   }
 
   openDialog(): void {
