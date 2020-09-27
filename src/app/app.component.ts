@@ -8,6 +8,8 @@ import OSM from 'ol/source/OSM';
 import * as olProj from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import {MatDialogModule} from '@angular/material/dialog';
+import { QuestionaireComponent } from './app/questionaire/questionaire.component' 
 
 declare var ol: any;
 @Component({
@@ -22,8 +24,9 @@ export class AppComponent {
   end_long: number;
   map: any;
   response: any;
+  email: string;
 
-  constructor(private http:HttpClient){
+  constructor(private http:HttpClient, public dialog: MatDialog){
 
   }
 
@@ -67,6 +70,17 @@ export class AppComponent {
     });
   }
 
+  openDialog(): void {
+    const dialogRef = this.dialog.open(QuestionaireComponent, {
+      width: '300px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.email = result;
+    });
+  }
+  
   setCenter() {
     var view = this.map.getView();
     view.setCenter(ol.proj.fromLonLat([this.longitude, this.latitude]));

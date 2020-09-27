@@ -20,6 +20,15 @@
 </div>
   <button (click)="drawLine2()" (click)="setMarker()">Go</button>
 </div>
+<div>
+
+  <button mat-raised-button (click)="openDialog()">Open questionaire</button>
+
+<br />
+<div *ngIf="email">
+  You signed up with: <p></p>
+</div>
+</div>
 <br>
 <div id="map" class map></div>
 <div id="mouse-position"></div>
