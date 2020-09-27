@@ -11,6 +11,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {MatDialogModule} from '@angular/material/dialog';
 import { QuestionaireComponent } from './questionaire/questionaire.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatCardModule} from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 declare var ol: any;
 @Component({

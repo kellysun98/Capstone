@@ -6,6 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatCardModule} from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 interface DialogData {
   email: string;
@@ -17,6 +19,10 @@ interface DialogData {
   styleUrls: ['./questionaire.component.css']
 })
 export class QuestionaireComponent implements OnInit {
+
+  checked = false;
+  indeterminate = false;
+
 
   constructor(
     public dialogRef: MatDialogRef<QuestionaireComponent>,

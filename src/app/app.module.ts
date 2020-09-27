@@ -8,11 +8,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { MatCardModule} from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { QuestionaireComponent } from './questionaire/questionaire.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    QuestionaireComponent
   ],
   imports: [
     FormsModule,
@@ -23,11 +26,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatFormFieldModule,
     MatInputModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatCardModule,
+    MatCheckboxModule
   ],
   exports:[MatFormFieldModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent,QuestionaireComponent]
 })
 export class AppModule { }
 
