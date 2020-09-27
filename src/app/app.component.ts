@@ -9,7 +9,8 @@ import * as olProj from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {MatDialogModule} from '@angular/material/dialog';
-import { QuestionaireComponent } from './app/questionaire/questionaire.component' 
+import { QuestionaireComponent } from './questionaire/questionaire.component';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 declare var ol: any;
 @Component({

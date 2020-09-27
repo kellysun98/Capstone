@@ -1,4 +1,7 @@
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
 .map {
   height: 70%;
   width: 100%;
 }
+
