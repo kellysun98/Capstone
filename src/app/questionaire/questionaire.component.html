@@ -1,11 +1,9 @@
-<mat-card>
-    <mat-card-content>
-      <h2 class="example-h2">1. What are your preferred mode(s) of transportation?</h2>
-  
-      <section class="example-section">
-        <mat-checkbox class="example-margin" [(ngModel)]="checked">Walking</mat-checkbox>
-        <mat-checkbox class="example-margin" [(ngModel)]="indeterminate">Public Transit</mat-checkbox>
-        <mat-checkbox class="example-margin" [(ngModel)]="indeterminate">Biking</mat-checkbox>
-      </section>
-    </mat-card-content>
-</mat-card>
+<form [formGroup]="form" (ngSubmit)="submitForm()" novalidate>
+    <div *ngFor="let data of Data; let i=index">
+        <label>
+          <input type="checkbox" [value]="data.value" (change)="onCheckboxChange($event)" />
+          {{data.name}}
+        </label>
+      </div>
+    <input type="submit" value="Submit">
+</form>
