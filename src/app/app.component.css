@@ -3,3 +3,10 @@
   height: 70%;
   width: 100%;
 }
+
+.dialog{
+  display: flex;
+  flex-direction: row;
+  justify-content: bottom;
+  margin-top: 40px;
+  }

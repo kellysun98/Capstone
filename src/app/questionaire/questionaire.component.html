@@ -1,10 +1,26 @@
-<h1 mat-dialog-title>Want to receive our emails?</h1>
+<style>
+  h1 {text-align: center;
+     font: 40px;
+    }
+
+  @-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+  }
+  
+  @keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+  }
+  </style>
+
+<h1 mat-dialog-title>Welcome!</h1>
 <div mat-dialog-content>
-  <p>What's your email?</p>
-  <input #box (keyup)="null" />
-  <p>{{box.value}}</p>
+  <p>Welcome to COVID-19 Map. This software helps you to find a covid-free route based on your customization.</p>
+  <p>To start, we would like to ask the following questions to set up, or you can skip for now and find them in the settings later.</p>
+
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No</button>
-  <button mat-button cdkFocusInitial>Yes</button>
+<div mat-dialog-actions style="text-align:center;">
+  <button mat-raised-button cdkFocusInitial >Continue</button>
+  <button mat-button (click)="onNoClick()">skip</button>
 </div>

@@ -1,2 +1,32 @@
 
+.mat-dialog-actions{
+    height: 120px;
+    width: 100px;
+    position: center;
+    }
+
+.mat-dialog-title{
+    color: purple;
+    position: center;
+}
+
+.mat-raised-button{
+    text-align: center;
+    color: white;
+    background-color: purple;
+    margin: 0 auto;
+}
+
+.mat-button{
+    text-align: center;
+    color:purple;
+    font:10px;
+    text-decoration: underline;
+    margin: 0 auto;
+}
+/* Add Animation */
+
+  
+
+
 
