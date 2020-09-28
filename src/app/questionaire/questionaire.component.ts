@@ -12,9 +12,10 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 
 
 interface DialogData {
-  email: string;
-
+  value: string;
+  viewValue: string;
 }
+
 
 @Component({
   selector: 'app-questionaire',
@@ -22,7 +23,16 @@ interface DialogData {
   styleUrls: ['./questionaire.component.css']
 })
 export class QuestionaireComponent implements OnInit {
-  form: FormGroup;
+  selectedValue: string;
+  Walking = false;
+  PublicTransit = false;
+  Biking = false;
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
+  thirdFormGroup: FormGroup;
+  selected = 'nolimit';
+  selected2= 'hospital';
+
   Data: Array<any> = [
     { name: 'Walking', value: 'Walking' },
     { name: 'Public Transit', value: 'Public Transit' },
@@ -32,39 +42,30 @@ export class QuestionaireComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<QuestionaireComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, 
-    private fb: FormBuilder) 
-    {
-      this.form = this.fb.group({
-        checkArray: this.fb.array([])
-    })
-  }
+    private fb: FormBuilder) {}
+
+    foods: DialogData[] = [
+      {value: '5mins', viewValue: 'Less than 5 minutes'},
+      {value: '10mins', viewValue: 'Less than 10 minutes'},
+      {value: '15mins', viewValue: 'Less than 15 minutes'},
+      {value: 'nolimit', viewValue: 'No limit'}
+    ];
+  
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  onCheckboxChange(e) {
-    const checkArray: FormArray = this.form.get('checkArray') as FormArray;
-  
-    if (e.target.checked) {
-      checkArray.push(new FormControl(e.target.value));
-    } else {
-      let i: number = 0;
-      checkArray.controls.forEach((item: FormControl) => {
-        if (item.value == e.target.value) {
-          checkArray.removeAt(i);
-          return;
-        }
-        i++;
-      });
-    }
-  }
-
-  submitForm(){
-    console.log(this.form.value)
-  }
-
   ngOnInit() {
+    this.firstFormGroup = this.fb.group({
+      firstCtrl: ['', Validators.required]
+    });
+    this.secondFormGroup = this.fb.group({
+      secondCtrl: ['', Validators.required]
+    });
+    this.thirdFormGroup = this.fb.group({
+      secondCtrl: ['', Validators.required]
+    });
   }
 
 }

@@ -75,7 +75,8 @@ export class AppComponent {
 
   openDialog(): void {
     const dialogRef = this.dialog.open(QuestionaireComponent, {
-      width: '300px',
+      width: '500px',
+      height: '500px',
       data: {}
     });
 

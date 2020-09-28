@@ -11,6 +11,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { QuestionaireComponent } from './questionaire/questionaire.component';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { QuestionaireComponent } from './questionaire/questionaire.component';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     MatCardModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatStepperModule,
+    MatSelectModule
   ],
   exports:[MatFormFieldModule],
   providers: [],

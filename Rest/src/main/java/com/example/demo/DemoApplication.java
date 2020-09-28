@@ -33,16 +33,26 @@ public class DemoApplication {
 		torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
 		NodeList nList = torontoGraph.osmDoc.getElementsByTagName("node");
 		Element final_e = null;
-		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+		for (int temp = 0; temp < 5; temp++) {
 			Node node = nList.item(temp);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element eElement = (Element) node;
 				String lon_osm = eElement.getAttribute("lon");
 				String lat_osm = eElement.getAttribute("lat");
+
+//				System.out.println("osm longtiude found is: " + lon_osm);
+//				System.out.println("input longitude is: " + lon.substring(0,8));
+				System.out.println("is equal: " + lon_osm.substring(0, 8) == lon.substring(0,8));
+
 				if (lon_osm.substring(0, 8) == lon.substring(0,8) || lat_osm.substring(0, 7) == lat.substring(0,7)) {
+					System.out.println("im in!");
 					final_e = (Element) eElement;
 					break;
 				}
+				/**else{
+				 System.out.println("im not in!");
+				 }**/
 			}
 		}
 		return final_e;
