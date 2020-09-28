@@ -7,14 +7,14 @@ interface DialogData {
 }
 
 @Component({
-  selector: 'app-questionaire',
-  templateUrl: './questionaire.component.html',
-  styleUrls: ['./questionaire.component.css']
+  selector: 'app-Welcome',
+  templateUrl: './welcome.component.html',
+  styleUrls: ['./welcome.component.css']
 })
-export class QuestionaireComponent implements OnInit {
+export class WelcomeComponent implements OnInit {
 
   constructor(
-    public dialogRef: MatDialogRef<QuestionaireComponent>,
+    public dialogRef: MatDialogRef<WelcomeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
   onNoClick(): void {
@@ -22,6 +22,7 @@ export class QuestionaireComponent implements OnInit {
   }
 
   ngOnInit() {
+    
   }
 
 }

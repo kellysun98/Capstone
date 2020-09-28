@@ -10,12 +10,12 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { QuestionaireComponent } from './questionaire/questionaire.component';
+import { WelcomeComponent } from './Welcome/welcome.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    QuestionaireComponent
+    WelcomeComponent
   ],
   imports: [
     FormsModule,
@@ -32,7 +32,7 @@ import { QuestionaireComponent } from './questionaire/questionaire.component';
   ],
   exports:[MatFormFieldModule],
   providers: [],
-  bootstrap: [AppComponent,QuestionaireComponent]
+  bootstrap: [AppComponent,WelcomeComponent]
 })
 export class AppModule { }
 

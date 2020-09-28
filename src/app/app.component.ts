@@ -9,7 +9,7 @@ import * as olProj from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {MatDialogModule} from '@angular/material/dialog';
-import { QuestionaireComponent } from './questionaire/questionaire.component' 
+import { WelcomeComponent } from './Welcome/welcome.component' 
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Point from 'ol/geom/Point'; 
 
@@ -106,13 +106,9 @@ export class AppComponent {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(QuestionaireComponent, {
-      width: '300px',
+    const dialogRef = this.dialog.open(WelcomeComponent, {
+      width: '350px',
       data: {}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      this.email = result;
     });
   }
   

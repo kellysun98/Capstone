@@ -1,5 +1,12 @@
-
-.mat-dialog-actions{
+.mat-stepper-vertical {
+    margin-top: 8px;
+  }
+  
+  .mat-form-field {
+    margin-top: 16px;
+  }
+  
+  .mat-dialog-actions{
     height: 120px;
     width: 100px;
     position: center;
@@ -8,13 +15,14 @@
 .mat-dialog-title{
     color: purple;
     position: center;
+    font-size: 30px;
 }
 
 .mat-raised-button{
     text-align: center;
     color: white;
     background-color: purple;
-    margin: 0 auto;
+    left: 100%;
 }
 
 .mat-button{
@@ -22,11 +30,7 @@
     color:purple;
     font:10px;
     text-decoration: underline;
-    margin: 0 auto;
+    margin: 0;
+    left: 100%;
+    
 }
-/* Add Animation */
-
-  
-
-
-
