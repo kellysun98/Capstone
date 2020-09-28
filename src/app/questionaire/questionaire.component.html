@@ -13,13 +13,22 @@
 
 <mat-vertical-stepper linear #stepper>
   <mat-step [stepControl]="firstFormGroup">
-    <form [formGroup]="firstFormGroup">
+    <!-- <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>What is your preferred mode(s) of transportation?</ng-template>
       <section class="example-section">
-        <mat-checkbox class="example-margin" [(ngModel)]="Walking" [ngModelOptions]="{standalone: true}">Walking</mat-checkbox>
-        <mat-checkbox class="example-margin" [(ngModel)]="PublicTransit" [ngModelOptions]="{standalone: true}">Public Transit</mat-checkbox>
-        <mat-checkbox class="example-margin" [(ngModel)]="Biking" [ngModelOptions]="{standalone: true}">Biking</mat-checkbox>
+        <mat-checkbox required formControlName = 'check1' id = 'check1' class="example-margin" [(ngModel)]="Walking">Walking</mat-checkbox>
+        <mat-checkbox required formControlName = 'check2' id ='check2' class="example-margin" [(ngModel)]="PublicTransit">Public Transit</mat-checkbox>
+        <mat-checkbox required formControlName = 'check3' id = 'check3' class="example-margin" [(ngModel)]="Biking">Biking</mat-checkbox>
       </section>
+      <div class="invalid-feedback" *ngIf="firstFormGroup.controls['myCheckboxGroup'].errors && firstFormGroup.controls['myCheckboxGroup'].errors.requireOneCheckboxToBeChecked">Please check at least one checkbox</div> -->
+      
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Fill out your name</ng-template>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="firstCtrl" placeholder="Last name, First name" required>
+        </mat-form-field>
+      
       <div>
         <button mat-button matStepperNext>Next</button>
       </div>

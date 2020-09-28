@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-
+import {requireCheckboxesToBeCheckedValidator} from './require-checkboxes-to-be-checked.validator';
 
 interface DialogData {
   value: string;
@@ -42,7 +42,11 @@ export class QuestionaireComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<QuestionaireComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, 
-    private fb: FormBuilder) {}
+    private fb: FormBuilder) {
+      this.firstFormGroup = this.fb.group({});
+      this.secondFormGroup = this.fb.group({});
+      this.thirdFormGroup = this.fb.group({});
+    }
 
     foods: DialogData[] = [
       {value: '5mins', viewValue: 'Less than 5 minutes'},
@@ -57,6 +61,13 @@ export class QuestionaireComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.firstFormGroup = new FormGroup({
+    //   myCheckboxGroup: new FormGroup({
+    //     check1: new FormControl(false),
+    //     check2: new FormControl(false),
+    //     check3: new FormControl(false),
+    //   }, requireCheckboxesToBeCheckedValidator()),
+    // });
     this.firstFormGroup = this.fb.group({
       firstCtrl: ['', Validators.required]
     });
