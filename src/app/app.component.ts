@@ -62,7 +62,7 @@ export class AppComponent {
       ],
       view: new ol.View({
         center: ol.proj.fromLonLat([-79.3883, 43.6548]),
-        zoom: 8
+        zoom: 10
       })
     });
 
