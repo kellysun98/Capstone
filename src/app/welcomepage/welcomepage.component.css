@@ -1,26 +1,40 @@
-h1 {
+
+.mat-stepper-vertical {
+    margin-top: 8px;
+  }
+  
+  .mat-form-field {
+    margin-top: 16px;
+  }
+  
+.mat-dialog-actions{
+    height: 120px;
+    width: 100px;
+    position: center;
+    }
+.mat-dialog-content{
+    position: center;
+}
+.mat-dialog-title{
+    color: purple;
     text-align: center;
-    font: 40px;
+    font-size: 30px;
+    
 }
 
-@-webkit-keyframes animatetop {
-    from {
-        top: -300px;
-        opacity: 0
-    }
-    to {
-        top: 0;
-        opacity: 1
-    }
+.mat-raised-button{
+    text-align: center;
+    color: white;
+    background-color: purple;
+    left: 180%;
 }
 
-@keyframes animatetop {
-    from {
-        top: -300px;
-        opacity: 0
-    }
-    to {
-        top: 0;
-        opacity: 1
-    }
+.mat-button{
+    text-align: center;
+    color:purple;
+    font:10px;
+    text-decoration: underline;
+    margin: 0;
+    left: 180%
+    
 }
