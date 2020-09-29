@@ -6,7 +6,7 @@
 
             <mat-form-field appearance="fill">
                 <mat-label>Pick any which are applicable</mat-label>
-                <mat-select [formControl]="transportations" formControlName="firstCtrl" multiple>
+                <mat-select [(ngModel)] = "df1" [formControl]="transportations" formControlName="firstCtrl" multiple>
                     <mat-option *ngFor="let transportation of transportationList" [value]="transportation">{{transportation}}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="transportations.hasError('required')">Please make selection(s)</mat-error>
@@ -25,7 +25,7 @@
 
             <mat-form-field appearance="fill">
                 <mat-label>Pick a range</mat-label>
-                <mat-select [formControl]="periods" formControlName="secondCtrl">
+                <mat-select [(ngModel)] = "df2" [formControl]="periods" formControlName="secondCtrl">
                     <mat-option *ngFor="let period of periodList" [value]="period">
                         {{period}}
                     </mat-option>
@@ -48,7 +48,7 @@
 
             <mat-form-field appearance="fill">
                 <mat-label>Pick any which are applicable</mat-label>
-                <mat-select [formControl]="safeties" formControlName="thirdCtrl" multiple>
+                <mat-select [(ngModel)] = "df3" [formControl]="safeties" formControlName="thirdCtrl" multiple>
                     <mat-option *ngFor="let safety of safetyList" [value]="safety">
                         {{safety}}
                     </mat-option>

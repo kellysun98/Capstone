@@ -26,6 +26,9 @@ export class QuestionaireComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
+  df1: any = ["Walking", "Public Transit"];
+  df2: any = 'Less than 5 minutes';
+  df3: any = ['I want to avoid hospital/covid-19 assessment center', 'I want to avoid public gathering places (e.g.: shopping malls)'];
   // selected = 'nolimit';
   // selected2= 'hospital';
 
