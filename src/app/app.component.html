@@ -1,35 +1,35 @@
 <div>
-  <div>
-      <label for="latitude">Latitude:</label>
-      <input id="latitude" type="number" [(ngModel)]="latitude" placeholder="Latitude">
-  </div>
+    <div>
+        <label for="latitude">Latitude:</label>
+        <input id="latitude" type="number" [(ngModel)]="latitude" placeholder="Latitude">
+    </div>
 
-  <div>
-      <label for="longitude">Longitude:</label>
-      <input id="longitude" type="number" [(ngModel)]="longitude" placeholder="Longitude">
-  </div>
+    <div>
+        <label for="longitude">Longitude:</label>
+        <input id="longitude" type="number" [(ngModel)]="longitude" placeholder="Longitude">
+    </div>
 
-  <div>
-    <label for="latitude">Latitude:</label>
-    <input id="end_lat" type="number" [(ngModel)]="end_lat" placeholder="Latitude">
+    <div>
+        <label for="latitude">Latitude:</label>
+        <input id="end_lat" type="number" [(ngModel)]="end_lat" placeholder="Latitude">
+    </div>
+
+    <div>
+        <label for="longitude">Longitude:</label>
+        <input id="end_long" type="number" [(ngModel)]="end_long" placeholder="Longitude">
+    </div>
+    <button (click)="drawLine2()" (click)="setMarker()">Go</button>
 </div>
-
 <div>
-  <label for="longitude">Longitude:</label>
-  <input id="end_long" type="number" [(ngModel)]="end_long" placeholder="Longitude">
-</div>
-  <button (click)="drawLine2()" (click)="setMarker()">Go</button>
-</div>
-<div>
 
-<button mat-raised-button (click)="openDialog()">Open questionaire</button>
+    <button mat-raised-button (click)="openWelcome()">Open questionaire</button>
 
-<br />
-<div *ngIf="email">
-  You signed up with: <p></p>
-</div>
+    <br />
+    <div *ngIf="email">
+        You signed up with:
+        <p></p>
+    </div>
 </div>
 <br>
 <div id="map" class map></div>
 <div id="mouse-position"></div>
-

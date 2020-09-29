@@ -13,6 +13,7 @@ import { QuestionaireComponent } from './questionaire/questionaire.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 
 declare var ol: any;
 @Component({
@@ -23,13 +24,15 @@ declare var ol: any;
 export class AppComponent {
   latitude: number;
   longitude: number;
+  // tslint:disable-next-line:variable-name
   end_lat: number;
+  // tslint:disable-next-line:variable-name
   end_long: number;
   map: any;
   response: any;
   email: string;
 
-  constructor(private http:HttpClient, public dialog: MatDialog){
+  constructor(private http: HttpClient, public dialog: MatDialog){
 
   }
 
@@ -73,18 +76,26 @@ export class AppComponent {
     });
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(QuestionaireComponent, {
+  // openDialog(): void {
+  //   const dialogRef = this.dialog.open(QuestionaireComponent, {
+  //     width: '500px',
+  //     height: '500px',
+  //     data: {}
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     this.email = result;
+  //   });
+  // }
+
+  openWelcome(): void{
+    const dialogRef = this.dialog.open(WelcomepageComponent, {
       width: '500px',
       height: '500px',
       data: {}
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      this.email = result;
-    });
   }
-  
+
   setCenter() {
     var view = this.map.getView();
     view.setCenter(ol.proj.fromLonLat([this.longitude, this.latitude]));
