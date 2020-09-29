@@ -9,7 +9,7 @@
                 <mat-select [(ngModel)] = "df1" formControlName="fristCtrl" multiple>
                     <mat-option *ngFor="let transportation of transportationList" [value]="transportation">{{transportation}}</mat-option>
                 </mat-select>
-                <mat-error *ngIf="transportations.hasError('required')">Please make selection(s)</mat-error>
+                <mat-error *ngIf="firstFormGroup.hasError('required')">Please make selection(s)</mat-error>
             </mat-form-field>
             <div>
                 <button mat-button matStepperNext>Next</button>
@@ -30,7 +30,7 @@
                         {{period}}
                     </mat-option>
                 </mat-select>
-                <mat-error *ngIf="periods.hasError('required')">Please make a selection</mat-error>
+                <mat-error *ngIf="secondFormGroup.hasError('required')">Please make a selection</mat-error>
             </mat-form-field>
             <div>
                 <button mat-button matStepperPrevious>Back</button>
@@ -53,7 +53,7 @@
                         {{safety}}
                     </mat-option>
                 </mat-select>
-                <mat-error *ngIf="safeties.hasError('required')">Please make a selection</mat-error>
+                <mat-error *ngIf="thirdFormGroup.hasError('required')">Please make a selection</mat-error>
             </mat-form-field>
             <div>
                 <button mat-button matStepperPrevious>Back</button>

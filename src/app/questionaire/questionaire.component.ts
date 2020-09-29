@@ -37,13 +37,13 @@ export class QuestionaireComponent implements OnInit {
   //   { name: 'Public Transit', value: 'Public Transit' },
   //   { name: 'Biking', value: 'Biking' },
   // ];
-  transportations = new FormControl('', Validators.required);
+  // transportations = new FormControl('', Validators.required);
   transportationList: string[] = ['Walking', 'Public Transit', 'Biking'];
 
-  periods = new FormControl('', Validators.required);
+  // periods = new FormControl('', Validators.required);
   periodList: string[] = ['Less than 5 minutes', 'Less than 10 minutes', 'Less than 15 minutes','No limit'];
 
-  safeties = new FormControl('', Validators.required);
+  // safeties = new FormControl('', Validators.required);
   safetyList: string[] = ['I want to avoid hospital/covid-19 assessment center', 'I want to avoid public gathering places (e.g.: shopping malls)','I want to avoid over-crowded streets','I don\'t have a specific concern'];
 
   constructor(
@@ -57,10 +57,10 @@ export class QuestionaireComponent implements OnInit {
 
   ngOnInit() {
     this.firstFormGroup = this.fb.group({
-      fristCtrl: ['Default Value', Validators.required]
+      fristCtrl: ['', Validators.required]
     });
     this.secondFormGroup = this.fb.group({
-      secondCtrl: ['Default Value', Validators.required]
+      secondCtrl: ['', Validators.required]
     });
     this.thirdFormGroup = this.fb.group({
       thirdCtrl: ['', Validators.required]
