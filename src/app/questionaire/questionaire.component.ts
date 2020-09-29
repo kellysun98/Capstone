@@ -11,10 +11,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 
-interface DialogData {
-  value: string;
-  viewValue: string;
-}
+// interface DialogData {
+//   value: string;
+//   viewValue: string;
+// }
 
 
 @Component({
@@ -26,9 +26,9 @@ export class QuestionaireComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
-  df1: any = ["Walking", "Public Transit"];
+  df1: any = ["Walking"];
   df2: any = 'Less than 5 minutes';
-  df3: any = ['I want to avoid hospital/covid-19 assessment center', 'I want to avoid public gathering places (e.g.: shopping malls)'];
+  df3: any = ['I want to avoid hospital/covid-19 assessment center'];
   // selected = 'nolimit';
   // selected2= 'hospital';
 
@@ -48,7 +48,7 @@ export class QuestionaireComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<QuestionaireComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData, 
+    // @Inject(MAT_DIALOG_DATA) public data: DialogData, 
     private fb: FormBuilder) {}
   
   onNoClick(): void {
@@ -63,7 +63,7 @@ export class QuestionaireComponent implements OnInit {
       secondCtrl: ['Default Value', Validators.required]
     });
     this.thirdFormGroup = this.fb.group({
-      thirdCtrl: ['Default Value', Validators.required]
+      thirdCtrl: ['', Validators.required]
     });
   }
 
