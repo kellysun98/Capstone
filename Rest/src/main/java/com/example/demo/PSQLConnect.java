@@ -86,12 +86,12 @@ public class PSQLConnect {
 
     public static void main(String[] args) {
 
-
+        /*
         HashMap<Integer, String> test = getNeighbourhoodCoordinate();
         test.entrySet().forEach(entry->{
             System.out.println(entry.getKey() + ":   " + entry.getValue());
         });
-
+        /*
         /*
         ArrayList<ArrayList<Double>> test2 = getPedestrianCount("08:00:00", "10:00:00");
         for (ArrayList list : test2) {
