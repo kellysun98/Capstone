@@ -15,7 +15,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.example.demo.PSQLConnect.getNeighbourhoodCoordinate;
 
 
 @SpringBootApplication
@@ -28,34 +32,18 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	public Element getElement(String lon, String lat) {
-		torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
-		torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
-		NodeList nList = torontoGraph.osmDoc.getElementsByTagName("node");
-		Element final_e = null;
+	public MapNode getElement(HashMap<Double, MapNode> nodeMap, String lon, String lat) {
 
-		for (int temp = 0; temp < 5; temp++) {
-			Node node = nList.item(temp);
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				Element eElement = (Element) node;
-				String lon_osm = eElement.getAttribute("lon");
-				String lat_osm = eElement.getAttribute("lat");
 
-//				System.out.println("osm longtiude found is: " + lon_osm);
-//				System.out.println("input longitude is: " + lon.substring(0,8));
-				System.out.println("is equal: " + lon_osm.substring(0, 8) == lon.substring(0,8));
-
-				if (lon_osm.substring(0, 8) == lon.substring(0,8) || lat_osm.substring(0, 7) == lat.substring(0,7)) {
-					System.out.println("im in!");
-					final_e = (Element) eElement;
-					break;
-				}
-				/**else{
-				 System.out.println("im not in!");
-				 }**/
+		MapNode res = new MapNode();
+		for (Double key : nodeMap.keySet()) {
+			if(Double.toString(nodeMap.get(key).latitude).equals(lat) & Double.toString(nodeMap.get(key).longitude).equals(lon)){
+				res = nodeMap.get(key);
+				break;
 			}
 		}
-		return final_e;
+		return res;
+
 	}
 
 	@RestController
@@ -63,22 +51,29 @@ public class DemoApplication {
 	class nodeController{
 
 		@GetMapping("/api")
-		public List<List<MapNode>> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
+		public List<List<List<Double>>> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
 								   @RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
 
-			Element e_startNode = getElement(longitude,latitude);
-			Element e_endNode = getElement(end_long, end_lat);
-
-			MapNode m_startNode = new MapNode(e_startNode);
-			MapNode m_endNode = new MapNode(e_endNode);
+			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
+			torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
+			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
 
 			Planner planner = new Planner(torontoGraph);
-			List<List<MapNode>> resultList = planner.runSearches(m_startNode, m_endNode);
+			List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
 
-			System.out.println(resultList.get(0).size());
+			if(! resultList.isEmpty()){
+				System.out.println("11111111");
+			}
 			return resultList;
+		}
 
+		@GetMapping("/heatmap")
+		public HashMap<Integer, String> getNeighbourCoord(){
+			HashMap results = new HashMap<Integer, String>();
+			results = getNeighbourhoodCoordinate();
+			return results;
 		}
 	}
+
 
 }

@@ -25,7 +25,7 @@ public class Graph {
 //    public static List<MapPolygon> polygons;
 
     public static double MPERLAT = 111320;
-    public double MPERLON;
+    public static double MPERLON;
 
     public Graph() {
         this("./data/toronto.osm","./data/Cyclists.csv");
@@ -43,7 +43,7 @@ public class Graph {
         getFocus();
         MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
         MapEdge.graph = this;
-//        buildGraph();
+        buildGraph();
     }
 
 
@@ -112,8 +112,8 @@ public class Graph {
 //            e.printStackTrace();
 //        }
     }
-/**
-    private void buildGraph() {
+
+    public void buildGraph() {
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -180,8 +180,8 @@ public class Graph {
                 }
             }
         }
-//        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
-    }**/
+        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
+    }
 
     private void getFocus() {
         NodeList boundsList = osmDoc.getElementsByTagName("bounds");
@@ -193,7 +193,7 @@ public class Graph {
         focus = new double[]{(minLon + maxLon) / 2, (minLat + maxLat) / 2};
     }
 
-    public double getDistance(MapNode sourceNode, MapNode destinationNode) {
+    public static double getDistance(MapNode sourceNode, MapNode destinationNode) {
         double dx = (destinationNode.longitude - sourceNode.longitude) * MPERLON;
         double dy = (destinationNode.latitude - sourceNode.latitude) * MPERLAT;
         return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
