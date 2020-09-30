@@ -114,7 +114,7 @@ public class Planner {
     }
 
     public double heuristics(MapNode node, MapNode goalNode){
-        return graph.getDistance(node,goalNode);
+        return com.example.demo.Services.Graph.getDistance(node,goalNode);
     }
 
     public List<MapNode> getGeoList(HashMap<MapNode, MapNode> parents, MapNode goalNode){
