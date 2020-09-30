@@ -57,7 +57,7 @@
         <form [formGroup]="thirdFormGroup">
             <ng-template matStepLabel>
                 <div>
-                    Which level of safety would you choose? (Please click on all which applies)
+                    Are there any places that you do not wish to travel through?
                 </div>
             </ng-template>
 
@@ -78,11 +78,11 @@
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Done</ng-template>
-        <p>You are now done.</p>
+        <p>You are almost done!</p>
         <div>
             <button mat-button matStepperPrevious>Back</button>
             <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
-            <button mat-button (click)="openNav();onNoClick()">Continue</button>
+            <button mat-button (click)="openNav(); onNoClick()">Continue</button>
         </div>
     </mat-step>
 
