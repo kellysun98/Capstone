@@ -13,11 +13,16 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { QuestionaireComponent } from './questionaire/questionaire.component';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatSelectModule} from '@angular/material/select';
+import { WelcomepageComponent } from './welcomepage/welcomepage.component';
+import { StartlocationComponent } from './startlocation/startlocation.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
     AppComponent,
-    QuestionaireComponent
+    QuestionaireComponent,
+    WelcomepageComponent,
+    StartlocationComponent
   ],
   imports: [
     FormsModule,
@@ -32,11 +37,13 @@ import {MatSelectModule} from '@angular/material/select';
     MatCardModule,
     MatCheckboxModule,
     MatStepperModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule
   ],
-  exports:[MatFormFieldModule],
+  exports: [MatFormFieldModule],
   providers: [],
-  bootstrap: [AppComponent,QuestionaireComponent]
+  bootstrap: [AppComponent, QuestionaireComponent, StartlocationComponent],
+  entryComponents: [QuestionaireComponent, StartlocationComponent]
 })
 export class AppModule { }
 

@@ -9,12 +9,12 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import {requireCheckboxesToBeCheckedValidator} from './require-checkboxes-to-be-checked.validator';
+import { StartlocationComponent } from '../startlocation/startlocation.component';
 
-interface DialogData {
-  value: string;
-  viewValue: string;
-}
+// interface DialogData {
+//   value: string;
+//   viewValue: string;
+// }
 
 
 @Component({
@@ -23,60 +23,58 @@ interface DialogData {
   styleUrls: ['./questionaire.component.css']
 })
 export class QuestionaireComponent implements OnInit {
-  selectedValue: string;
-  Walking = false;
-  PublicTransit = false;
-  Biking = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
-  selected = 'nolimit';
-  selected2= 'hospital';
+  df1: any = ["Walking"];
+  df2: any = 'Less than 5 minutes';
+  df3: any = ['I want to avoid hospital/covid-19 assessment center'];
+  // selected = 'nolimit';
+  // selected2= 'hospital';
 
-  Data: Array<any> = [
-    { name: 'Walking', value: 'Walking' },
-    { name: 'Public Transit', value: 'Public Transit' },
-    { name: 'Biking', value: 'Biking' },
-  ];
+  // Data: Array<any> = [
+  //   { name: 'Walking', value: 'Walking' },
+  //   { name: 'Public Transit', value: 'Public Transit' },
+  //   { name: 'Biking', value: 'Biking' },
+  // ];
+  // transportations = new FormControl('', Validators.required);
+  transportationList: string[] = ['Walking', 'Public Transit', 'Biking'];
+
+  // periods = new FormControl('', Validators.required);
+  periodList: string[] = ['Less than 5 minutes', 'Less than 10 minutes', 'Less than 15 minutes','No limit'];
+
+  // safeties = new FormControl('', Validators.required);
+  safetyList: string[] = ['I want to avoid hospital/covid-19 assessment center', 'I want to avoid public gathering places (e.g.: shopping malls)','I want to avoid over-crowded streets','I don\'t have a specific concern'];
+  // dialog: any;
 
   constructor(
     public dialogRef: MatDialogRef<QuestionaireComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData, 
-    private fb: FormBuilder) {
-      this.firstFormGroup = this.fb.group({});
-      this.secondFormGroup = this.fb.group({});
-      this.thirdFormGroup = this.fb.group({});
-    }
-
-    foods: DialogData[] = [
-      {value: '5mins', viewValue: 'Less than 5 minutes'},
-      {value: '10mins', viewValue: 'Less than 10 minutes'},
-      {value: '15mins', viewValue: 'Less than 15 minutes'},
-      {value: 'nolimit', viewValue: 'No limit'}
-    ];
+    public dialog: MatDialog,
+    // @Inject(MAT_DIALOG_DATA) public data: DialogData, 
+    private fb: FormBuilder) {}
   
-
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   ngOnInit() {
-    // this.firstFormGroup = new FormGroup({
-    //   myCheckboxGroup: new FormGroup({
-    //     check1: new FormControl(false),
-    //     check2: new FormControl(false),
-    //     check3: new FormControl(false),
-    //   }, requireCheckboxesToBeCheckedValidator()),
-    // });
     this.firstFormGroup = this.fb.group({
-      firstCtrl: ['', Validators.required]
+      fristCtrl: ['', Validators.required]
     });
     this.secondFormGroup = this.fb.group({
       secondCtrl: ['', Validators.required]
     });
     this.thirdFormGroup = this.fb.group({
-      secondCtrl: ['', Validators.required]
+      thirdCtrl: ['', Validators.required]
     });
   }
 
+  openNav(): void {
+    const dialogRef = this.dialog.open(StartlocationComponent, {
+      width: '500px',
+      height: '500px',
+      data: {}
+    });
+
+  }
 }

@@ -13,6 +13,8 @@ import { QuestionaireComponent } from './questionaire/questionaire.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { WelcomepageComponent } from './welcomepage/welcomepage.component';
+import { ThrowStmt } from '@angular/compiler';
 
 declare var ol: any;
 @Component({
@@ -21,19 +23,24 @@ declare var ol: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  heatmap: Object;
   latitude: number;
   longitude: number;
+  // tslint:disable-next-line:variable-name
   end_lat: number;
+  // tslint:disable-next-line:variable-name
   end_long: number;
   map: any;
   response: any;
   email: string;
 
-  constructor(private http:HttpClient, public dialog: MatDialog){
+  constructor(private http: HttpClient, public dialog: MatDialog){
 
   }
 
   ngOnInit() {
+    this.openWelcome();
+    this.Heatmap();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -59,7 +66,7 @@ export class AppComponent {
       ],
       view: new ol.View({
         center: ol.proj.fromLonLat([-79.3883, 43.6548]),
-        zoom: 8
+        zoom: 10
       })
     });
 
@@ -73,18 +80,26 @@ export class AppComponent {
     });
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(QuestionaireComponent, {
+  // openDialog(): void {
+  //   const dialogRef = this.dialog.open(QuestionaireComponent, {
+  //     width: '500px',
+  //     height: '500px',
+  //     data: {}
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     this.email = result;
+  //   });
+  // }
+
+  openWelcome(): void{
+    const dialogRef = this.dialog.open(WelcomepageComponent, {
       width: '500px',
       height: '500px',
       data: {}
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      this.email = result;
-    });
   }
-  
+
   setCenter() {
     var view = this.map.getView();
     view.setCenter(ol.proj.fromLonLat([this.longitude, this.latitude]));
@@ -158,6 +173,42 @@ drawLine2(){
       })
   });
     this.map.addLayer(vectorLineLayer);
+}
+
+Heatmap(){
+  var style1 = new ol.style.Style({
+    fill: new ol.style.Fill({ color: 'rgba(128,0,128,0.5)'}),
+    stroke: new ol.style.Stroke({ color: 'rgba(0,0,0,0.8)', width: 2 })
+  });
+  var vectorLine = new ol.source.Vector({});
+
+  this.http.get("http://localhost:8080/heatmap")
+  .subscribe((heatmap) => {
+    this.heatmap = heatmap;
+    for (let key of Object.keys(this.heatmap)){
+    
+      var test = this.heatmap[key];
+    test = test.replace(/\(/g, '[').replace(/\)/g, ']');
+    test = '['+test+']';
+    try{ test = JSON.parse(test) }
+    catch { continue;}
+    console.log(key);
+    var poly= new ol.geom.Polygon([test]);
+    poly.transform('EPSG:4326', 'EPSG:3857');       
+    var featureLine = new ol.Feature({
+          geometry: poly,
+          });
+    featureLine.setStyle(style1);
+    vectorLine.addFeature(featureLine);
+  
+  }
+    var vectorLineLayer = new ol.layer.Vector({
+      source: vectorLine,
+    });
+    this.map.addLayer(vectorLineLayer); 
+
+});
+  
 }
 
 }
