@@ -10,9 +10,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.*;
 public class PSQLConnect {
-    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto";
+
+//    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto";
+//    public static String user = "REMOVED";
+//    public static String password = "REMOVED";
+
+    //kelly psql setup
+
+    public static String url = "jdbc:REMOVEDql://localhost:5432/osm";
     public static String user = "REMOVED";
-    public static String password = "REMOVED";
+    public static String password = "smile01981124";
 
     //get node id from longitude and latitude
     public static Double getNodeID(String longitude, String latitude){
@@ -85,7 +92,7 @@ public class PSQLConnect {
 
 
     public static void main(String[] args) {
-
+        //System.out.println(getNeighbourhoodCoordinate());
         /*
         HashMap<Integer, String> test = getNeighbourhoodCoordinate();
         test.entrySet().forEach(entry->{
