@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.demo.PSQLConnect.getNeighbourhoodCoordinate;
+
 
 @SpringBootApplication
 public class DemoApplication {
@@ -63,6 +65,13 @@ public class DemoApplication {
 				System.out.println("11111111");
 			}
 			return resultList;
+		}
+
+		@GetMapping("/heatmap")
+		public HashMap<Integer, String> getNeighbourCoord(){
+			HashMap results = new HashMap<Integer, String>();
+			results = getNeighbourhoodCoordinate();
+			return results;
 		}
 	}
 
