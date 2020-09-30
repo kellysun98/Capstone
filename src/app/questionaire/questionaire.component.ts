@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-
+import { StartlocationComponent } from '../startlocation/startlocation.component';
 
 // interface DialogData {
 //   value: string;
@@ -45,9 +45,11 @@ export class QuestionaireComponent implements OnInit {
 
   // safeties = new FormControl('', Validators.required);
   safetyList: string[] = ['I want to avoid hospital/covid-19 assessment center', 'I want to avoid public gathering places (e.g.: shopping malls)','I want to avoid over-crowded streets','I don\'t have a specific concern'];
+  // dialog: any;
 
   constructor(
     public dialogRef: MatDialogRef<QuestionaireComponent>,
+    public dialog: MatDialog,
     // @Inject(MAT_DIALOG_DATA) public data: DialogData, 
     private fb: FormBuilder) {}
   
@@ -67,4 +69,12 @@ export class QuestionaireComponent implements OnInit {
     });
   }
 
+  openNav(): void {
+    const dialogRef = this.dialog.open(StartlocationComponent, {
+      width: '500px',
+      height: '500px',
+      data: {}
+    });
+
+  }
 }

@@ -37,6 +37,7 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    this.openWelcome();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',

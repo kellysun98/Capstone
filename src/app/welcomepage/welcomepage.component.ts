@@ -3,10 +3,10 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dial
 import { QuestionaireComponent } from '../questionaire/questionaire.component';
 
 
-interface DialogData {
-  value: string;
-  viewValue: string;
-}
+// interface DialogData {
+//   value: string;
+//   viewValue: string;
+// }
 
 @Component({
   selector: 'app-welcomepage',
@@ -14,7 +14,6 @@ interface DialogData {
   styleUrls: ['./welcomepage.component.css']
 })
 export class WelcomepageComponent implements OnInit {
-  email: string;
 
   constructor(public dialogRef: MatDialogRef<WelcomepageComponent>, public dialog: MatDialog) { }
 
@@ -31,9 +30,7 @@ export class WelcomepageComponent implements OnInit {
       data: {}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.email = result;
-    });
+
   }
 
 }
