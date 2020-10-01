@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ErrorHandler } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import VectorLayer from 'ol/layer/Vector';
@@ -7,7 +7,7 @@ import Icon from 'ol/style/Icon';
 import OSM from 'ol/source/OSM';
 import * as olProj from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import {MatDialogModule} from '@angular/material/dialog';
 import { QuestionaireComponent } from './questionaire/questionaire.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -16,6 +16,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { ThrowStmt } from '@angular/compiler';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import {Options} from './options';
 
 declare var ol: any;
 @Component({
@@ -34,6 +36,8 @@ export class AppComponent {
   map: any;
   response: any;
   email: string;
+  testArray: any[] = [];
+
   constructor(private http: HttpClient, public dialog: MatDialog){
 
   }
@@ -41,6 +45,7 @@ export class AppComponent {
   ngOnInit() {
     this.openWelcome();
     this.Heatmap();
+    this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -105,11 +110,17 @@ export class AppComponent {
     view.setCenter(ol.proj.fromLonLat([this.longitude, this.latitude]));
     view.setZoom(10);
   }
+//return observable
+  getAllCoords(): Observable<Options[]>{
+    let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
+    return this.http.get<Options[]>('http://localhost:8080/api', {params:params})
+  }
 
   setMarker(){
-    console.log(this.longitude.toString());
-    let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
-    this.http.get("http://localhost:8080/api", {params:params}).subscribe((response) => {this.response = response})
+    // console.log(this.longitude.toString());
+    // let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
+    // this.http.get("http://localhost:8080/api", {params:params})
+    // .subscribe((response) => {this.response})
 
     var Markers = [{lat: this.latitude, lng: this.longitude}, {lat:this.end_lat, lng: this.end_long}];
     var features = [];
@@ -148,7 +159,12 @@ export class AppComponent {
   }
 
 drawLine2(){
-  var points = [ [this.longitude, this.latitude], [this.end_long, this.end_lat] ];
+  this.getAllCoords().subscribe(
+    data => this.testArray = data,
+    error => console.log('oops', error),
+  );
+  var points = this.testArray;
+  console.log(points)
 
   for (var i = 0; i < points.length; i++) {
       points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');

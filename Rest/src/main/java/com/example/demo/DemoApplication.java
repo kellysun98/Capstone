@@ -51,7 +51,7 @@ public class DemoApplication {
 	class nodeController{
 
 		@GetMapping("/api")
-		public List<List<Double>> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
+		public List<List<List<Double>>> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
 								   @RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
 
 			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
@@ -68,7 +68,7 @@ public class DemoApplication {
 				System.out.println(coor);
 			}
 
-			return resultList.get(0);
+			return resultList;
 		}
 
 		@GetMapping("/heatmap")
