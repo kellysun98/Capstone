@@ -46,7 +46,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.openWelcome();
-    //this.Heatmap();
+    this.Heatmap();
 
 
     this.getAllCoords();
@@ -87,6 +87,7 @@ export class AppComponent {
       var lat = lonlat[1];
       alert(`lat: ${lat} long: ${lon}`);
     });
+    console.log(this.map.getLayers());
 
   }
 
@@ -161,6 +162,7 @@ export class AppComponent {
       source: vectorSource
     });
     this.map.addLayer(vectorLayer);
+
     
   }
 
@@ -226,8 +228,8 @@ Heatmap(){
     this.map.addLayer(vectorLineLayer); 
 
 });
-  
 }
+
 noHeatmap(){
   console.log(this.map.getLayers());
   //this.map.removeLayer(vectorLineLayer);
