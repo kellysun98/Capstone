@@ -2,6 +2,7 @@ import { Component, ErrorHandler } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import OSM from 'ol/source/OSM';
@@ -18,6 +19,7 @@ import { ThrowStmt } from '@angular/compiler';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {Options} from './options';
+import GeoJSON from 'ol/format/GeoJSON';
 
 declare var ol: any;
 @Component({
@@ -45,6 +47,8 @@ export class AppComponent {
   ngOnInit() {
     this.openWelcome();
     this.Heatmap();
+
+
     this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
@@ -83,6 +87,7 @@ export class AppComponent {
       var lat = lonlat[1];
       alert(`lat: ${lat} long: ${lon}`);
     });
+
   }
 
   // openDialog(): void {
@@ -189,8 +194,8 @@ drawLine2(){
 
 Heatmap(){
   var style1 = new ol.style.Style({
-    fill: new ol.style.Fill({ color: 'rgba(128,0,128,0.5)'}),
-    stroke: new ol.style.Stroke({ color: 'rgba(0,0,0,0.8)', width: 2 })
+    fill: new ol.style.Fill({ color: 'rgba(128,0,128,0.3)'}),
+    stroke: new ol.style.Stroke({ color: 'rgba(0,0,0,0.8)', width: 0.5 })
   });
   var vectorLine = new ol.source.Vector({});
 
@@ -200,11 +205,11 @@ Heatmap(){
     for (let key of Object.keys(this.heatmap)){
     
       var test = this.heatmap[key];
-    test = test.replace(/\(/g, '[').replace(/\)/g, ']');
+    test = test.replace(/\,-79/g, '),(-79').replace(/\(/g, '[').replace(/\)/g, ']');
     test = '['+test+']';
     try{ test = JSON.parse(test) }
-    catch { continue;}
-    console.log(key);
+    catch { console.log(key);
+      continue;}
     var poly= new ol.geom.Polygon([test]);
     poly.transform('EPSG:4326', 'EPSG:3857');       
     var featureLine = new ol.Feature({
