@@ -49,7 +49,7 @@ export class AppComponent {
     this.Heatmap();
 
 
-    this.getAllCoords();
+    //this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -117,9 +117,9 @@ export class AppComponent {
     view.setZoom(10);
   }
 //return observable
-  getAllCoords(): Observable<Options[]>{
+  getAllCoords(){
     let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
-    return this.http.get<Options[]>('http://localhost:8080/api', {params:params})
+    return this.http.get('http://localhost:8080/api', {params:params})
   }
 
   setMarker(){
@@ -167,14 +167,21 @@ export class AppComponent {
   }
 
 drawLine2(){
-  this.getAllCoords().subscribe(
-    data => this.testArray = data,
-    error => console.log('oops', error),
+  this.getAllCoords()
+  // .pipe(map(res=>this.testArray))
+  .subscribe(
+    (res)=>{ console.log(res), this.testArray.push(res) },
+    (err)=>console.error(err),
+    ()=>console.log(this.testArray.length + 'Proces Complete!')
   );
-  var points = this.testArray;
-  console.log(points)
-
+  //console.log(points)
+  var points = this.testArray[0];
+  for (var i =0; i<this.testArray.length; i++) {
+    console.log(i);
+    console.log(this.testArray[i])
+  }
   for (var i = 0; i < points.length; i++) {
+      console.log('length enumeration'+i);
       points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
   }
 
