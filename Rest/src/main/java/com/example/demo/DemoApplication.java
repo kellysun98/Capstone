@@ -51,7 +51,7 @@ public class DemoApplication {
 	class nodeController{
 
 		@GetMapping("/api")
-		public List<List<List<Double>>> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
+		public List<List<Double>> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
 								   @RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
 
 			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
@@ -61,10 +61,14 @@ public class DemoApplication {
 			Planner planner = new Planner(torontoGraph);
 			List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
 
-			if(! resultList.isEmpty()){
+			if (! resultList.isEmpty()){
 				System.out.println("11111111");
 			}
-			return resultList;
+			for (List<Double> coor: resultList.get(0)){
+				System.out.println(coor);
+			}
+
+			return resultList.get(0);
 		}
 
 		@GetMapping("/heatmap")

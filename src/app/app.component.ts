@@ -15,6 +15,7 @@ import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { ThrowStmt } from '@angular/compiler';
+import { Observable } from 'rxjs';
 
 declare var ol: any;
 @Component({
@@ -24,16 +25,15 @@ declare var ol: any;
 })
 export class AppComponent {
   heatmap: Object;
-  latitude: number;
-  longitude: number;
+  latitude: number = 43.653871;
+  longitude: number = -79.3728709;
   // tslint:disable-next-line:variable-name
-  end_lat: number;
+  end_lat: number = 43.6656433;
   // tslint:disable-next-line:variable-name
-  end_long: number;
+  end_long: number = -79.3913338;
   map: any;
   response: any;
   email: string;
-
   constructor(private http: HttpClient, public dialog: MatDialog){
 
   }
@@ -109,11 +109,7 @@ export class AppComponent {
   setMarker(){
     console.log(this.longitude.toString());
     let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
-    this.http.get("http://localhost:8080/api", {params:params})
-    .subscribe((response) => {
-        this.response = response;
-        console.log(this.response);
-    })
+    this.http.get("http://localhost:8080/api", {params:params}).subscribe((response) => {this.response = response})
 
     var Markers = [{lat: this.latitude, lng: this.longitude}, {lat:this.end_lat, lng: this.end_long}];
     var features = [];
