@@ -16,6 +16,8 @@ import {MatSelectModule} from '@angular/material/select';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { StartlocationComponent } from './startlocation/startlocation.component';
 import { MatIconModule } from '@angular/material/icon';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
     BrowserModule,
     HttpClientModule,
     MatDialogModule,
+    MatSlideToggleModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,

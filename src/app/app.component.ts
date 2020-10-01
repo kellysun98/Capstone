@@ -46,7 +46,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.openWelcome();
-    this.Heatmap();
+    //this.Heatmap();
 
 
     this.getAllCoords();
@@ -161,6 +161,7 @@ export class AppComponent {
       source: vectorSource
     });
     this.map.addLayer(vectorLayer);
+    
   }
 
 drawLine2(){
@@ -226,6 +227,10 @@ Heatmap(){
 
 });
   
+}
+noHeatmap(){
+  console.log(this.map.getLayers());
+  //this.map.removeLayer(vectorLineLayer);
 }
 
 }

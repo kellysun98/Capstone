@@ -18,7 +18,10 @@
         <label for="longitude">Longitude:</label>
         <input id="end_long" type="number" [(ngModel)]="end_long" placeholder="Longitude">
     </div>
-    <button (click)="drawLine2()" (click)="setMarker()">Go</button>
+    <button (click)="drawLine2()" (click)="setMarker()">Go</button>    
+</div>
+<div>
+<mat-slide-toggle [checked]="Heatmap()"  [disabled]="noHeatmap()"> Show Heatmap </mat-slide-toggle>       
 </div>
 <div>
 
