@@ -51,7 +51,7 @@ public class DemoApplication {
 	class nodeController{
 
 		@GetMapping("/api")
-		public List<List<List<Double>>> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
+		public HashMap<Integer, String> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
 								   @RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
 //		public List<Double> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
 //												@RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
@@ -60,13 +60,13 @@ public class DemoApplication {
 			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
 
 			Planner planner = new Planner(torontoGraph);
-			List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
+			HashMap<Integer, String> resultList = planner.toHashMap(planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat)));
 
 			if (! resultList.isEmpty()){
 				System.out.println("11111111");
 			}
-			for (List<Double> coor: resultList.get(0)){
-				System.out.println(coor);
+			for (Integer key: resultList.keySet()){
+				System.out.println(resultList.get(key));
 			}
 
 //			return resultList.get(0).get(0);

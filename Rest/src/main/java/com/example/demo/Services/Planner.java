@@ -192,6 +192,19 @@ public class Planner {
         return solutions;
     }
 
+    public HashMap<Integer, String> toHashMap(List<List<List<Double>>> solutions){
+        Integer count = 1;
+        HashMap<Integer, String> string_result = new HashMap<>();
+        for(List<List<Double>> route: solutions){
+            String route_to_string = new String();
+            for(List<Double> coord: route){
+                route_to_string += ("["+coord.get(0).toString()+", "+coord.get(1).toString()+"]" + ",");
+            }
+            string_result.put(count,route_to_string.substring(0,route_to_string.length()-1));
+            count += 1;
+        }
+        return string_result;
+    }
 /**
     public static void main(String[] args){
         String osmFile = "./data/toronto.osm";

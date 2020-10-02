@@ -173,41 +173,54 @@ export class AppComponent {
 
 drawLine2(){
   this.getAllCoords()
-  // .pipe(map(response=>response.pipe(map(res=>res.pipe(map(coor=>this.coor))))))
+  //  .pipe(map(response=>JSON.parse))
   .subscribe(
     (res)=>{ console.log(res), 
-      this.response = res, 
-      this.testArray.concat(Array((this.response))),
-      console.log('test: '+this.testArray)},
+      this.response = res; 
+      for (let key of Object.keys(this.response)){
+        var route = this.response[key];
+        route = '[' + route + ']';
+        try{
+          route = JSON.parse(route)
+        }catch{
+          console.log(route.length);
+          continue;
+        }
+        for (var i = 0; i < route.length; i++) {
+          console.log('length enumeration '+i);
+          route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+        }
+        var featureLine = new ol.Feature({
+          geometry: new ol.geom.LineString(route)
+        });
+        var vectorLine = new ol.source.Vector({});
+        vectorLine.addFeature(featureLine);
+      
+        var vectorLineLayer = new ol.layer.Vector({
+            source: vectorLine,
+            style: new ol.style.Style({
+                fill: new ol.style.Fill({ color: '#000000', weight: 10 }),
+                stroke: new ol.style.Stroke({ color: '#000000', width: 10 })
+            })
+        });
+          this.map.addLayer(vectorLineLayer);
+
+      };},
+      // this.testArray.concat(Array((this.response))),
+      // console.log('test: '+this.response)},
     (err)=>console.error(err),
-    ()=>console.log(this.testArray.length + 'Proces Complete!')
+    ()=>console.log(this.response + 'Proces Complete!')
   );
   //console.log(points)
-  var points = this.testArray[0];
-  for (var i =0; i<this.testArray.length; i++) {
-    console.log('I\'m here'+ i);
-    console.log(this.testArray[i])
-  }
-  for (var i = 0; i < points.length; i++) {
-      console.log('length enumeration'+i);
-      points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
-  }
+  // var points = this.testArray[0];
+  // for (var i =0; i<this.testArray.length; i++) {
+  //   console.log('I\'m here'+ i);
+  //   console.log(this.testArray[i])
+  // }
 
-  var featureLine = new ol.Feature({
-      geometry: new ol.geom.LineString(points)
-  });
 
-  var vectorLine = new ol.source.Vector({});
-  vectorLine.addFeature(featureLine);
 
-  var vectorLineLayer = new ol.layer.Vector({
-      source: vectorLine,
-      style: new ol.style.Style({
-          fill: new ol.style.Fill({ color: '#000000', weight: 10 }),
-          stroke: new ol.style.Stroke({ color: '#000000', width: 10 })
-      })
-  });
-    this.map.addLayer(vectorLineLayer);
+
 }
 
 Heatmap(){
@@ -226,8 +239,8 @@ Heatmap(){
     test = test.replace(/\,-79/g, '),(-79').replace(/\(/g, '[').replace(/\)/g, ']');
     test = '['+test+']';
     try{ test = JSON.parse(test) }
-    catch { console.log(key);
-      continue;}
+    // catch { console.log(key);
+    catch{continue;}
     var poly= new ol.geom.Polygon([test]);
     poly.transform('EPSG:4326', 'EPSG:3857');       
     var featureLine = new ol.Feature({
