@@ -14,6 +14,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,9 +35,30 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	public MapNode getElement(HashMap<Double, MapNode> nodeMap, String lon, String lat) {
+	public static HashMap<Double, MapNode> deserialize() {
+		HashMap<Double, MapNode> nodeMap = new HashMap<>();
+		ObjectInputStream objectinputstream = null;
+        try
+        {
+            FileInputStream fis = new FileInputStream("./data/hashmap.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            nodeMap = (HashMap) ois.readObject();
+            ois.close();
+            fis.close();
+        }catch(IOException ioe)
+        {
+            ioe.printStackTrace();
+        }catch(ClassNotFoundException c)
+        {
+            System.out.println("Class not found");
+            c.printStackTrace();
+        }
+		return nodeMap;
+	}
 
+	public MapNode getElement(String lon, String lat) {
 
+		HashMap<Double, MapNode> nodeMap = deserialize();
 		MapNode res = new MapNode();
 		for (Double key : nodeMap.keySet()) {
 			if(Double.toString(nodeMap.get(key).latitude).equals(lat) & Double.toString(nodeMap.get(key).longitude).equals(lon)){
@@ -57,10 +81,10 @@ public class DemoApplication {
 //												@RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
 			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
 			torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
-			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
+//			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
 
 			Planner planner = new Planner(torontoGraph);
-			HashMap<Integer, String> resultList = planner.toHashMap(planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat)));
+			HashMap<Integer, String> resultList = planner.toHashMap(planner.runSearches(getElement(longitude,latitude), getElement(end_long, end_lat)));
 
 			if (! resultList.isEmpty()){
 				System.out.println("11111111");

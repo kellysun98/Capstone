@@ -1,12 +1,13 @@
 package com.example.demo.Services;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
-public class MapEdge {
-    public MapRoute mapRoute;
-    public MapNode destinationNode;
-    public MapNode sourceNode;
-    public Integer accidentsCount;
+public class MapEdge implements Serializable {
+    public static MapRoute mapRoute;
+    public static MapNode destinationNode;
+    public static MapNode sourceNode;
+    public static Integer accidentsCount;
     public static Graph graph;
     public static DecimalFormat df = new DecimalFormat("#.###");
 
@@ -23,7 +24,7 @@ public class MapEdge {
 //            accidentsCount = null;
 //        }
     }
-    public double getCost(String costFunction){
+    public static double getCost(String costFunction){
         double euclideanDistance = graph.getDistance(sourceNode,destinationNode);
         if (costFunction.equals("distance")){
             return euclideanDistance;

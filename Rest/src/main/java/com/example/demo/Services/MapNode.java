@@ -4,18 +4,19 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MapNode implements Comparable<MapNode>{
-    public Graph graph;
-    public Element element;
-    public double id;
-    public double longitude;
-    public double latitude;
-    public List<MapEdge> edges;
-    public double estimatedCost;
+public class MapNode implements Comparable<MapNode>, Serializable {
+    public static Graph graph;
+    public static Element element;
+    public static double id;
+    public static double longitude;
+    public static double latitude;
+    public static List<MapEdge> edges;
+    public static double estimatedCost;
 
     public MapNode (){
         id = -1;

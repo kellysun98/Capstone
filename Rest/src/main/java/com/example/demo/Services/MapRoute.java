@@ -1,17 +1,19 @@
 package com.example.demo.Services;
 
 import org.w3c.dom.Element;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class MapRoute {
-    public double routeId;
-    public String routeName;
-    public String routeType;
-    public List<Double> nodeIds;
-    public boolean bikeLane;
-    public boolean steps = false;
-    public int maxSpeed;
-    public int lanes;
+public class MapRoute implements Serializable {
+    public static double routeId;
+    public static String routeName;
+    public static String routeType;
+    public static List<Double> nodeIds;
+    public static boolean bikeLane;
+    public static boolean steps = false;
+    public static int maxSpeed;
+    public static int lanes;
 
     public MapRoute(Element route, String routeName, String routeType, boolean bikeLane, int maxSpeed, int lanes){
         routeId = Double.parseDouble(route.getAttribute("id"));

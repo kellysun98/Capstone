@@ -15,10 +15,11 @@ import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import javax.swing.text.StyledEditorKit;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
-public class Planner {
+public class Planner implements Serializable {
     public JXMapViewer mapViewer;
     public JFrame frame;
     public Graph graph;
