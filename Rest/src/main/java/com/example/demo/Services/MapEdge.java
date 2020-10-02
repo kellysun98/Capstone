@@ -1,15 +1,36 @@
 package com.example.demo.Services;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.List;
 
-public class MapEdge {
+public class MapEdge implements Serializable {
     public MapRoute mapRoute;
     public MapNode destinationNode;
     public MapNode sourceNode;
     public Integer accidentsCount;
-    public static Graph graph;
+    //public static Graph graph;
     public static DecimalFormat df = new DecimalFormat("#.###");
 
+    private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
+    {
+        mapRoute = (MapRoute) aInputStream.readObject();
+        destinationNode = (MapNode) aInputStream.readObject();
+        sourceNode = (MapNode) aInputStream.readObject();
+        df = new DecimalFormat("#.###");
+    }
+
+    private void writeObject(ObjectOutputStream aOutputStream) throws IOException
+    {
+        aOutputStream.writeObject(mapRoute);
+        aOutputStream.writeObject(destinationNode);
+        aOutputStream.writeObject(sourceNode);
+        aOutputStream.writeObject(df);
+
+    }
 
     public MapEdge(MapRoute mapRoute, MapNode sourceNode, MapNode destinationNode) {
         this.mapRoute = mapRoute;
@@ -24,7 +45,7 @@ public class MapEdge {
 //        }
     }
     public double getCost(String costFunction){
-        double euclideanDistance = graph.getDistance(sourceNode,destinationNode);
+        double euclideanDistance = Graph.getDistance(sourceNode,destinationNode);
         if (costFunction.equals("distance")){
             return euclideanDistance;
         } else if (costFunction.equals("bikeLane")){

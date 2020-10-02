@@ -3,10 +3,14 @@ package com.example.demo;
 import com.example.demo.Services.Graph;
 import com.example.demo.Services.MapNode;
 
-import java.io.*;
-
 import java.util.HashMap;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 public class SerializeData {
 
     public static void serrialize(HashMap<Double, MapNode> nodeMap){
@@ -39,13 +43,14 @@ public class SerializeData {
             nodeMap = (HashMap<Double, MapNode>) objectinputstream.readObject();
         } catch (Exception e) {
             e.printStackTrace();
-
+            System.out.println(e.getMessage());
         } finally {
             if(objectinputstream != null){
                 try {
                     objectinputstream .close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
             }
         }

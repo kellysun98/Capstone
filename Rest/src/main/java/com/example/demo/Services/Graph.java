@@ -13,9 +13,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-
-public class Graph {
+public class Graph implements Serializable{
     public Document osmDoc;
     public double[] focus;
     public HashMap<Double, MapNode> nodes;
@@ -42,7 +48,7 @@ public class Graph {
         loadFiles(osmFilePath, accidentsFilePath);
         getFocus();
         MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
-        MapEdge.graph = this;
+        //MapEdge.graph = this;
         buildGraph();
     }
 
