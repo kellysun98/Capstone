@@ -53,7 +53,8 @@ public class DemoApplication {
 		@GetMapping("/api")
 		public List<List<List<Double>>> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
 								   @RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
-
+//		public List<Double> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
+//												@RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
 			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
 			torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
 			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
@@ -68,6 +69,7 @@ public class DemoApplication {
 				System.out.println(coor);
 			}
 
+//			return resultList.get(0).get(0);
 			return resultList;
 		}
 

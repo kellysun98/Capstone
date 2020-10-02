@@ -18,7 +18,9 @@ import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { ThrowStmt } from '@angular/compiler';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {Options} from './options';
+import { Options } from './options';
+import { Route } from './route';
+import { Coordinates} from './coordinates';
 import GeoJSON from 'ol/format/GeoJSON';
 
 declare var ol: any;
@@ -36,9 +38,13 @@ export class AppComponent {
   // tslint:disable-next-line:variable-name
   end_long: number = -79.3913338;
   map: any;
-  response: any;
+  response: Object;
   email: string;
-  testArray: any[] = [];
+  testArray: any[];
+  option:Options[];
+  route: Route[];
+  coor: Coordinates[];
+
 
   constructor(private http: HttpClient, public dialog: MatDialog){
 
@@ -47,7 +53,6 @@ export class AppComponent {
   ngOnInit() {
     this.openWelcome();
     this.Heatmap();
-
 
     //this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
@@ -168,16 +173,19 @@ export class AppComponent {
 
 drawLine2(){
   this.getAllCoords()
-  // .pipe(map(res=>this.testArray))
+  // .pipe(map(response=>response.pipe(map(res=>res.pipe(map(coor=>this.coor))))))
   .subscribe(
-    (res)=>{ console.log(res), this.testArray.push(res) },
+    (res)=>{ console.log(res), 
+      this.response = res, 
+      this.testArray.concat(Array((this.response))),
+      console.log('test: '+this.testArray)},
     (err)=>console.error(err),
     ()=>console.log(this.testArray.length + 'Proces Complete!')
   );
   //console.log(points)
   var points = this.testArray[0];
   for (var i =0; i<this.testArray.length; i++) {
-    console.log(i);
+    console.log('I\'m here'+ i);
     console.log(this.testArray[i])
   }
   for (var i = 0; i < points.length; i++) {
