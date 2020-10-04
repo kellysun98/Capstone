@@ -1,4 +1,4 @@
-import { Component, ErrorHandler } from '@angular/core';
+import { Component, ErrorHandler, ViewChild } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import VectorLayer from 'ol/layer/Vector';
@@ -22,6 +22,9 @@ import { Options } from './options';
 import { Route } from './route';
 import { Coordinates} from './coordinates';
 import GeoJSON from 'ol/format/GeoJSON';
+import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
+import { SideNavService } from './side-nav.service';
+
 
 declare var ol: any;
 @Component({
@@ -30,6 +33,8 @@ declare var ol: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  @ViewChild('sidenav') public sidenav: MatSidenav;
+  open: boolean;
   heatmap: Object;
   latitude: number = 43.653871;
   longitude: number = -79.3728709;
@@ -44,15 +49,19 @@ export class AppComponent {
   option:Options[];
   route: Route[];
   coor: Coordinates[];
+  
 
 
-  constructor(private http: HttpClient, public dialog: MatDialog){
-
+  constructor(private http: HttpClient, public dialog: MatDialog, public sideNavService: SideNavService){
   }
-
-  ngOnInit() {
-    this.openWelcome();
-    this.Heatmap();
+    ngOnInit() {
+      this.sideNavService.sideNavToggleSubject.subscribe(()=> 
+      {
+        this.sidenav.toggle();
+      });
+      this.openWelcome();
+      this.Heatmap();
+   
 
     //this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
@@ -223,27 +232,27 @@ drawLine2(){
 
 }
 
-Heatmap(){
-  var style1 = new ol.style.Style({
-    fill: new ol.style.Fill({ color: 'rgba(128,0,128,0.3)'}),
-    stroke: new ol.style.Stroke({ color: 'rgba(0,0,0,0.8)', width: 0.5 })
-  });
-  var vectorLine = new ol.source.Vector({});
+  Heatmap(){
+    var style1 = new ol.style.Style({
+      fill: new ol.style.Fill({ color: 'rgba(128,0,128,0.3)'}),
+      stroke: new ol.style.Stroke({ color: 'rgba(0,0,0,0.8)', width: 0.5 })
+    });
+    var vectorLine = new ol.source.Vector({});
 
-  this.http.get("http://localhost:8080/heatmap")
-  .subscribe((heatmap) => {
-    this.heatmap = heatmap;
-    for (let key of Object.keys(this.heatmap)){
+    this.http.get("http://localhost:8080/heatmap")
+    .subscribe((heatmap) => {
+      this.heatmap = heatmap;
+      for (let key of Object.keys(this.heatmap)){
     
-      var test = this.heatmap[key];
+        var test = this.heatmap[key];
     test = test.replace(/\,-79/g, '),(-79').replace(/\(/g, '[').replace(/\)/g, ']');
-    test = '['+test+']';
-    try{ test = JSON.parse(test) }
+      test = '['+test+']';
+      try{ test = JSON.parse(test) }
     // catch { console.log(key);
-    catch{continue;}
-    var poly= new ol.geom.Polygon([test]);
-    poly.transform('EPSG:4326', 'EPSG:3857');       
-    var featureLine = new ol.Feature({
+      catch{continue;}
+      var poly= new ol.geom.Polygon([test]);
+      poly.transform('EPSG:4326', 'EPSG:3857');       
+      var featureLine = new ol.Feature({
           geometry: poly,
           });
     featureLine.setStyle(style1);
@@ -262,5 +271,14 @@ noHeatmap(){
   console.log(this.map.getLayers());
   //this.map.removeLayer(vectorLineLayer);
 }
+
+  hideit(){
+    var x = document.getElementById("willhide");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
 
 }

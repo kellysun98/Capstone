@@ -17,14 +17,18 @@ import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { StartlocationComponent } from './startlocation/startlocation.component';
 import { MatIconModule } from '@angular/material/icon';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-
+import { MybarComponent } from './mybar/mybar.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
     AppComponent,
     QuestionaireComponent,
     WelcomepageComponent,
-    StartlocationComponent
+    StartlocationComponent,
+    MybarComponent,
   ],
   imports: [
     FormsModule,
@@ -41,7 +45,10 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatCheckboxModule,
     MatStepperModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    MatSidenavModule,
+    MatTabsModule,
+    MatListModule
   ],
   exports: [MatFormFieldModule],
   providers: [],

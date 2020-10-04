@@ -1,38 +1,39 @@
-<div>
-    <div>
-        <label for="latitude">Latitude:</label>
-        <input id="latitude" type="number" [(ngModel)]="latitude" placeholder="Latitude">
-    </div>
+<mat-sidenav-container auosize>
+    <mat-sidenav #sidenav mode="side" [(opened)]="open">
+        <app-mybar></app-mybar>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div id="willhide">
+            <div>
+                <div>
+                    <label for="latitude">Latitude:</label>
+                    <input id="latitude" type="number" [(ngModel)]="latitude" placeholder="Latitude">
+                </div>
+                <div>
+                    <label for="longitude">Longitude:</label>
+                    <input id="longitude" type="number" [(ngModel)]="longitude" placeholder="Longitude">
+                </div>
+                <div>
+                    <label for="latitude">Latitude:</label>
+                    <input id="end_lat" type="number" [(ngModel)]="end_lat" placeholder="Latitude">
+                </div>
+                <div>
+                    <label for="longitude">Longitude:</label>
+                    <input id="end_long" type="number" [(ngModel)]="end_long" placeholder="Longitude">
+                </div>
+                <button (click)="drawLine2(); setMarker(); sidenav.toggle(); hideit()">Go</button>
+            </div>
+            <div>
+                <mat-slide-toggle [disabled]="" [checked]=""> Show COVID19 Map</mat-slide-toggle>
+            </div>
+            <div>
 
-    <div>
-        <label for="longitude">Longitude:</label>
-        <input id="longitude" type="number" [(ngModel)]="longitude" placeholder="Longitude">
-    </div>
+                <button mat-raised-button (click)="openWelcome()">Open questionaire</button>
+            </div>
+        </div>
 
-    <div>
-        <label for="latitude">Latitude:</label>
-        <input id="end_lat" type="number" [(ngModel)]="end_lat" placeholder="Latitude">
-    </div>
-
-    <div>
-        <label for="longitude">Longitude:</label>
-        <input id="end_long" type="number" [(ngModel)]="end_long" placeholder="Longitude">
-    </div>
-    <button (click)="drawLine2()" (click)="setMarker()">Go</button>    
-</div>
-<div>
-  <mat-slide-toggle  [disabled]=""[checked]="" > Show COVID19 Map</mat-slide-toggle>       
-</div>
-<div>
-
-    <button mat-raised-button (click)="openWelcome()">Open questionaire</button>
-
-    <br />
-    <div *ngIf="email">
-        You signed up with:
-        <p></p>
-    </div>
-</div>
-<br>
-<div id="map" class map></div>
-<div id="mouse-position"></div>
+        <br>
+        <div id="map" class map></div>
+        <div id="mouse-position"></div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
