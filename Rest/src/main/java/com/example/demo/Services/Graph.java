@@ -26,6 +26,7 @@ public class Graph implements Serializable{
     public static double[] focus;
     public static HashMap<Double, MapNode> nodes;
     public static HashMap<Double, MapNode> routeNodes;
+//    public static HashMap<Double, ArrayList<Double>> test_routeNodes;
     public static HashMap<Double, MapRoute> routes;
     public static HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
 //    public static List<MapPolygon> polygons;
@@ -182,6 +183,10 @@ public class Graph implements Serializable{
                 newRoute.nodeIds = nodeIdList;
                 routes.put(newRoute.routeId, newRoute);
                 for (double nodeId : nodeIdList) {
+//                    ArrayList lon_lat = new ArrayList();
+//                    lon_lat.add(nodes.get(nodeId).longitude);
+//                    lon_lat.add(nodes.get(nodeId).latitude);
+//                    test_routeNodes.put(nodeId, lon_lat);
                     routeNodes.put(nodeId, nodes.get(nodeId));
                 }
             }

@@ -17,7 +17,7 @@ public class SerializeData {
         ObjectOutputStream oos = null;
         FileOutputStream fout = null;
         try{
-            fout = new FileOutputStream("./data/nodemap.ser", true);
+            fout = new FileOutputStream("./data/test_nodemap.ser", true);
             oos = new ObjectOutputStream(fout);
             oos.writeObject(nodeMap);
         } catch (Exception ex) {
@@ -58,11 +58,11 @@ public class SerializeData {
 //    }
 
     public static void main(String[] args) {
-//        Graph torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
-//        torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
-//        HashMap<Double, MapNode> nodeMap_orig = torontoGraph.routeNodes;
-//
-//        serrialize(nodeMap_orig);
+        Graph torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
+        torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
+        HashMap<Double, MapNode> nodeMap_orig = torontoGraph.routeNodes;
+
+        serrialize(nodeMap_orig);
         HashMap<Double, MapNode> nodeMap = new HashMap<>();
         try {
             FileInputStream fileIn = new FileInputStream("./data/nodemap.ser");
@@ -81,10 +81,10 @@ public class SerializeData {
 
         System.out.println("Deserialized map...");
         System.out.println(nodeMap.keySet());
-//        for (Double d: nodeMap.keySet()){
-//            System.out.println("Lon: " + nodeMap.get(d).longitude);
-//            System.out.println("Lat: " + nodeMap.get(d).latitude);
-//        }
+        for (Double d: nodeMap.keySet()){
+            System.out.println("Lon: " + nodeMap.get(d).longitude);
+            System.out.println("Lat: " + nodeMap.get(d).latitude);
+        }
 
 //        HashMap<Double, MapNode> nodeMap_deser = deserialize();
 
