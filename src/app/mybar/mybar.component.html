@@ -1,0 +1,55 @@
+<button mat-icon-button color="primary" (click)="inputSideNav.toggle();">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+
+
+<mat-tab-group dynamicHeight>
+    <mat-tab label="Walking">
+        <mat-list>
+            <mat-list-item>
+                <mat-label>20 mins</mat-label>
+                Fatest Route but may die
+                <mat-icon>keyboard_arrow_right</mat-icon>
+
+            </mat-list-item>
+
+            <mat-divider></mat-divider>
+            <mat-list-item>
+                <mat-label>30 mins</mat-label>
+                2nd fatest route, no patios
+                <mat-icon>keyboard_arrow_right</mat-icon>
+
+            </mat-list-item>
+
+            <mat-divider></mat-divider>
+            <mat-list-item>
+                <mat-label>30 mins</mat-label>
+                slowest but safest, 要速度还是要命
+                <mat-icon>keyboard_arrow_right</mat-icon>
+
+            </mat-list-item>
+
+            <mat-divider></mat-divider>
+
+
+        </mat-list>
+    </mat-tab>
+    <mat-tab label="Transit"> TODO </mat-tab>
+    <mat-tab label="Sharebike"> TODO </mat-tab>
+</mat-tab-group>
+<br>
+<br>
+<mat-card>
+    <mat-card-content>
+        <h2 class="amentities">Amentities Showing</h2>
+        <section>
+            <ul>
+                <li *ngFor="let amentity of amentities">
+                    <mat-checkbox class="each">
+                        {{amentity}}
+                    </mat-checkbox>
+                </li>
+            </ul>
+        </section>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,89 @@
+<mat-vertical-stepper linear #stepper>
+
+    <!-- first form step  -->
+
+    <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+
+            <ng-template matStepLabel>
+                <div>What is your preferred mode(s) of transportation?</div>
+            </ng-template>
+
+
+            <mat-form-field appearance="fill">
+                <mat-label>Pick any which are applicable</mat-label>
+                <mat-select [(ngModel)]="df1" formControlName="fristCtrl" multiple>
+                    <mat-option *ngFor="let transportation of transportationList" [value]="transportation">{{transportation}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="firstFormGroup.hasError('required')">Please make selection(s)</mat-error>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </form>
+    </mat-step>
+    <!-- second form step  -->
+
+    <mat-step [stepControl]="secondFormGroup">
+        <form [formGroup]="secondFormGroup">
+
+            <ng-template matStepLabel>
+                <div>
+                    What is the maximum time you would like to spend detouring your trip?
+                </div>
+            </ng-template>
+
+
+            <mat-form-field appearance="fill">
+                <mat-label>Pick a range</mat-label>
+                <mat-select [(ngModel)]="df2" formControlName="secondCtrl">
+                    <mat-option *ngFor="let period of periodList" [value]="period">
+                        {{period}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="secondFormGroup.hasError('required')">Please make a selection</mat-error>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </form>
+    </mat-step>
+
+
+    <!-- third form group  -->
+
+    <mat-step [stepControl]="thirdFormGroup">
+        <form [formGroup]="thirdFormGroup">
+            <ng-template matStepLabel>
+                <div>
+                    Are there any places that you do not wish to travel through?
+                </div>
+            </ng-template>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Pick any which are applicable</mat-label>
+                <mat-select [(ngModel)]="df3" formControlName="thirdCtrl" multiple>
+                    <mat-option *ngFor="let safety of safetyList" [value]="safety">
+                        {{safety}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="thirdFormGroup.hasError('required')">Please make a selection</mat-error>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <p>You are almost done!</p>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+            <button mat-button (click)="openNav(); onNoClick()">Continue</button>
+        </div>
+    </mat-step>
+
+</mat-vertical-stepper>

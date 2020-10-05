@@ -1,0 +1,55 @@
+body {
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+}
+
+p {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 15px;
+}
+
+.mat-dialog-actions {
+    height: 120px;
+    width: 100px;
+    position: center;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.mat-dialog-content {
+    position: center;
+    margin: 8px;
+    margin-top: 30px;
+}
+
+.mat-dialog-title {
+    color: purple;
+    text-align: center;
+    font-size: 30px;
+    margin-top: 30px;
+}
+
+.mat-raised-button {
+    text-align: center;
+    color: white;
+    background-color: purple;
+    left: 180%
+}
+
+.mybt {
+    text-align: center;
+}
+
+.mat-button {
+    text-align: center;
+    color: purple;
+    font: 10px;
+    text-decoration: underline;
+    margin: 0;
+    vertical-align: center;
+    left: 180%
+}
