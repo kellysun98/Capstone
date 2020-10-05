@@ -1,6 +1,6 @@
 <mat-sidenav-container auosize>
     <mat-sidenav #sidenav mode="side" [(opened)]="open">
-        <app-mybar></app-mybar>
+        <app-mybar [inputSideNav]="sidenav"></app-mybar>
     </mat-sidenav>
     <mat-sidenav-content>
         <div id="willhide">

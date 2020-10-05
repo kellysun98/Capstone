@@ -52,13 +52,12 @@ export class AppComponent {
   
 
 
-  constructor(private http: HttpClient, public dialog: MatDialog, public sideNavService: SideNavService){
+  constructor(private http: HttpClient, public dialog: MatDialog){
   }
     ngOnInit() {
-      this.sideNavService.sideNavToggleSubject.subscribe(()=> 
-      {
-        this.sidenav.toggle();
-      });
+    //   toggleRightSidenav() {
+    //     this.sidenav.toggle();
+    //  }
       this.openWelcome();
       this.Heatmap();
    
