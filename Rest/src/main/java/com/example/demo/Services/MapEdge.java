@@ -8,14 +8,14 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class MapEdge implements Serializable {
-    public MapRoute mapRoute;
-    public MapNode destinationNode;
-    public MapNode sourceNode;
-    public Integer accidentsCount;
+    public static MapRoute mapRoute;
+    public static MapNode destinationNode;
+    public static MapNode sourceNode;
+    public static Integer accidentsCount;
     //public static Graph graph;
     public static DecimalFormat df = new DecimalFormat("#.###");
 
-    private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
+    private static void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
     {
         mapRoute = (MapRoute) aInputStream.readObject();
         destinationNode = (MapNode) aInputStream.readObject();
@@ -23,7 +23,7 @@ public class MapEdge implements Serializable {
         df = new DecimalFormat("#.###");
     }
 
-    private void writeObject(ObjectOutputStream aOutputStream) throws IOException
+    private static void writeObject(ObjectOutputStream aOutputStream) throws IOException
     {
         aOutputStream.writeObject(mapRoute);
         aOutputStream.writeObject(destinationNode);
@@ -44,7 +44,7 @@ public class MapEdge implements Serializable {
 //            accidentsCount = null;
 //        }
     }
-    public double getCost(String costFunction){
+    public static double getCost(String costFunction){
         double euclideanDistance = Graph.getDistance(sourceNode,destinationNode);
         if (costFunction.equals("distance")){
             return euclideanDistance;

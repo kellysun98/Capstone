@@ -22,12 +22,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class Graph implements Serializable{
-    public Document osmDoc;
-    public double[] focus;
-    public HashMap<Double, MapNode> nodes;
-    public HashMap<Double, MapNode> routeNodes;
-    public HashMap<Double, MapRoute> routes;
-    public HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
+    public static Document osmDoc;
+    public static double[] focus;
+    public static HashMap<Double, MapNode> nodes;
+    public static HashMap<Double, MapNode> routeNodes;
+    public static HashMap<Double, MapRoute> routes;
+    public static HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
 //    public static List<MapPolygon> polygons;
 
     public static double MPERLAT = 111320;
@@ -53,7 +53,7 @@ public class Graph implements Serializable{
     }
 
 
-    public void loadFiles(String osmFilePath, String accidentsFilePath){
+    public static void loadFiles(String osmFilePath, String accidentsFilePath){
         // load osm file
         try {
             File file = new File(osmFilePath);
@@ -119,7 +119,7 @@ public class Graph implements Serializable{
 //        }
     }
 
-    public void buildGraph() {
+    public static void buildGraph() {
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -189,7 +189,7 @@ public class Graph implements Serializable{
         System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
     }
 
-    private void getFocus() {
+    private static void getFocus() {
         NodeList boundsList = osmDoc.getElementsByTagName("bounds");
         Element bounds = (Element) boundsList.item(0);
         double minLat = Double.parseDouble(bounds.getAttribute("minlat"));

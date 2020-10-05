@@ -34,37 +34,59 @@ public class SerializeData {
             }
         }
     }
-    public static HashMap<Double, MapNode> deserialize(){
-        HashMap<Double, MapNode> nodeMap = new HashMap<>();
-        ObjectInputStream objectinputstream = null;
-        try {
-            FileInputStream streamIn = new FileInputStream("G:\\address.ser");
-            objectinputstream = new ObjectInputStream(streamIn);
-            nodeMap = (HashMap<Double, MapNode>) objectinputstream.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        } finally {
-            if(objectinputstream != null){
-                try {
-                    objectinputstream .close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-        return nodeMap;
-    }
+//    public static HashMap<Double, MapNode> deserialize(){
+//        HashMap<Double, MapNode> nodeMap = new HashMap<>();
+//        ObjectInputStream objectinputstream = null;
+//        try {
+//            FileInputStream streamIn = new FileInputStream("G:\\address.ser");
+//            objectinputstream = new ObjectInputStream(streamIn);
+//            nodeMap = (HashMap<Double, MapNode>) objectinputstream.readObject();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.out.println(e.getMessage());
+//        } finally {
+//            if(objectinputstream != null){
+//                try {
+//                    objectinputstream .close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    System.out.println(e.getMessage());
+//                }
+//            }
+//        }
+//        return nodeMap;
+//    }
 
     public static void main(String[] args) {
-        Graph torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
-        torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
-        HashMap<Double, MapNode> nodeMap_orig = torontoGraph.routeNodes;
+//        Graph torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
+//        torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
+//        HashMap<Double, MapNode> nodeMap_orig = torontoGraph.routeNodes;
+//
+//        serrialize(nodeMap_orig);
+        HashMap<Double, MapNode> nodeMap = new HashMap<>();
+        try {
+            FileInputStream fileIn = new FileInputStream("./data/nodemap.ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            nodeMap = (HashMap<Double, MapNode>) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+            return;
+        } catch (ClassNotFoundException c) {
+            System.out.println("class not found");
+            c.printStackTrace();
+            return;
+        }
 
-        serrialize(nodeMap_orig);
+        System.out.println("Deserialized map...");
+        System.out.println(nodeMap.keySet());
+//        for (Double d: nodeMap.keySet()){
+//            System.out.println("Lon: " + nodeMap.get(d).longitude);
+//            System.out.println("Lat: " + nodeMap.get(d).latitude);
+//        }
 
-        HashMap<Double, MapNode> nodeMap_deser = deserialize();
+//        HashMap<Double, MapNode> nodeMap_deser = deserialize();
 
 
 

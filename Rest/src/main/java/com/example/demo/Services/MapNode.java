@@ -20,12 +20,12 @@ import java.io.ObjectOutputStream;
 
 public class MapNode implements Comparable<MapNode>, Serializable{
     //public Graph graph;
-    public Element element;
-    public double id;
-    public double longitude;
-    public double latitude;
-    public List<MapEdge> edges;
-    public double estimatedCost;
+    public static Element element;
+    public static double id;
+    public static double longitude;
+    public static double latitude;
+    public static List<MapEdge> edges;
+    public static double estimatedCost;
 
     public MapNode (){
         id = -1;
@@ -43,7 +43,7 @@ public class MapNode implements Comparable<MapNode>, Serializable{
     }
 
 
-    private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
+    private static void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
     {
         id = aInputStream.readDouble();
         longitude = aInputStream.readDouble();
@@ -52,7 +52,7 @@ public class MapNode implements Comparable<MapNode>, Serializable{
         estimatedCost = aInputStream.readDouble();
     }
 
-    private void writeObject(ObjectOutputStream aOutputStream) throws IOException
+    private static void writeObject(ObjectOutputStream aOutputStream) throws IOException
     {
         aOutputStream.writeDouble(id);
         aOutputStream.writeDouble(longitude);
