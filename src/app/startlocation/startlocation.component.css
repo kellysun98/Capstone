@@ -1,0 +1,13 @@
+.mat-dialog-title {
+    text-align: center;
+    margin-top: 30px;
+    color: purple;
+    font-size: 20px;
+}
+
+.mat-raised-button {
+    text-align: center;
+    color: white;
+    background-color: purple;
+    left: 40%
+}
