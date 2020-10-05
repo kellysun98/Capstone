@@ -21,7 +21,7 @@
                     <label for="longitude">Longitude:</label>
                     <input id="end_long" type="number" [(ngModel)]="end_long" placeholder="Longitude">
                 </div>
-                <button (click)="drawLine2(); setMarker(); sidenav.toggle(); hideit()">Go</button>
+                <button (click)="drawLine2(); setMarker(); sidenav.toggle();">Go</button>
             </div>
             <div>
                 <mat-slide-toggle [disabled]="" [checked]=""> Show COVID19 Map</mat-slide-toggle>

@@ -23,7 +23,6 @@ import { Route } from './route';
 import { Coordinates} from './coordinates';
 import GeoJSON from 'ol/format/GeoJSON';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
-import { SideNavService } from './side-nav.service';
 
 
 declare var ol: any;
@@ -55,9 +54,6 @@ export class AppComponent {
   constructor(private http: HttpClient, public dialog: MatDialog){
   }
     ngOnInit() {
-    //   toggleRightSidenav() {
-    //     this.sidenav.toggle();
-    //  }
       this.openWelcome();
       this.Heatmap();
    
