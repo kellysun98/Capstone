@@ -13,16 +13,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class MapRoute implements Serializable {
-    public double routeId;
-    public String routeName;
-    public String routeType;
-    public List<Double> nodeIds;
-    public boolean bikeLane;
-    public boolean steps = false;
-    public int maxSpeed;
-    public int lanes;
+    public static double routeId;
+    public static String routeName;
+    public static String routeType;
+    public static List<Double> nodeIds;
+    public static boolean bikeLane;
+    public static boolean steps = false;
+    public static int maxSpeed;
+    public static int lanes;
 
-    private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
+    private static void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
     {
         routeId = aInputStream.readDouble();
         routeName = aInputStream.readUTF();
@@ -34,7 +34,7 @@ public class MapRoute implements Serializable {
         lanes = aInputStream.read();
     }
 
-    private void writeObject(ObjectOutputStream aOutputStream) throws IOException
+    private static void writeObject(ObjectOutputStream aOutputStream) throws IOException
     {
         aOutputStream.writeDouble(routeId);
         aOutputStream.writeUTF(routeName);
