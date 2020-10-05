@@ -11,15 +11,16 @@ import java.util.logging.Logger;
 import java.sql.*;
 public class PSQLConnect {
 
-//    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto";
-//    public static String user = "REMOVED";
-//    public static String password = "REMOVED";
+    //joyce psql setup
+    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto";
+    public static String user = "REMOVED";
+    public static String password = "REMOVED";
 
     //kelly psql setup
 
-    public static String url = "jdbc:REMOVEDql://localhost:5432/osm";
-    public static String user = "REMOVED";
-    public static String password = "smile01981124";
+//    public static String url = "jdbc:REMOVEDql://localhost:5432/osm";
+//    public static String user = "REMOVED";
+//    public static String password = "smile01981124";
 
     //get node id from longitude and latitude
     public static Double getNodeID(String longitude, String latitude){
@@ -90,9 +91,32 @@ public class PSQLConnect {
         return res;
     }
 
+    //get pedestrian count data for heatmap
+    public static HashMap<String, Double> getPedCountHeatmap(String start_time, String end_time){
+        HashMap<String, Double> res = new HashMap<>();
+        try (Connection con = DriverManager.getConnection(url, user, password);
+             PreparedStatement pst = con.prepareStatement(
+                     "select distinct(concat_ws(',',longitude,latitude)) as coord, round(avg(ped_count)::numeric,3) as count from pedestrian_count_data \n" +
+                             "WHERE time_stamp >= '" + start_time +"'AND  time_stamp <  '"+ end_time+ "'\n"+
+                             "group by coord;\n"
+             );
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()){
+                res.put(rs.getString("coord"), rs.getDouble("count"));
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Connection failure.");
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
+
 
     public static void main(String[] args) {
-        //System.out.println(getNeighbourhoodCoordinate());
+        System.out.println(getPedCountHeatmap("2020-09-11 00:00:00","2020-09-13 00:00:00"));
+
         /*
         HashMap<Integer, String> test = getNeighbourhoodCoordinate();
         test.entrySet().forEach(entry->{
