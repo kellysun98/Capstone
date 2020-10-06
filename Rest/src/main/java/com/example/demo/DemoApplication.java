@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.demo.PSQLConnect.getNeighbourhoodCoordinate;
+import static com.example.demo.PSQLConnect.getPedCountHeatmap;
 
 
 @SpringBootApplication
@@ -101,6 +102,13 @@ public class DemoApplication {
 		public HashMap<Integer, String> getNeighbourCoord(){
 			HashMap results = new HashMap<Integer, String>();
 			results = getNeighbourhoodCoordinate();
+			return results;
+		}
+
+		@GetMapping("/heatmap2")
+		public HashMap<String, Double> getPedCount(String start_time,String end_time){
+			HashMap results = new HashMap<String, Double>();
+			results = getPedCountHeatmap(start_time,end_time);
 			return results;
 		}
 	}
