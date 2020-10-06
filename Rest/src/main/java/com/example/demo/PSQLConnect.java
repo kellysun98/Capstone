@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.*;
 public class PSQLConnect {
-    public static String url = "jdbc:postgresql://localhost:5432/toronto";
+    public static String url = "jdbc:postgresql://localhost:5432/toronto.osm";
     public static String user = "postgres";
     public static String password = "postgres";
 
@@ -91,7 +91,7 @@ public class PSQLConnect {
         test.entrySet().forEach(entry->{
             System.out.println(entry.getKey() + ":   " + entry.getValue());
         });
-        */
+        /*
         /*
         ArrayList<ArrayList<Double>> test2 = getPedestrianCount("08:00:00", "10:00:00");
         for (ArrayList list : test2) {

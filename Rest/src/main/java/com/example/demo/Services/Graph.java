@@ -13,25 +13,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
-public class Graph implements Serializable{
-    public static Document osmDoc;
-    public static double[] focus;
-    public static HashMap<Double, MapNode> nodes;
-    public static HashMap<Double, MapNode> routeNodes;
-    public static HashMap<Double, MapRoute> routes;
-    public static HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
+
+public class Graph {
+    public Document osmDoc;
+    public double[] focus;
+    public HashMap<Double, MapNode> nodes;
+    public HashMap<Double, MapNode> routeNodes;
+    public HashMap<Double, MapRoute> routes;
+    public HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
 //    public static List<MapPolygon> polygons;
 
     public static double MPERLAT = 111320;
-    public static double MPERLON;
+    public double MPERLON;
 
     public Graph() {
         this("./data/toronto.osm","./data/Cyclists.csv");
@@ -48,12 +42,12 @@ public class Graph implements Serializable{
         loadFiles(osmFilePath, accidentsFilePath);
         getFocus();
         MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
-        //MapEdge.graph = this;
+        MapEdge.graph = this;
         buildGraph();
     }
 
 
-    public static void loadFiles(String osmFilePath, String accidentsFilePath){
+    public void loadFiles(String osmFilePath, String accidentsFilePath){
         // load osm file
         try {
             File file = new File(osmFilePath);
@@ -119,7 +113,7 @@ public class Graph implements Serializable{
 //        }
     }
 
-    public static void buildGraph() {
+    public void buildGraph() {
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -189,7 +183,7 @@ public class Graph implements Serializable{
         System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
     }
 
-    private static void getFocus() {
+    private void getFocus() {
         NodeList boundsList = osmDoc.getElementsByTagName("bounds");
         Element bounds = (Element) boundsList.item(0);
         double minLat = Double.parseDouble(bounds.getAttribute("minlat"));
@@ -199,7 +193,7 @@ public class Graph implements Serializable{
         focus = new double[]{(minLon + maxLon) / 2, (minLat + maxLat) / 2};
     }
 
-    public static double getDistance(MapNode sourceNode, MapNode destinationNode) {
+    public double getDistance(MapNode sourceNode, MapNode destinationNode) {
         double dx = (destinationNode.longitude - sourceNode.longitude) * MPERLON;
         double dy = (destinationNode.latitude - sourceNode.latitude) * MPERLAT;
         return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));

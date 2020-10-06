@@ -7,25 +7,15 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.io.Serializable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
-public class MapNode implements Comparable<MapNode>, Serializable{
-    //public Graph graph;
-    public static Element element;
-    public static double id;
-    public static double longitude;
-    public static double latitude;
-    public static List<MapEdge> edges;
-    public static double estimatedCost;
+public class MapNode implements Comparable<MapNode>{
+    public Graph graph;
+    public Element element;
+    public double id;
+    public double longitude;
+    public double latitude;
+    public List<MapEdge> edges;
+    public double estimatedCost;
 
     public MapNode (){
         id = -1;
@@ -34,7 +24,6 @@ public class MapNode implements Comparable<MapNode>, Serializable{
         edges = new ArrayList<>();
     }
 
-
     public MapNode (Element e){
         id = Double.parseDouble(e.getAttribute("id"));
         longitude = Double.parseDouble(e.getAttribute("lon"));
@@ -42,24 +31,6 @@ public class MapNode implements Comparable<MapNode>, Serializable{
         edges = new ArrayList<>();
     }
 
-
-    private static void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
-    {
-        id = aInputStream.readDouble();
-        longitude = aInputStream.readDouble();
-        latitude = aInputStream.readDouble();
-        edges = (List<MapEdge>) aInputStream.readObject();
-        estimatedCost = aInputStream.readDouble();
-    }
-
-    private static void writeObject(ObjectOutputStream aOutputStream) throws IOException
-    {
-        aOutputStream.writeDouble(id);
-        aOutputStream.writeDouble(longitude);
-        aOutputStream.writeDouble(latitude);
-        aOutputStream.writeObject(edges);
-        aOutputStream.writeDouble(estimatedCost);
-    }
 
 
     @Override

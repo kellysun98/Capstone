@@ -114,7 +114,7 @@ public class Planner {
     }
 
     public double heuristics(MapNode node, MapNode goalNode){
-        return com.example.demo.Services.Graph.getDistance(node,goalNode);
+        return graph.getDistance(node,goalNode);
     }
 
     public List<MapNode> getGeoList(HashMap<MapNode, MapNode> parents, MapNode goalNode){
@@ -191,6 +191,21 @@ public class Planner {
 //        solutions.add(plan(startNode, endNode,"allFeatures"));
         return solutions;
     }
+
+    public HashMap<Integer, String> toHashMap(List<List<List<Double>>> solutions){
+        Integer count = 1;
+        HashMap<Integer, String> string_result = new HashMap<>();
+        for(List<List<Double>> route: solutions){
+            String route_to_string = new String();
+            for(List<Double> coord: route){
+                route_to_string += ("["+coord.get(0).toString()+", "+coord.get(1).toString()+"]" + ",");
+            }
+            string_result.put(count,route_to_string.substring(0,route_to_string.length()-1));
+            count += 1;
+        }
+        return string_result;
+    }
+
 
 /**
     public static void main(String[] args){
