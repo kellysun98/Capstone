@@ -53,6 +53,8 @@ public class Graph implements Serializable{
     }
 
 
+
+
     public void loadFiles(String osmFilePath, String accidentsFilePath){
         // load osm file
         try {
@@ -203,6 +205,15 @@ public class Graph implements Serializable{
         double dx = (destinationNode.longitude - sourceNode.longitude) * MPERLON;
         double dy = (destinationNode.latitude - sourceNode.latitude) * MPERLAT;
         return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+    }
+
+    public static void main(String[] args){
+        String osmFile = "C://Users//Helen Wang//Documents//4th_yr//capstone//Capstone//Rest//data//toronto.osm";
+        String cyclistFile = "C://Users//Helen Wang//Documents//4th_yr//capstone//Capstone//Rest//data//Cyclists.csv";
+        Graph torontoGraph = new Graph(osmFile, cyclistFile);
+        System.out.println(torontoGraph);
+//        Planner planner = new Planner(torontoGraph);
+//        planner.initializeMapViewer();
     }
 
 }
