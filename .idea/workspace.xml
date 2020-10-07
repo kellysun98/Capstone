@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -16,41 +19,153 @@
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </expand>
-    <select />
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:algorithm" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6d65bccc-e8ba-41bb-a10e-0a077a793091" name="Default Changelist" comment="" />
+    <list default="true" id="3dd3dead-7751-47f9-9078-61e24f362b69" name="Default Changelist" comment="Yen's Algorithm (WIP 还有错需要修改一下）" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="backend" />
+                <branch-info repo="$PROJECT_DIR$" source="algorithm" />
+                <branch-info repo="$PROJECT_DIR$" source="algo" />
+                <branch-info repo="$PROJECT_DIR$" source="altogether930" />
+              </list>
+            </value>
+          </entry>
+          <entry type="REMOTE">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="origin/backend" />
+                <branch-info repo="$PROJECT_DIR$" source="origin/altogether1006" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="algorithm" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1i80zNf4jpW8Qr9rK2Lx29gEn83" />
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\IntelliJ IDEA Community Edition 2020.2.2\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1iEc0KtPM9JYD1mSSmzcN4pqKBi" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../open-street-a-star-master" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager" selected="Application.Graph">
+    <configuration name="DemoApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo.DemoApplication" />
+      <module name="demo" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Graph" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo.Services.Graph" />
+      <module name="demo" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo.Services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SerializeData" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.demo.SerializeData" />
+      <module name="demo" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.demo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Graph" />
+        <item itemvalue="Application.DemoApplication" />
+        <item itemvalue="Application.SerializeData" />
+        <item itemvalue="Application.DemoApplication" />
+        <item itemvalue="Application.SerializeData" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="6d65bccc-e8ba-41bb-a10e-0a077a793091" name="Default Changelist" comment="" />
-      <created>1601274173477</created>
+      <changelist id="3dd3dead-7751-47f9-9078-61e24f362b69" name="Default Changelist" comment="" />
+      <created>1601475969856</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1601274173477</updated>
+      <updated>1601475969856</updated>
     </task>
+    <task id="LOCAL-00001" summary="Yen's Algorithm (WIP 还有错需要修改一下）">
+      <created>1602092120399</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1602092120400</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Yen's Algorithm (WIP 还有错需要修改一下）">
+      <created>1602092676265</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1602092676265</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -58,16 +173,137 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="algorithm" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Yen's Algorithm (WIP 还有错需要修改一下）" />
+    <option name="LAST_COMMIT_MESSAGE" value="Yen's Algorithm (WIP 还有错需要修改一下）" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="481" y="128" key="git4idea.branch.GitSmartOperationDialog" timestamp="1601274199168">
-      <screen x="0" y="23" width="1440" height="816" />
+    <state x="435" y="260" key="#Notifications" timestamp="1602092597049">
+      <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state x="481" y="128" key="git4idea.branch.GitSmartOperationDialog/0.23.1440.816@0.23.1440.816" timestamp="1601274199168" />
+    <state x="435" y="260" key="#Notifications/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601727169934" />
+    <state x="435" y="260" key="#Notifications/0.0.1368.872@0.0.1368.872" timestamp="1602092597049" />
+    <state x="166" y="12" key="#Project_Structure" timestamp="1601477497466">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="166" y="12" key="#Project_Structure/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601477497466" />
+    <state x="141" y="92" width="1086" height="712" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601945352887">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="141" y="92" width="1086" height="712" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601945352887" />
+    <state x="490" y="143" key="#com.intellij.ide.util.MemberChooser" timestamp="1602091117877">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="490" y="143" key="#com.intellij.ide.util.MemberChooser/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602091117877" />
+    <state x="415" y="183" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602083679317">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="415" y="183" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602083679317" />
+    <state x="415" y="183" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1602075657798">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="415" y="183" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602075657798" />
+    <state x="466" y="192" key="FileChooserDialogImpl" timestamp="1601948132582">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="466" y="192" key="FileChooserDialogImpl/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601948132582" />
+    <state x="466" y="192" key="FileChooserDialogImpl/0.0.1368.872@0.0.1368.872" timestamp="1601935712341" />
+    <state width="1326" height="80" key="GridCell.Tab.0.bottom" timestamp="1602090989279">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1326" height="80" key="GridCell.Tab.0.bottom/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989279" />
+    <state width="1326" height="280" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1601939907778" />
+    <state width="1326" height="80" key="GridCell.Tab.0.center" timestamp="1602090989279">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1326" height="80" key="GridCell.Tab.0.center/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989279" />
+    <state width="1326" height="280" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1601939907777" />
+    <state width="1326" height="80" key="GridCell.Tab.0.left" timestamp="1602090989278">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1326" height="80" key="GridCell.Tab.0.left/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989278" />
+    <state width="1326" height="280" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1601939907777" />
+    <state width="1326" height="80" key="GridCell.Tab.0.right" timestamp="1602090989279">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1326" height="80" key="GridCell.Tab.0.right/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989279" />
+    <state width="1326" height="280" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1601939907778" />
+    <state width="1326" height="80" key="GridCell.Tab.1.bottom" timestamp="1602090989280">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1326" height="80" key="GridCell.Tab.1.bottom/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989280" />
+    <state width="1326" height="80" key="GridCell.Tab.1.center" timestamp="1602090989280">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1326" height="80" key="GridCell.Tab.1.center/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989280" />
+    <state width="1326" height="80" key="GridCell.Tab.1.left" timestamp="1602090989279">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1326" height="80" key="GridCell.Tab.1.left/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989279" />
+    <state width="1326" height="80" key="GridCell.Tab.1.right" timestamp="1602090989280">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1326" height="80" key="GridCell.Tab.1.right/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989280" />
+    <state x="216" y="92" key="Maven.ArtifactSearchDialog" timestamp="1601477393512">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="216" y="92" key="Maven.ArtifactSearchDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601477393512" />
+    <state x="131" y="70" key="MergeDialog" timestamp="1601482398409">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="131" y="70" key="MergeDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601482398409" />
+    <state x="277" y="169" key="Vcs.Push.Dialog.v2" timestamp="1602092477028">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="277" y="169" key="Vcs.Push.Dialog.v2/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602092477028" />
+    <state x="503" y="351" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1602092324242">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="503" y="351" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602092324242" />
+    <state x="503" y="351" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1368.872@0.0.1368.872" timestamp="1601924910326" />
+    <state x="249" y="165" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1601939924608">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="249" y="165" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1368.872@0.0.1368.872" timestamp="1601939924608" />
+    <state x="430" y="150" key="git4idea.branch.GitSmartOperationDialog" timestamp="1601944523660">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="430" y="150" key="git4idea.branch.GitSmartOperationDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601944523660" />
+    <state x="430" y="150" key="git4idea.branch.GitSmartOperationDialog/0.0.1368.872@0.0.1368.872" timestamp="1601923316714" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Rest/src/main/java/com/example/demo/SerializeData.java</url>
+          <line>64</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Rest/src/main/java/com/example/demo/DemoApplication.java</url>
+          <line>66</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
