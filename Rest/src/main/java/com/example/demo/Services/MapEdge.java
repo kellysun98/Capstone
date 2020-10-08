@@ -7,14 +7,22 @@ public class MapEdge {
     public MapNode destinationNode;
     public MapNode sourceNode;
     public Integer accidentsCount;
+    public Double weight;
     public static Graph graph;
     public static DecimalFormat df = new DecimalFormat("#.###");
+
+    // Get source node id of MapEdge
+    public double getSourceNodeID(){return this.sourceNode.id;}
+    // Get destination node id of MapEdge
+    public double getDestinationNodeID(){return this.destinationNode.id;}
+
 
 
     public MapEdge(MapRoute mapRoute, MapNode sourceNode, MapNode destinationNode) {
         this.mapRoute = mapRoute;
         this.sourceNode = sourceNode;
         this.destinationNode = destinationNode;
+        this.weight = graph.getDistance(this.sourceNode, this.destinationNode); // Set weight of the edge as distance from src to dest MapNode
 //        try {
         double lon = Double.parseDouble(df.format(destinationNode.longitude));
         double lat = Double.parseDouble(df.format(destinationNode.latitude));
