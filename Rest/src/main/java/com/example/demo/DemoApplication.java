@@ -55,7 +55,7 @@ public class DemoApplication {
 			Planner planner = new Planner();
 			//List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
 			HashMap<Integer, Path> resultList = planner.toHashMap(planner.plan(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance"));
-			ArrayList<Path> kspresultList = KSP.ksp(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance", 3);
+			ArrayList<Path> kspresultList = KSP.ksp(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance", 4);
 			if(! resultList.isEmpty()){
 				System.out.println("11111111");
 			}
