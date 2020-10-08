@@ -40,9 +40,10 @@ public class Planner {
         while (!priorityQueue.isEmpty()){
             MapNode node = priorityQueue.remove();
             if(node.id == goalNode.id){
-                double total_cost = 0;
-                for(double c:costs.values()){total_cost+=c;};
-                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
+//                double total_cost = 0;
+//                for(double c:costs.values()){total_cost+=c;};
+//                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
+                Path fastestRoute = new Path(getGeoList(parents,goalNode));
                 return fastestRoute;
             }
             for (MapEdge edge:node.edges){
