@@ -66,7 +66,6 @@ public class DemoApplication {
 			}
 			return resultList;
 		}
-
 		@GetMapping("/heatmap")
 		public HashMap<Integer, String> getNeighbourCoord(){
 			HashMap results = new HashMap<Integer, String>();
