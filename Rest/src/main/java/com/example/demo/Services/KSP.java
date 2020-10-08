@@ -15,7 +15,6 @@ public class KSP {
         // Initialize a set to store potential kth shortest path
         ArrayList<Path> B = new ArrayList<>();
 
-        try{
             // Find shortest path from src to sink
             Planner planner = new Planner();
             Path shortestpath = planner.plan(graph, src, dest, costFunction);
@@ -32,13 +31,11 @@ public class KSP {
                     // Clone spurNode for restore purpose
                     MapNode spurNode_copy = spurNode.clone();
 
+
                     // Remove edges
-                    for (Path p : A) {
-                        if (rootPath.equals(p.subPath(0, i))) {
-                            // Remove the links that are part of the previous shortest paths which share the same root path.
-                            /* Eliminate the next edge in the path from the graph (later on, this forces the spur
-                               node to connect the root path with an un-found suffix path) */
-                            spurNode_copy.removeEdges(p.getNodes().get(i + 1));
+                    for (int n = 0; n < previousPath.size(); n++){
+                        if(previousPath.getNodes().get(n).equals(spurNode)){
+                            spurNode_copy.removeEdges(previousPath.get(n + 1));
                         }
                     }
 
@@ -67,10 +64,6 @@ public class KSP {
                 System.out.println("B size = "+B.size());
                 System.out.println("B[0]: "+ B.get(0));
             }
-        }catch(Exception e){
-            System.out.println(e);
-            e.printStackTrace();
-        }
         return A;
     }
 }
