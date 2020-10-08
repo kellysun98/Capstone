@@ -1,5 +1,7 @@
 package com.example.demo.Services;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
@@ -14,7 +16,7 @@ public class KSP {
 //    }
 
 
-    public static ArrayList<Path> ksp(Graph graph, MapNode src, MapNode dest, String costFunction, int K){
+    public static ArrayList<Path> ksp(Graph graph, MapNode src, MapNode dest, String costFunction, int K) {
 
 
         ArrayList<Path> A = new ArrayList<>();
@@ -22,75 +24,78 @@ public class KSP {
         // Initialize a set to store potential kth shortest path
         ArrayList<Path> B = new ArrayList<>();
 
-            // Find shortest path from src to sink
-            Planner planner = new Planner();
-            Path shortestpath = planner.plan(graph, src, dest, costFunction);
-            A.add(shortestpath);
+        // Find shortest path from src to sink
+        Planner planner = new Planner();
+        Path shortestpath = planner.plan(graph, src, dest, costFunction);
+        A.add(shortestpath);
 
-            for (int k=1; k<K; k++){
-                // The spur node ranges from the first node to the next to last node in the previous k-shortest path.
-                Path previousPath = A.get(k-1);
-                for (int i=0; i<previousPath.size()-2; i++ ) {
-                    // Spur node is retrieved from the previous k-shortest path, k − 1.
-                    MapNode spurNode = previousPath.get(i);
-                    // The sequence of nodes from the source to the spur node of the previous k-shortest path.
-                    Path rootPath = previousPath.subPath(0, i);
-                    // Clone spurNode for restore purpose
-                    MapNode spurNode_copy = spurNode.clone();
-
-
-                    // Remove edges
-                    for (int n = 0; n < previousPath.size(); n++){
-                        if(previousPath.getNodes().get(n).equals(spurNode)){
-                            spurNode_copy.removeEdges(previousPath.get(n + 1));
-                        }
-                    }
-
-                    // Calculate the spur path from spurNode to destinationNode
-                    Path spurPath = planner.plan(graph, spurNode_copy, dest, costFunction);
+        for (int k = 1; k < K; k++) {
+            // The spur node ranges from the first node to the next to last node in the previous k-shortest path.
+            Path previousPath = A.get(k - 1);
+            for (int i = 0; i < previousPath.size() - 2; i++) {
+                // Spur node is retrieved from the previous k-shortest path, k − 1.
+                MapNode spurNode = previousPath.get(i);
+                // The sequence of nodes from the source to the spur node of the previous k-shortest path.
+                Path rootPath = previousPath.subPath(0, i);
+                // Clone spurNode for restore purpose
+                MapNode spurNode_copy = spurNode.clone();
 
 
-                    // If a new spur path is found
-                    if (spurPath != null) {
-                        // Entire path is made up of root path and spur path
-                        Path totalPath = Path.concatenate(rootPath, spurPath);
-
-                        // Add potential k-shortest path to the heap
-                        if (!B.contains(totalPath))
-                            B.add(totalPath);
+                // Remove edges
+                for (int n = 0; n < previousPath.size(); n++) {
+                    if (previousPath.getNodes().get(n).equals(spurNode)) {
+                        spurNode_copy.removeEdges(previousPath.get(n + 1));
                     }
                 }
-                if (B.isEmpty())
-                    break;
-                Collections.sort(B);
-                // Add the lowest cost path becomes the k-shortest path
-                A.add(B.get(0));
-                B.remove(0);
-                System.out.println("A size = " + A.size());
-                System.out.println("A: "+ A);
-                System.out.println("B size = "+B.size());
-                System.out.println("B[0]: "+ B.get(0));
+
+                // Calculate the spur path from spurNode to destinationNode
+                Path spurPath = planner.plan(graph, spurNode_copy, dest, costFunction);
+
+
+                // If a new spur path is found
+                if (spurPath != null) {
+                    // Entire path is made up of root path and spur path
+                    Path totalPath = Path.concatenate(rootPath, spurPath);
+
+                    // Add potential k-shortest path to the heap
+                    if (!B.contains(totalPath))
+                        B.add(totalPath);
+                }
             }
-            // Print cost of each path in A for sanity check
-            for(int j=0;j<A.size();j++){
-                System.out.println("A["+j+"]= "+A.get(j).getTotalCost());
-            }
+            if (B.isEmpty())
+                break;
+            Collections.sort(B);
+            // Add the lowest cost path becomes the k-shortest path
+            A.add(B.get(0));
+            B.remove(0);
+            System.out.println("A size = " + A.size());
+            System.out.println("A: " + A);
+            System.out.println("B size = " + B.size());
+            System.out.println("B[0]: " + B.get(0));
+        }
+        // Print cost of each path in A for sanity check
+        for (int j = 0; j < A.size(); j++) {
+            System.out.println("A[" + j + "]= " + A.get(j).getTotalCost());
+        }
 //        A.get(0)
         return A;
     }
-    public static String KSPtoJson(ArrayList<Path> ksp_sol){
+
+    public static String KSPtoJson(ArrayList<Path> ksp_sol) {
         ArrayList solution = new ArrayList<>();
-        for (Path p: ksp_sol){
+        for (Path p : ksp_sol) {
             HashMap<Double, String> path_map = new HashMap<>();
             List<MapNode> node_list = p.getNodes();
             String mn_toString = new String();
-            for (MapNode mn: node_list){
+            for (MapNode mn : node_list) {
                 Double longitude = mn.longitude;
                 Double latitude = mn.latitude;
-                mn_toString += ('[' + longitude.toString() + latitude.toString() + ']' + ',');
+                mn_toString += ('[' + longitude.toString() + ',' + latitude.toString() + ']' + ',');
             }
             Double cost = p.getTotalCost();
-            path_map.put(cost, mn_toString.substring(0, mn_toString.length()-1));
+            path_map.put(cost, mn_toString.substring(0, mn_toString.length() - 1));
+//            System.out.println(cost);
+//            System.out.print(mn_toString.substring(0, mn_toString.length() - 1));
             solution.add(path_map);
         }
         String solution_to_string = new Gson().toJson(solution);

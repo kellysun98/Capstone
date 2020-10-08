@@ -218,13 +218,13 @@ public class Planner {
 //        return Path_result;
 //    }
 
-    public static HashMap<Integer, Path> toHashMap(Path solution){
-        Integer count = 1;
-        HashMap<Integer, Path> Path_result = new HashMap<>();
-        Path_result.put(count,solution);
-
-        return Path_result;
-    }
+//    public static HashMap<Integer, Path> toHashMap(Path solution){
+//        Integer count = 1;
+//        HashMap<Integer, Path> Path_result = new HashMap<>();
+//        Path_result.put(count,solution);
+//
+//        return Path_result;
+//    }
 
 
 /**

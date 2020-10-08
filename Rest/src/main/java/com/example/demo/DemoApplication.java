@@ -62,7 +62,7 @@ public class DemoApplication {
 //			if(! resultList.isEmpty()){
 //				System.out.println("11111111");
 //			}
-//			System.out.println("resultList: "+ resultList);
+			System.out.println("resultList: "+ resultList);
 			return resultList;
 		}
 
@@ -73,12 +73,12 @@ public class DemoApplication {
 				return results;
 			}
 
-//			@GetMapping("/heatmap2")
-//			public HashMap<String, Double> getPedCount(@RequestParam(required = false) String start_time,@RequestParam(required = false) String end_time){
-//				HashMap results = new HashMap<String, Double>();
-//				results = getPedCountHeatmap(start_time,end_time);
-//			return results;
-//		}
+			@GetMapping("/heatmap2")
+			public HashMap<String, Double> getPedCount(@RequestParam(required = false) String start_time,@RequestParam(required = false) String end_time){
+				HashMap results = new HashMap<String, Double>();
+				results = getPedCountHeatmap(start_time,end_time);
+			return results;
+		}
 		
 	}
 }
