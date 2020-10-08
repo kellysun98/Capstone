@@ -180,37 +180,46 @@ drawLine2(){
   this.getAllCoords()
   //  .pipe(map(response=>JSON.parse))
   .subscribe(
-    (res)=>{ console.log(res), 
+    (res)=>{
       this.response = res; 
-      for (let key of Object.keys(this.response)){
-        var route = this.response[key];
-        route = '[' + route + ']';
-        try{
-          route = JSON.parse(route)
-        }catch{
-          console.log(route.length);
-          continue;
-        }
-        for (var i = 0; i < route.length; i++) {
-          console.log('length enumeration '+i);
-          route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
-        }
-        var featureLine = new ol.Feature({
-          geometry: new ol.geom.LineString(route)
-        });
-        var vectorLine = new ol.source.Vector({});
-        vectorLine.addFeature(featureLine);
-      
-        var vectorLineLayer = new ol.layer.Vector({
-            source: vectorLine,
-            style: new ol.style.Style({
-                fill: new ol.style.Fill({ color: '#000000', weight: 10 }),
-                stroke: new ol.style.Stroke({ color: '#000000', width: 10 })
-            })
-        });
-          this.map.addLayer(vectorLineLayer);
+      // console.log('From backend: ' + JSON.parse(res.toString()));
+      for (let index in this.response){
+        console.log('first loop: ' + index)
+        for (let key of Object.keys(this.response[index])){
+          var route = JSON.parse('[' + this.response[index][key] + ']');
+          console.log('second loop: ' + route)
 
-      };},
+      // for (let key of Object.keys(this.response)){
+      //   var route = this.response[key];
+      //   route = '[' + route + ']';
+      //   try{
+      //     route = JSON.parse(route)
+      //   }catch{
+      //     console.log(route.length);
+      //     continue;
+      //   }
+      
+          for (var i = 0; i < route.length; i++) {
+            console.log('length enumeration '+i);
+            route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+          }
+          var featureLine = new ol.Feature({
+            geometry: new ol.geom.LineString(route)
+          });
+          var vectorLine = new ol.source.Vector({});
+          vectorLine.addFeature(featureLine);
+      
+          var vectorLineLayer = new ol.layer.Vector({
+              source: vectorLine,
+              style: new ol.style.Style({
+                  fill: new ol.style.Fill({ color: '#000000', weight: 5 }),
+                  stroke: new ol.style.Stroke({ color: '#000000', width: 5 })
+              })
+        });
+        this.map.addLayer(vectorLineLayer);
+      }}      
+        
+      },
       // this.testArray.concat(Array((this.response))),
       // console.log('test: '+this.response)},
     (err)=>console.error(err),
@@ -222,10 +231,6 @@ drawLine2(){
   //   console.log('I\'m here'+ i);
   //   console.log(this.testArray[i])
   // }
-
-
-
-
 }
 
   Heatmap(){
