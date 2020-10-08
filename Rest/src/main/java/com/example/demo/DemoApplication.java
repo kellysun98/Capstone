@@ -48,7 +48,7 @@ public class DemoApplication {
 		public HashMap<Integer, Path> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
 											  @RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
 
-			torontoGraph = new Graph("C://Users//Helen Wang//Documents//4th_yr//capstone//Capstone//Rest//data//toronto.osm", "C://Users//Helen Wang//Documents//4th_yr//capstone//Capstone//Rest//data//Cyclists.csv");
+			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
 			//torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
 			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
 
