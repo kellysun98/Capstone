@@ -23,12 +23,11 @@ public class Planner {
     public JFrame frame;
     public Graph graph;
 
-    public Planner(Graph graph){
+    public Planner(){}
+
+    public Path plan(Graph graph, MapNode startNode, MapNode goalNode, String costFunction){
+
         this.graph = graph;
-    }
-
-    public List<MapNode> plan(MapNode startNode, MapNode goalNode, String costFunction){
-
         HashMap<MapNode, MapNode> parents = new HashMap<>();
         HashMap<MapNode, Double> costs = new HashMap<>();
         PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>();
@@ -41,7 +40,10 @@ public class Planner {
         while (!priorityQueue.isEmpty()){
             MapNode node = priorityQueue.remove();
             if(node.id == goalNode.id){
-                return getGeoList(parents,goalNode);
+                double total_cost = 0;
+                for(double c:costs.values()){total_cost+=c;};
+                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
+                return fastestRoute;
             }
             for (MapEdge edge:node.edges){
                 MapNode nextNode = edge.destinationNode;
@@ -117,8 +119,8 @@ public class Planner {
         return graph.getDistance(node,goalNode);
     }
 
-    public List<MapNode> getGeoList(HashMap<MapNode, MapNode> parents, MapNode goalNode){
-        List<MapNode> geoList = new ArrayList<>();
+    public ArrayList<MapNode> getGeoList(HashMap<MapNode, MapNode> parents, MapNode goalNode){
+        ArrayList<MapNode> geoList = new ArrayList<>();
         geoList.add(goalNode);
         MapNode thisNode = goalNode;
         while(thisNode != null){
@@ -179,9 +181,9 @@ public class Planner {
         return coordinates;
     }
 
-    public List<List<List<Double>>> runSearches(MapNode startNode, MapNode endNode){
+    public List<List<List<Double>>> runSearches(Graph graph, MapNode startNode, MapNode endNode){
         List<List<List<Double>>> solutions = new ArrayList<>();
-        solutions.add(getCoordinates(plan(startNode, endNode, "distance")));
+//        solutions.add(getCoordinates(plan(graph, startNode, endNode, "distance").getNodes()));
         //solutions.add(plan(startNode, endNode,"distance"));
 
 //        solutions.add(plan(startNode, endNode,"bikeLane"));
@@ -192,18 +194,35 @@ public class Planner {
         return solutions;
     }
 
-    public HashMap<Integer, String> toHashMap(List<List<List<Double>>> solutions){
+//    public HashMap<Integer, String> toHashMap(List<List<List<Double>>> solutions){
+//        Integer count = 1;
+//        HashMap<Integer, String> string_result = new HashMap<>();
+//        for(List<List<Double>> route: solutions){
+//            String route_to_string = new String();
+//            for(List<Double> coord: route){
+//                route_to_string += ("["+coord.get(0).toString()+", "+coord.get(1).toString()+"]" + ",");
+//            }
+//            string_result.put(count,route_to_string.substring(0,route_to_string.length()-1));
+//            count += 1;
+//        }
+//        return string_result;
+//    }
+//    public static HashMap<Integer, Path> toHashMap(List<Path> solutions){
+//        Integer count = 1;
+//        HashMap<Integer, Path> Path_result = new HashMap<>();
+//        for(Path route: solutions){
+//            Path_result.put(count,route);
+//            count += 1;
+//        }
+//        return Path_result;
+//    }
+
+    public static HashMap<Integer, Path> toHashMap(Path solution){
         Integer count = 1;
-        HashMap<Integer, String> string_result = new HashMap<>();
-        for(List<List<Double>> route: solutions){
-            String route_to_string = new String();
-            for(List<Double> coord: route){
-                route_to_string += ("["+coord.get(0).toString()+", "+coord.get(1).toString()+"]" + ",");
-            }
-            string_result.put(count,route_to_string.substring(0,route_to_string.length()-1));
-            count += 1;
-        }
-        return string_result;
+        HashMap<Integer, Path> Path_result = new HashMap<>();
+        Path_result.put(count,solution);
+
+        return Path_result;
     }
 
 

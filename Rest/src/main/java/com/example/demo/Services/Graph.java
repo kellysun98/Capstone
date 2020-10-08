@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -25,7 +26,7 @@ public class Graph {
 //    public static List<MapPolygon> polygons;
 
     public static double MPERLAT = 111320;
-    public double MPERLON;
+    public static double MPERLON;
 
     public Graph() {
         this("./data/toronto.osm","./data/Cyclists.csv");
@@ -193,7 +194,7 @@ public class Graph {
         focus = new double[]{(minLon + maxLon) / 2, (minLat + maxLat) / 2};
     }
 
-    public double getDistance(MapNode sourceNode, MapNode destinationNode) {
+    public static double getDistance(MapNode sourceNode, MapNode destinationNode) {
         double dx = (destinationNode.longitude - sourceNode.longitude) * MPERLON;
         double dy = (destinationNode.latitude - sourceNode.latitude) * MPERLAT;
         return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
