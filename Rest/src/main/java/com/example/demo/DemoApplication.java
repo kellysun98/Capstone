@@ -46,8 +46,8 @@ public class DemoApplication {
 	class nodeController{
 
 		@GetMapping("/api")
-		public HashMap<Integer, Path> getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
-											  @RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
+		public String getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
+							  @RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
 
 			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
 			//torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
@@ -55,12 +55,14 @@ public class DemoApplication {
 
 			Planner planner = new Planner();
 			//List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
-			HashMap<Integer, Path> resultList = planner.toHashMap(planner.plan(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance"));
+//			HashMap<Integer, Path> resultList = planner.toHashMap(planner.plan(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance"));
+
 			ArrayList<Path> kspresultList = KSP.ksp(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance", 4);
-			if(! resultList.isEmpty()){
-				System.out.println("11111111");
-			}
-			System.out.println("resultList: "+ resultList);
+			String resultList = KSP.KSPtoJson(kspresultList);
+//			if(! resultList.isEmpty()){
+//				System.out.println("11111111");
+//			}
+//			System.out.println("resultList: "+ resultList);
 			return resultList;
 		}
 
@@ -71,12 +73,12 @@ public class DemoApplication {
 				return results;
 			}
 
-			@GetMapping("/heatmap2")
-			public HashMap<String, Double> getPedCount(@RequestParam(required = false) String start_time,@RequestParam(required = false) String end_time){
-				HashMap results = new HashMap<String, Double>();
-				results = getPedCountHeatmap(start_time,end_time);
-			return results;
-		}
+//			@GetMapping("/heatmap2")
+//			public HashMap<String, Double> getPedCount(@RequestParam(required = false) String start_time,@RequestParam(required = false) String end_time){
+//				HashMap results = new HashMap<String, Double>();
+//				results = getPedCountHeatmap(start_time,end_time);
+//			return results;
+//		}
 		
 	}
 }

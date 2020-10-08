@@ -3,8 +3,15 @@ package com.example.demo.Services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
+import com.google.gson.Gson;
+
 
 public class KSP {
+//    public void changeA0(ArrayList<Path> inList){
+//        for (int i=0;i<inList.size();i++ ){
+//            if (i==0)
+//        }
+//    }
 
 
     public static ArrayList<Path> ksp(Graph graph, MapNode src, MapNode dest, String costFunction, int K){
@@ -64,6 +71,29 @@ public class KSP {
                 System.out.println("B size = "+B.size());
                 System.out.println("B[0]: "+ B.get(0));
             }
+            // Print cost of each path in A for sanity check
+            for(int j=0;j<A.size();j++){
+                System.out.println("A["+j+"]= "+A.get(j).getTotalCost());
+            }
+//        A.get(0)
         return A;
+    }
+    public static String KSPtoJson(ArrayList<Path> ksp_sol){
+        ArrayList solution = new ArrayList<>();
+        for (Path p: ksp_sol){
+            HashMap<Double, String> path_map = new HashMap<>();
+            List<MapNode> node_list = p.getNodes();
+            String mn_toString = new String();
+            for (MapNode mn: node_list){
+                Double longitude = mn.longitude;
+                Double latitude = mn.latitude;
+                mn_toString += ('[' + longitude.toString() + latitude.toString() + ']' + ',');
+            }
+            Double cost = p.getTotalCost();
+            path_map.put(cost, mn_toString.substring(0, mn_toString.length()-1));
+            solution.add(path_map);
+        }
+        String solution_to_string = new Gson().toJson(solution);
+        return solution_to_string;
     }
 }
