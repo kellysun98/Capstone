@@ -55,7 +55,8 @@ export class AppComponent {
   }
     ngOnInit() {
       this.openWelcome();
-      this.Heatmap();
+      //this.Heatmap();
+      this.Heatmap2();
    
 
     //this.getAllCoords();
@@ -262,9 +263,47 @@ drawLine2(){
 });
 }
 
-noHeatmap(){
-  console.log(this.map.getLayers());
-  //this.map.removeLayer(vectorLineLayer);
+Heatmap2(){
+  var test = new ol.source.Vector({});
+  var points = new Array();
+  let params = new HttpParams().set('start_time', "2020-09-11 00:00:00").set('end_time', "2020-09-13 00:00:00")
+  this.http.get("http://localhost:8080/heatmap2",{params:params}).subscribe((data)=>{
+    for (let key of Object.keys(data)){
+      var coord  = '[ ' + key + ' ]';
+      try { coord = JSON.parse(coord); 
+        }
+      catch {console.log(coord);
+      continue;}
+
+      var pointFeature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.transform(coord, 'EPSG:4326', 'EPSG:3857')),
+    });
+    test.addFeature(pointFeature);
+    //  points.push(new ol.Feature(new ol.geom.Point(ol.proj.transform(coord, 'EPSG:4326', 'EPSG:3857'))));
+  }
+ 
+  
+  // var source = new ol.source.Vector({
+  //   features: points
+  // });
+  
+  // var vector = new ol.layer.Heatmap({
+  //   source: points,
+  //   weight: function(feature) { return feature.get('points').length/1000; },
+  //   blur: 10,
+  //   radius: 10,
+  // });
+
+  var vector = new ol.layer.Heatmap({
+    source: test,
+    blur: 20,
+    radius: 15,
+    opacity : 0.5
+  });
+  
+  this.map.addLayer(vector);
+  
+  });
 }
 
   hideit(){

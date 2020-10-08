@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.*;
+
+//joyce database connection
 public class PSQLConnect {
-    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto.osm";
+    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto";
     public static String user = "REMOVED";
     public static String password = "REMOVED";
 
@@ -74,6 +76,26 @@ public class PSQLConnect {
                 temp.add(rs.getDouble("longitude"));
                 temp.add(rs.getDouble("avg_ped_count"));
                 res.add(temp);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Connection failure.");
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
+    public static HashMap<String, Double> getPedCountHeatmap(String start_time, String end_time){
+        HashMap<String, Double> res = new HashMap<>();
+        try (Connection con = DriverManager.getConnection(url, user, password);
+             PreparedStatement pst = con.prepareStatement(
+                     "select distinct(concat_ws(',',longitude,latitude)) as coord, round(avg(ped_count)::numeric,3) as count from pedestrian_count_data \n" +
+                             "WHERE time_stamp >= '" + start_time +"'AND  time_stamp <  '"+ end_time+ "'\n"+
+                             "group by coord;\n"
+             );
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()){
+                res.put(rs.getString("coord"), rs.getDouble("count"));
             }
 
         } catch (SQLException ex) {
