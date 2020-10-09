@@ -16,7 +16,7 @@ import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { ThrowStmt } from '@angular/compiler';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Options } from './options';
 import { Route } from './route';
@@ -35,12 +35,12 @@ export class AppComponent {
   @ViewChild('sidenav') public sidenav: MatSidenav;
   open: boolean;
   heatmap: Object;
-  latitude: number = 43.653871;
-  longitude: number = -79.3728709;
-  // tslint:disable-next-line:variable-name
-  end_lat: number = 43.6656433;
-  // tslint:disable-next-line:variable-name
-  end_long: number = -79.3913338;
+  start_add: String = '130 Queen Street East, Toronto';
+  end_add: String = '121A Saint Joseph Street, Toronto';
+  latitude: number;
+  longitude: number;
+  // end_lat: number;
+  // end_long: number;
   map: any;
   response: Object;
   email: string;
@@ -56,8 +56,7 @@ export class AppComponent {
     ngOnInit() {
       this.openWelcome();
       //this.Heatmap();
-      this.Heatmap2();
-   
+      this.Heatmap2();   
 
     //this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
@@ -101,6 +100,7 @@ export class AppComponent {
 
   }
 
+  
   // openDialog(): void {
   //   const dialogRef = this.dialog.open(QuestionaireComponent, {
   //     width: '500px',
@@ -112,6 +112,32 @@ export class AppComponent {
   //     this.email = result;
   //   });
   // }
+
+  getUrl(addr){
+    var nomUrl = 'https://nominatim.openstreetmap.org/?addressdetails=1&q='
+    var tempUrl = addr.split(' ').join('+')
+    var finalUrl = nomUrl+tempUrl+'&format=json&limit=1'
+    console.log(finalUrl)
+    // var proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+
+    return (finalUrl)
+    // .then((
+    //   blob=>blob.json()
+    // ))
+    // .then((
+    //   data=>{
+    //     this.longitude = (data[0]['lon']);
+    //     console.table(data);
+    //     console.log(data[0]['lon']);
+    //     console.log(this.longitude)
+    // }))
+    // .catch(e => {
+    //   console.log(e);
+    //   return e;
+    // });
+    // console.log('Yvonne\'s longitude'+this.longitude);
+    // return this.longitude;
+  }
 
   openWelcome(): void{
     const dialogRef = this.dialog.open(WelcomepageComponent, {
@@ -127,110 +153,136 @@ export class AppComponent {
     view.setZoom(10);
   }
 //return observable
-  getAllCoords(){
-    let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
-    return this.http.get('http://localhost:8080/api', {params:params})
-  }
+  // getAllCoords(){
+  //   let start_obs = this.http.get(this.getUrl(this.start_add));
+  //   let end_obs = this.http.get(this.getUrl(this.end_add));
+
+  //   forkJoin([start_obs, end_obs]).subscribe(
+  //     result => {
+  //       let params = new HttpParams().set('longitude', result[0][0]['lon'].toString())
+  //                                 .set('latitude', result[0][0]['lat'].toString())
+  //                                 .set('end_long', result[1][0]['lon'].toString())
+  //                                 .set('end_lat', result[1][0]['lat'].toString())
+  //       this.http.get('http://localhost:8080/api', {params:params})
+  //     }
+  //   )
+
+    // let params = new HttpParams().set('longitude', this.getLon(this.start_add).toString())
+    //                               .set('latitude', this.getLat(this.start_add).toString())
+    //                               .set('end_long', this.getLon(this.end_add).toString())
+    //                               .set('end_lat', this.getLat(this.end_add).toString())
+    // return this.http.get('http://localhost:8080/api', {params:params})
+  //}
 
   setMarker(){
     // console.log(this.longitude.toString());
     // let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
     // this.http.get("http://localhost:8080/api", {params:params})
     // .subscribe((response) => {this.response})
+    let start_obs = this.http.get(this.getUrl(this.start_add));
+    let end_obs = this.http.get(this.getUrl(this.end_add));
 
-    var Markers = [{lat: this.latitude, lng: this.longitude}, {lat:this.end_lat, lng: this.end_long}];
-    var features = [];
-    for (var i = 0; i < Markers.length; i++) {
-      var item = Markers[i];
-      var longitude = item.lng;
-      var latitude = item.lat;
-  
-      var iconFeature = new ol.Feature({
-          geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'))
-      });    
+    forkJoin([start_obs, end_obs]).subscribe(
+      result => {
+        var Markers = [{lat: JSON.parse(result[0][0]['lat']), lng: JSON.parse(result[0][0]['lon'])}, {lat: JSON.parse(result[1][0]['lat']), lng: JSON.parse(result[1][0]['lon'])}];
+        console.log(result[0][0]['lat']);
+        var features = [];
+        for (var i = 0; i < Markers.length; i++) {
+          var item = Markers[i];
+          console.log(item);
+          var longitude = item.lng;
+          var latitude = item.lat;
       
-      var iconStyle = new ol.style.Style({
-          image: new ol.style.Icon(({
-              anchor: [0.5, 1],
-              src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
-          }))
-      });
+          var iconFeature = new ol.Feature({
+              geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'))
+          });    
+          
+          var iconStyle = new ol.style.Style({
+              image: new ol.style.Icon(({
+                  anchor: [0.5, 1],
+                  src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
+              }))
+          });
+        
+          iconFeature.setStyle(iconStyle);
+          features.push(iconFeature);
     
-      iconFeature.setStyle(iconStyle);
-      features.push(iconFeature);
-
-      //features.push(featureLine);
-  
-    }
-  
-    var vectorSource = new ol.source.Vector({
-      features: features
-    });
-  
-    // tslint:disable-next-line:prefer-const
-    var vectorLayer = new ol.layer.Vector({
-      source: vectorSource
-    });
-    this.map.addLayer(vectorLayer);
-
+          //features.push(featureLine);
+      
+        }
+      
+        var vectorSource = new ol.source.Vector({
+          features: features
+        });
+      
+        // tslint:disable-next-line:prefer-const
+        var vectorLayer = new ol.layer.Vector({
+          source: vectorSource
+        });
+        this.map.addLayer(vectorLayer);
     
+      }
+    )    
   }
 
 drawLine2(){
-  this.getAllCoords()
-  //  .pipe(map(response=>JSON.parse))
-  .subscribe(
-    (res)=>{
-      this.response = res; 
-      // console.log('From backend: ' + JSON.parse(res.toString()));
-      for (let index in this.response){
-        console.log('first loop: ' + index)
-        for (let key of Object.keys(this.response[index])){
-          var route = JSON.parse('[' + this.response[index][key] + ']');
-          console.log('second loop: ' + route)
+  let start_obs = this.http.get(this.getUrl(this.start_add));
+  let end_obs = this.http.get(this.getUrl(this.end_add));
 
-      // for (let key of Object.keys(this.response)){
-      //   var route = this.response[key];
-      //   route = '[' + route + ']';
-      //   try{
-      //     route = JSON.parse(route)
-      //   }catch{
-      //     console.log(route.length);
-      //     continue;
-      //   }
-      
-          for (var i = 0; i < route.length; i++) {
-            console.log('length enumeration '+i);
-            route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
-          }
-          var featureLine = new ol.Feature({
-            geometry: new ol.geom.LineString(route)
-          });
-          var vectorLine = new ol.source.Vector({});
-          vectorLine.addFeature(featureLine);
-      
-          var vectorLineLayer = new ol.layer.Vector({
-              source: vectorLine,
-              style: new ol.style.Style({
-                  fill: new ol.style.Fill({ color: '#000000', weight: 5 }),
-                  stroke: new ol.style.Stroke({ color: '#000000', width: 5 })
-              })
-        });
-        this.map.addLayer(vectorLineLayer);
-      }}      
-        
-      },
-      // this.testArray.concat(Array((this.response))),
-      // console.log('test: '+this.response)},
-    (err)=>console.error(err),
-    ()=>console.log(this.response + 'Proces Complete!')
-  );
-  //console.log(points)
-  // var points = this.testArray[0];
-  // for (var i =0; i<this.testArray.length; i++) {
-  //   console.log('I\'m here'+ i);
-  //   console.log(this.testArray[i])
-  // }
+  forkJoin([start_obs, end_obs]).subscribe(
+    result => {
+      let params = new HttpParams().set('longitude', result[0][0]['lon'].substring(0,10))
+                                .set('latitude', result[0][0]['lat'].substring(0,9))
+                                .set('end_long', result[1][0]['lon'].substring(0,10))
+                                .set('end_lat', result[1][0]['lat'].substring(0,9));
+      this.http.get('http://localhost:8080/api', {params:params}).subscribe(
+        (res)=>{
+          this.response = res; 
+          // console.log('From backend: ' + JSON.parse(res.toString()));
+          for (let index in this.response){
+            console.log('first loop: ' + index)
+            for (let key of Object.keys(this.response[index])){
+              var route = JSON.parse('[' + this.response[index][key] + ']');
+              console.log('second loop: ' + route)
+    
+          // for (let key of Object.keys(this.response)){
+          //   var route = this.response[key];
+          //   route = '[' + route + ']';
+          //   try{
+          //     route = JSON.parse(route)
+          //   }catch{
+          //     console.log(route.length);
+          //     continue;
+          //   }
+          
+              for (var i = 0; i < route.length; i++) {
+                console.log('length enumeration '+i);
+                route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+              }
+              var featureLine = new ol.Feature({
+                geometry: new ol.geom.LineString(route)
+              });
+              var vectorLine = new ol.source.Vector({});
+              vectorLine.addFeature(featureLine);
+          
+              var vectorLineLayer = new ol.layer.Vector({
+                  source: vectorLine,
+                  style: new ol.style.Style({
+                      fill: new ol.style.Fill({ color: '#000000', weight: 5 }),
+                      stroke: new ol.style.Stroke({ color: '#000000', width: 5 })
+                  })
+            });
+            this.map.addLayer(vectorLineLayer);
+          }}      
+            
+          },
+          // this.testArray.concat(Array((this.response))),
+          // console.log('test: '+this.response)},
+        (err)=>console.error(err),
+        ()=>console.log(this.response + 'Process Complete!')
+      );
+    }
+  )  //  .pipe(map(response=>JSON.parse))
 }
 
   Heatmap(){
