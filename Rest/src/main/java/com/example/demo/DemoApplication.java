@@ -53,16 +53,16 @@ public class DemoApplication {
 			//torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
 			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
 
+			for (MapNode n : nodeMap.values()) {
+				System.out.println("lon: " + n.longitude + " lat: " + n.latitude);
+			}
+
 			Planner planner = new Planner();
 			//List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
 //			HashMap<Integer, Path> resultList = planner.toHashMap(planner.plan(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance"));
 
-			ArrayList<Path> kspresultList = KSP.ksp(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance", 4);
+			ArrayList<Path> kspresultList = KSP.ksp(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance", 9);
 			String resultList = KSP.KSPtoJson(kspresultList);
-//			if(! resultList.isEmpty()){
-//				System.out.println("11111111");
-//			}
-			System.out.println("resultList: "+ resultList);
 			return resultList;
 		}
 
