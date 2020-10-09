@@ -6,22 +6,22 @@
         <div id="willhide">
             <div>
                 <div>
-                    <label for="latitude">Latitude:</label>
-                    <input id="latitude" type="number" [(ngModel)]="latitude" placeholder="Latitude">
+                    <label for="start">Starting Location</label>
+                    <input id="start" type="string" [(ngModel)]="start_add" placeholder="start">
                 </div>
-                <div>
+                <!-- <div>
                     <label for="longitude">Longitude:</label>
                     <input id="longitude" type="number" [(ngModel)]="longitude" placeholder="Longitude">
-                </div>
+                </div> -->
                 <div>
-                    <label for="latitude">Latitude:</label>
-                    <input id="end_lat" type="number" [(ngModel)]="end_lat" placeholder="Latitude">
+                    <label for="end">Your Destination</label>
+                    <input id="end" type="string" [(ngModel)]="end_add" placeholder="destination">
                 </div>
-                <div>
+                <!-- <div>
                     <label for="longitude">Longitude:</label>
                     <input id="end_long" type="number" [(ngModel)]="end_long" placeholder="Longitude">
-                </div>
-                <button (click)="drawLine2(); setMarker(); sidenav.toggle();">Go</button>
+                </div> -->
+                <button (click)="setMarker(); sidenav.toggle(); drawLine2()">Go</button>
             </div>
             <div>
                 <mat-slide-toggle [disabled]="" [checked]=""> Show COVID19 Map</mat-slide-toggle>
