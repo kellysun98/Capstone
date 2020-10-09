@@ -35,8 +35,8 @@ export class AppComponent {
   @ViewChild('sidenav') public sidenav: MatSidenav;
   open: boolean;
   heatmap: Object;
-  start_add: String = '130 Queen Street East, Toronto';
-  end_add: String = '121A Saint Joseph Street, Toronto';
+  start_add: String = 'St. Michael\'s College parking, Bay Street, Toronto Centre, Old Toronto, Toronto';
+  end_add: String = '65, Queen\'s Park Crescent East, University—Rosedale, Old Toronto, Toronto';
   latitude: number;
   longitude: number;
   // end_lat: number;
@@ -231,10 +231,12 @@ drawLine2(){
 
   forkJoin([start_obs, end_obs]).subscribe(
     result => {
-      let params = new HttpParams().set('longitude', result[0][0]['lon'].substring(0,10))
-                                .set('latitude', result[0][0]['lat'].substring(0,9))
-                                .set('end_long', result[1][0]['lon'].substring(0,10))
-                                .set('end_lat', result[1][0]['lat'].substring(0,9));
+      // let params = new HttpParams().set('longitude', result[0][0]['lon'].substring(0,10))
+      //                           .set('latitude', result[0][0]['lat'].substring(0,9))
+      //                           .set('end_long', result[1][0]['lon'].substring(0,10))
+      //                           .set('end_lat', result[1][0]['lat'].substring(0,9));
+
+      let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
       this.http.get('http://localhost:8080/api', {params:params}).subscribe(
         (res)=>{
           this.response = res; 
