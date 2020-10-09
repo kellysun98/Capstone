@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static com.example.demo.PSQLConnect.getNeighbourhoodCoordinate;
@@ -27,18 +28,22 @@ public class DemoApplication {
 
 	}
 
-	public MapNode getElement(HashMap<Double, MapNode> nodeMap, String lon, String lat) {
-
-
+	public MapNode getElement(HashMap<Double, MapNode> nodeMap, String bound) {
 		MapNode res = new MapNode();
+
+		// 43.668459,43.6698816,-79.3891804,-79.3876308
+		ArrayList<String> l = new ArrayList<>(Arrays.asList(bound.split(",")));
+
 		for (Double key : nodeMap.keySet()) {
-			if(Double.toString(nodeMap.get(key).latitude).equals(lat) & Double.toString(nodeMap.get(key).longitude).equals(lon)){
+			if((nodeMap.get(key).latitude >= Double.parseDouble(l.get(0))) &
+					(nodeMap.get(key).latitude <= Double.parseDouble(l.get(1))) &
+					(nodeMap.get(key).longitude >= Double.parseDouble(l.get(2))) &
+					(nodeMap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
 				res = nodeMap.get(key);
 				break;
 			}
 		}
 		return res;
-
 	}
 
 	@RestController
@@ -46,8 +51,7 @@ public class DemoApplication {
 	class nodeController{
 
 		@GetMapping("/api")
-		public String getList(@RequestParam(required = false) String longitude, @RequestParam(required = false) String latitude,
-							  @RequestParam(required = false) String end_long, @RequestParam(required = false) String end_lat) {
+		public String getList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end) {
 
 			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
 			//torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
@@ -57,11 +61,12 @@ public class DemoApplication {
 				System.out.println("lon: " + n.longitude + " lat: " + n.latitude);
 			}
 
+
 			Planner planner = new Planner();
 			//List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
 //			HashMap<Integer, Path> resultList = planner.toHashMap(planner.plan(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance"));
 
-			ArrayList<Path> kspresultList = KSP.ksp(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance", 9);
+			ArrayList<Path> kspresultList = KSP.ksp(torontoGraph, getElement(nodeMap, bound_start), getElement(nodeMap, bound_end),"distance", 9);
 			String resultList = KSP.KSPtoJson(kspresultList);
 			return resultList;
 		}
