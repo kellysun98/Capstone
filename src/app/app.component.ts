@@ -246,7 +246,7 @@ drawLine2(){
             for (let key of Object.keys(this.response[index])){
               var route = JSON.parse('[' + this.response[index][key] + ']');
               console.log('second loop: ' + route)
-    
+              
           // for (let key of Object.keys(this.response)){
           //   var route = this.response[key];
           //   route = '[' + route + ']';
@@ -256,7 +256,12 @@ drawLine2(){
           //     console.log(route.length);
           //     continue;
           //   }
-          
+              
+              var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
+              var g_color = Math.floor(Math.random() * (225 - 0 + 1) + 0);
+              var b_color = Math.floor(Math.random() * (225 - 0 + 1) + 0);
+              var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5'+')';
+
               for (var i = 0; i < route.length; i++) {
                 console.log('length enumeration '+i);
                 route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
@@ -270,8 +275,8 @@ drawLine2(){
               var vectorLineLayer = new ol.layer.Vector({
                   source: vectorLine,
                   style: new ol.style.Style({
-                      fill: new ol.style.Fill({ color: '#000000', weight: 5 }),
-                      stroke: new ol.style.Stroke({ color: '#000000', width: 5 })
+                      fill: new ol.style.Fill({ color: color, weight: 5 }),
+                      stroke: new ol.style.Stroke({ color: color, width: 5})
                   })
             });
             this.map.addLayer(vectorLineLayer);
