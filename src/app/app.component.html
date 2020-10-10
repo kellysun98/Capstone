@@ -1,4 +1,4 @@
-<mat-sidenav-container auosize>
+<mat-sidenav-container fullscreen>
     <mat-sidenav #sidenav mode="side" opened>
         <!-- <app-mybar [inputSideNav]="sidenav"></app-mybar> -->
         <!-- <button mat-icon-button color="primary" (click)="sidenav.toggle();">
@@ -18,10 +18,10 @@
                 <button (click)="setMarker();drawLine2()">Go</button>
             </div> -->
 
-            <h1 mat-dialog-title>Please enter your starting and ending locations.</h1>
+            <!-- <h1 mat-dialog-title>Please enter your starting and ending locations.</h1> -->
 
 
-            <mat-form-field appearance="outline" style="margin-left: 35px;">
+            <mat-form-field appearance="outline" style="margin-left: 35px; margin-top: 35px;">
                 <mat-label>Starting Location</mat-label>
                 <input matInput [(ngModel)]="start_add" placeholder="e.g.123 Yonge St">
                 <mat-icon matSuffix>keyboard_arrow_right</mat-icon>
@@ -36,13 +36,6 @@
             <div>
                 <button mat-raised-button (click)="setMarker();drawLine2()">Find My Route</button></div>
 
-            <div>
-                <mat-slide-toggle [disabled]="" [checked]=""> Show COVID19 Map</mat-slide-toggle>
-            </div>
-            <div>
-
-                <button mat-raised-button (click)="openWelcome()">Open questionaire</button>
-            </div>
         </div>
 
         <mat-tab-group dynamicHeight>
@@ -96,6 +89,14 @@
                 </section>
             </mat-card-content>
         </mat-card>
+        <div>
+            <mat-slide-toggle [disabled]="" [checked]="openWelcome()"> Go Back to Questionaire</mat-slide-toggle>
+            <!-- <button mat-button (click)="openWelcome()">Go Back to Questionaire</button> -->
+        </div>
+        <div>
+            <mat-slide-toggle [disabled]="" [checked]=""> Show COVID19 Map</mat-slide-toggle>
+        </div>
+
     </mat-sidenav>
     <mat-sidenav-content>
         <div id="map" class map></div>

@@ -20,5 +20,14 @@ mat-sidenav {
     text-align: center;
     color: white;
     background-color: purple;
-    left: 40%
+    /* left: 40%; */
+    margin-left: 35px;
+    margin-bottom: 35px;
+}
+
+.mat-button{
+    margin-left: 35px;
+}
+.mat-slide-toggle{
+    margin-left: 35px;
 }
