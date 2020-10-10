@@ -16,12 +16,13 @@ import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { ThrowStmt } from '@angular/compiler';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, EMPTY } from 'rxjs';
 import { map } from 'rxjs/operators';
 import GeoJSON from 'ol/format/GeoJSON';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 import {FullScreen, defaults as defaultControls} from 'ol/control';
 import XYZ from 'ol/source/XYZ';
+import { ɵBrowserPlatformLocation } from '@angular/common';
 
 
 
@@ -56,7 +57,7 @@ export class AppComponent {
       this.openWelcome();
       //this.Heatmap();
       this.Heatmap2();   
-      this.setMapToFullScreen();
+      //this.setMapToFullScreen();
     //this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
@@ -98,9 +99,7 @@ export class AppComponent {
       var lat = lonlat[1];
       alert(`lat: ${lat} long: ${lon}`);
     });
-    this.map.getLayers().getLayers().forEach(function(el) {
-        console.log(el.get('name'));
-    });
+
   }
 
   
@@ -194,15 +193,15 @@ export class AppComponent {
     forkJoin([start_obs, end_obs]).subscribe(
       result => {
         this.map.getLayers().forEach(function(layer) {
+          console.log(layer.get('name'));
           if (layer.get('name') != undefined && layer.get('name') === 'markers') {
-            var features = layer.getSource().getFeatures();
-            features.forEach((feature) => {
-                layer.getSource().removeFeature(feature);
-            });          
+            layer.getSource().clear();
+            console.log("markers removed ");
+         
           }
       });
         var Markers = [{lat: JSON.parse(result[0][0]['lat']), lng: JSON.parse(result[0][0]['lon'])}, {lat: JSON.parse(result[1][0]['lat']), lng: JSON.parse(result[1][0]['lon'])}];
-        console.log(result[0][0]['lat']);
+        console.log(result[0][0]['lat'],result[1][0]['lat']);
         var features = [];
         for (var i = 0; i < Markers.length; i++) {
           var item = Markers[i];
@@ -225,20 +224,40 @@ export class AppComponent {
           features.push(iconFeature);
     
           //features.push(featureLine);
-      
         }
       
         var vectorSource = new ol.source.Vector({
           features: features,
-          
         });
-      
+        
+        var indicator = 0;
+        this.map.getLayers().forEach(function(layer) {
+          if (layer.get('name') != undefined && layer.get('name') === 'markers') {
+            features.forEach((feature) => {
+              layer.getSource().addFeature(feature);            
+            });    
+              indicator = 1;   
+              console.log("feature added to existing layer"); 
+          }
+        });
+
+          if(indicator  === 0) {  
+            console.log("new layer created"); 
+            var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            name: 'markers',
+          });
+          this.map.addLayer(vectorLayer);}
+
+          this.map.getLayers().forEach(function(layer) {
+            console.log(layer.get('name'));  });    
         // tslint:disable-next-line:prefer-const
-        var vectorLayer = new ol.layer.Vector({
-          source: vectorSource,
-          name: 'markers',
-        });
-        this.map.addLayer(vectorLayer);
+        // var vectorLayer = new ol.layer.Vector({
+        //   source: vectorSource,
+        //   name: 'markers',
+        // });
+        
+        // this.map.addLayer(vectorLayer);
     
       }
     )    
@@ -310,12 +329,13 @@ drawLine2(){
                   name: 'lines',
             });
             this.map.addLayer(vectorLineLayer);
-            this.map.getLayers().forEach(function(el) {
-              console.log(el.get('name'));
-          });
+
           }}      
             
-          },
+          this.map.getLayers().forEach(function(el) {
+            console.log(el.get('name'));
+        });        
+      },
           // this.testArray.concat(Array((this.response))),
           // console.log('test: '+this.response)},
         (err)=>console.error(err),
