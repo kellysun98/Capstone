@@ -56,7 +56,7 @@ export class AppComponent {
       this.openWelcome();
       //this.Heatmap();
       this.Heatmap2();   
-      //this.setMapToFullScreen();
+      this.setMapToFullScreen();
     //this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
@@ -80,7 +80,7 @@ export class AppComponent {
       })]),
       layers: [
         new ol.layer.Tile({
-          source: new ol.source.OSM()
+          source: new ol.source.OSM(),
         })
       ],
       view: new ol.View({
@@ -98,8 +98,9 @@ export class AppComponent {
       var lat = lonlat[1];
       alert(`lat: ${lat} long: ${lon}`);
     });
-    console.log(this.map.getLayers());
-
+    this.map.getLayers().getLayers().forEach(function(el) {
+        console.log(el.get('name'));
+    });
   }
 
   
@@ -192,6 +193,14 @@ export class AppComponent {
 
     forkJoin([start_obs, end_obs]).subscribe(
       result => {
+        this.map.getLayers().forEach(function(layer) {
+          if (layer.get('name') != undefined && layer.get('name') === 'markers') {
+            var features = layer.getSource().getFeatures();
+            features.forEach((feature) => {
+                layer.getSource().removeFeature(feature);
+            });          
+          }
+      });
         var Markers = [{lat: JSON.parse(result[0][0]['lat']), lng: JSON.parse(result[0][0]['lon'])}, {lat: JSON.parse(result[1][0]['lat']), lng: JSON.parse(result[1][0]['lon'])}];
         console.log(result[0][0]['lat']);
         var features = [];
@@ -220,12 +229,14 @@ export class AppComponent {
         }
       
         var vectorSource = new ol.source.Vector({
-          features: features
+          features: features,
+          
         });
       
         // tslint:disable-next-line:prefer-const
         var vectorLayer = new ol.layer.Vector({
-          source: vectorSource
+          source: vectorSource,
+          name: 'markers',
         });
         this.map.addLayer(vectorLayer);
     
@@ -247,6 +258,16 @@ drawLine2(){
       let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
       this.http.get('http://localhost:8080/api', {params:params}).subscribe(
         (res)=>{
+
+          this.map.getLayers().forEach(function(layer) {
+            if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+              var features = layer.getSource().getFeatures();
+              features.forEach((feature) => {
+                  layer.getSource().removeFeature(feature);
+              });          
+            }
+        });
+
           this.response = res; 
           // console.log('From backend: ' + JSON.parse(res.toString()));
           for (let index in this.response){
@@ -285,9 +306,13 @@ drawLine2(){
                   style: new ol.style.Style({
                       fill: new ol.style.Fill({ color: color, weight: 5 }),
                       stroke: new ol.style.Stroke({ color: color, width: 5})
-                  })
+                  }),
+                  name: 'lines',
             });
             this.map.addLayer(vectorLineLayer);
+            this.map.getLayers().forEach(function(el) {
+              console.log(el.get('name'));
+          });
           }}      
             
           },
@@ -370,11 +395,11 @@ Heatmap2(){
     source: test,
     blur: 20,
     radius: 15,
-    opacity : 0.5
+    opacity : 0.5,
+    name:'heatmap',
   });
   
-  this.map.addLayer(vector);
-  
+  this.map.addLayer(vector); 
   });
 }
 
