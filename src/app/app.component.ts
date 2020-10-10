@@ -48,6 +48,7 @@ export class AppComponent {
   option:Options[];
   route: Route[];
   coor: Coordinates[];
+  amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   
 
 
@@ -84,7 +85,7 @@ export class AppComponent {
       ],
       view: new ol.View({
         center: ol.proj.fromLonLat([-79.3883, 43.6548]),
-        zoom: 10
+        zoom: 12
       })
     });
 

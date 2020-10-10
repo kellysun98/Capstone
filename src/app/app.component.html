@@ -1,28 +1,41 @@
 <mat-sidenav-container auosize>
-    <mat-sidenav #sidenav mode="side" [(opened)]="open">
-        <app-mybar [inputSideNav]="sidenav"></app-mybar>
-    </mat-sidenav>
-    <mat-sidenav-content>
+    <mat-sidenav #sidenav mode="side" opened>
+        <!-- <app-mybar [inputSideNav]="sidenav"></app-mybar> -->
+        <!-- <button mat-icon-button color="primary" (click)="sidenav.toggle();">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+          </button> -->
         <div id="willhide">
-            <div>
+            <!-- <div>
                 <div>
                     <label for="start">Starting Location</label>
                     <input id="start" type="string" [(ngModel)]="start_add" placeholder="start">
                 </div>
-                <!-- <div>
-                    <label for="longitude">Longitude:</label>
-                    <input id="longitude" type="number" [(ngModel)]="longitude" placeholder="Longitude">
-                </div> -->
                 <div>
                     <label for="end">Your Destination</label>
                     <input id="end" type="string" [(ngModel)]="end_add" placeholder="destination">
                 </div>
-                <!-- <div>
-                    <label for="longitude">Longitude:</label>
-                    <input id="end_long" type="number" [(ngModel)]="end_long" placeholder="Longitude">
-                </div> -->
-                <button (click)="setMarker(); sidenav.toggle(); drawLine2()">Go</button>
-            </div>
+
+                <button (click)="setMarker();drawLine2()">Go</button>
+            </div> -->
+
+            <h1 mat-dialog-title>Please enter your starting and ending locations.</h1>
+
+
+            <mat-form-field appearance="outline" style="margin-left: 35px;">
+                <mat-label>Starting Location</mat-label>
+                <input matInput [(ngModel)]="start_add" placeholder="e.g.123 Yonge St">
+                <mat-icon matSuffix>keyboard_arrow_right</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="margin-left: 35px;">
+                <mat-label>Starting Longitude</mat-label>
+                <input matInput [(ngModel)]="end_add" placeholder="e.g.37 Grosvenor St">
+                <mat-icon matSuffix>keyboard_arrow_right</mat-icon>
+            </mat-form-field>
+
+            <div>
+                <button mat-raised-button (click)="setMarker();drawLine2()">Find My Route</button></div>
+
             <div>
                 <mat-slide-toggle [disabled]="" [checked]=""> Show COVID19 Map</mat-slide-toggle>
             </div>
@@ -32,7 +45,59 @@
             </div>
         </div>
 
+        <mat-tab-group dynamicHeight>
+
+            <mat-tab label="Walking">
+                <mat-list>
+                    <mat-list-item>
+                        <mat-label>20 mins</mat-label>
+                        Fatest Route but may die
+                        <mat-icon>keyboard_arrow_right</mat-icon>
+
+                    </mat-list-item>
+
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <mat-label>30 mins</mat-label>
+                        2nd fatest route, no patios
+                        <mat-icon>keyboard_arrow_right</mat-icon>
+
+                    </mat-list-item>
+
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <mat-label>30 mins</mat-label>
+                        slowest but safest, 要速度还是要命
+                        <mat-icon>keyboard_arrow_right</mat-icon>
+
+                    </mat-list-item>
+
+                    <mat-divider></mat-divider>
+
+
+                </mat-list>
+            </mat-tab>
+            <mat-tab label="Transit"> TODO </mat-tab>
+            <mat-tab label="Sharebike"> TODO </mat-tab>
+        </mat-tab-group>
         <br>
+        <br>
+        <mat-card>
+            <mat-card-content>
+                <h2 class="amentities">Amentities Showing</h2>
+                <section>
+                    <ul>
+                        <li *ngFor="let amentity of amentities">
+                            <mat-checkbox class="each">
+                                {{amentity}}
+                            </mat-checkbox>
+                        </li>
+                    </ul>
+                </section>
+            </mat-card-content>
+        </mat-card>
+    </mat-sidenav>
+    <mat-sidenav-content>
         <div id="map" class map></div>
         <div id="mouse-position"></div>
     </mat-sidenav-content>
