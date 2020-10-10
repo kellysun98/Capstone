@@ -56,7 +56,7 @@ export class AppComponent {
       this.openWelcome();
       //this.Heatmap();
       this.Heatmap2();   
-
+      //this.setMapToFullScreen();
     //this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
@@ -115,6 +115,12 @@ export class AppComponent {
   //   });
   // }
   
+  setMapToFullScreen(){
+    var elem = document.getElementById('map');
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+  }}
+
   getUrl(addr){
     var nomUrl = 'https://nominatim.openstreetmap.org/?addressdetails=1&q='
     var tempUrl = addr.split(' ').join('+')
