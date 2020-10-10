@@ -20,6 +20,9 @@ import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import GeoJSON from 'ol/format/GeoJSON';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
+import {FullScreen, defaults as defaultControls} from 'ol/control';
+import XYZ from 'ol/source/XYZ';
+
 
 
 declare var ol: any;
@@ -65,7 +68,6 @@ export class AppComponent {
       undefinedHTML: '&nbsp;'
     });
 
-
     this.map = new ol.Map({
       target: 'map',
       controls: ol.control.defaults({
@@ -73,7 +75,9 @@ export class AppComponent {
           collapsible: false
         }
       })
-      .extend([mousePositionControl]),
+      .extend([mousePositionControl], [new FullScreen({
+        source: 'fullscreen',
+      })]),
       layers: [
         new ol.layer.Tile({
           source: new ol.source.OSM()
