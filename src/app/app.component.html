@@ -17,9 +17,6 @@
                 <button mat-raised-button (click)="setMarker();drawLine2()">Find My Route</button></div>
 
         </div>
-
-        <br>
-        <br>
         <mat-card>
             <mat-card-content>
                 <h2 class="amentities">Amentities Showing</h2>
@@ -41,9 +38,12 @@
             <mat-slide-toggle [disabled]="" [checked]=""> Show COVID19 Map</mat-slide-toggle>
         </div>
 
-    </mat-sidenav> -->
+    </mat-sidenav>
     <mat-sidenav-content>
-        <div id="map" class map></div>
+        <div id="map" class map style="width: 100%; height: 100%; position:fixed"></div>
         <div id="mouse-position"></div>
     </mat-sidenav-content>
 </mat-sidenav-container>
+
+<!-- <div id = "map" class map></div>
+<button mat-raised-button (click) = "setMapToFullScreen()">Go</button> -->
