@@ -14,7 +14,7 @@
             </mat-form-field>
 
             <div>
-                <button mat-raised-button (click)="setMarker()">Find My Route</button></div>
+                <button mat-raised-button (click)="setMarker();drawLine2()">Find My Route</button></div>
 
         </div>
         <mat-card>
@@ -35,7 +35,7 @@
             <mat-slide-toggle [disabled]="" [checked]=""> Go Back to Questionaire</mat-slide-toggle>
         </div>
         <div>
-            <mat-slide-toggle [disabled]="" [checked]=""> Show COVID19 Map</mat-slide-toggle>
+            <mat-slide-toggle [checked]="useDefault" (change) = "heatmapControl($event)"> Show COVID-19 Map</mat-slide-toggle>
         </div>
 
     </mat-sidenav>
