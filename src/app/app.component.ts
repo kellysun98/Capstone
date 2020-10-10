@@ -23,6 +23,8 @@ import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 import {FullScreen, defaults as defaultControls} from 'ol/control';
 import XYZ from 'ol/source/XYZ';
 import { ɵBrowserPlatformLocation } from '@angular/common';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+
 
 
 
@@ -48,6 +50,7 @@ export class AppComponent {
   testArray: any[];
   coor: Coordinates[];
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
+  public useDefault = true;
   
 
 
@@ -386,6 +389,7 @@ Heatmap2(){
   let params = new HttpParams().set('start_time', "2020-09-11 00:00:00").set('end_time', "2020-09-13 00:00:00")
   this.http.get("http://localhost:8080/heatmap2",{params:params}).subscribe((data)=>{
     for (let key of Object.keys(data)){
+
       var coord  = '[ ' + key + ' ]';
       try { coord = JSON.parse(coord); 
         }
@@ -422,6 +426,24 @@ Heatmap2(){
   this.map.addLayer(vector); 
   });
 }
+
+heatmapControl(event: MatSlideToggleChange){
+  this.http.get("http://localhost:8080/heatmap")
+  .subscribe((heatmap) => {
+    console.log(event.checked);
+  this.map.getLayers().forEach(function(layer) {
+    if (layer.get('name') != undefined && layer.get('name') === 'heatmap' && event.checked === true) {
+      layer.setVisible(true);
+      console.log("heatmap on ");
+    }
+    else if (layer.get('name') != undefined && layer.get('name') === 'heatmap' && event.checked === false){
+      layer.setVisible(false);
+      console.log("heatmap off ");
+    } 
+  });
+});
+}
+
 
   hideit(){
     var x = document.getElementById("willhide");
