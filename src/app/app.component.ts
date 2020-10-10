@@ -18,9 +18,6 @@ import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { ThrowStmt } from '@angular/compiler';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Options } from './options';
-import { Route } from './route';
-import { Coordinates} from './coordinates';
 import GeoJSON from 'ol/format/GeoJSON';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 
@@ -45,8 +42,6 @@ export class AppComponent {
   response: Object;
   email: string;
   testArray: any[];
-  option:Options[];
-  route: Route[];
   coor: Coordinates[];
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   
@@ -65,8 +60,8 @@ export class AppComponent {
       projection: 'EPSG:4326',
       // comment the following two lines to have the mouse position
       // be placed within the map.
-      className: 'custom-mouse-position',
-      target: document.getElementById('mouse-position'),
+      // className: 'custom-mouse-position',
+      // target: document.getElementById('mouse-position'),
       undefinedHTML: '&nbsp;'
     });
 
@@ -77,7 +72,8 @@ export class AppComponent {
         attributionOptions: {
           collapsible: false
         }
-      }).extend([mousePositionControl]),
+      })
+      .extend([mousePositionControl]),
       layers: [
         new ol.layer.Tile({
           source: new ol.source.OSM()
@@ -87,6 +83,7 @@ export class AppComponent {
         center: ol.proj.fromLonLat([-79.3883, 43.6548]),
         zoom: 12
       })
+      
     });
 
     this.map.on('click', function (args) {
@@ -113,7 +110,7 @@ export class AppComponent {
   //     this.email = result;
   //   });
   // }
-
+  
   getUrl(addr){
     var nomUrl = 'https://nominatim.openstreetmap.org/?addressdetails=1&q='
     var tempUrl = addr.split(' ').join('+')
