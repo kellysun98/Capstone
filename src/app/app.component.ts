@@ -51,6 +51,7 @@ export class AppComponent {
   coor: Coordinates[];
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   public useDefault = true;
+  public show: boolean = false;
   
 
 
@@ -452,6 +453,16 @@ heatmapControl(event: MatSlideToggleChange){
     } else {
       x.style.display = "none";
     }
+    var y = document.getElementById("willshow");
+    if (y.style.display === "none") {
+      y.style.display = "block";
+    } else {
+      y.style.display = "none";
+    }
+  }
+
+  toggle(){
+    this.show = !this.show;
   }
 
 }

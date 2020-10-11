@@ -1,5 +1,10 @@
 <mat-sidenav-container fullscreen>
     <mat-sidenav #sidenav mode="side" opened>
+        <div id="willshow" style="display:none">
+            <button (click)="toggle();hideit()" mat-icon-button color="primary">
+                <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+        </div>
         <div id="willhide">
             <mat-form-field appearance="outline" style="margin-left: 35px; margin-top: 35px;">
                 <mat-label>Starting Location</mat-label>
@@ -14,9 +19,13 @@
             </mat-form-field>
 
             <div>
-                <button mat-raised-button (click)="setMarker();drawLine2()">Find My Route</button></div>
+                <button mat-raised-button (click)="setMarker();drawLine2();toggle();hideit()">Find My Route</button></div>
 
         </div>
+        <ng-container *ngIf="show">
+            <app-mybar></app-mybar>
+        </ng-container>
+
         <mat-card>
             <mat-card-content>
                 <h2 class="amentities">Amentities Showing</h2>
@@ -35,7 +44,7 @@
             <mat-slide-toggle [disabled]="" [checked]=""> Go Back to Questionaire</mat-slide-toggle>
         </div>
         <div>
-            <mat-slide-toggle [checked]="useDefault" (change) = "heatmapControl($event)"> Show COVID-19 Map</mat-slide-toggle>
+            <mat-slide-toggle [checked]="useDefault" (change)="heatmapControl($event)"> Show COVID-19 Map</mat-slide-toggle>
         </div>
 
     </mat-sidenav>

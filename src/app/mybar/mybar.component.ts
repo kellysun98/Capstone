@@ -9,6 +9,7 @@ import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
   styleUrls: ['./mybar.component.css']
 })
 export class MybarComponent implements OnInit {
+  
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   @Input() inputSideNav: MatSidenav;
 
