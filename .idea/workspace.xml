@@ -22,21 +22,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98830841-eeb6-49cc-9171-ac58fdbfb43c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/AController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/AController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/DemoApplication$nodeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/DemoApplication$nodeController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/DemoApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/DemoApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/PSQLConnect.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/PSQLConnect.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Graph.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Graph.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/KSP.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/KSP.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/MapEdge.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/MapEdge.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/MapNode.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/MapNode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/MapRoute.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/MapRoute.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Path.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Path.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Planner.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Planner.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/test_xml.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/test_xml.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rest/target/test-classes/com/example/demo/DemoApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/test-classes/com/example/demo/DemoApplicationTests.class" afterDir="false" />
-    </list>
+    <list default="true" id="98830841-eeb6-49cc-9171-ac58fdbfb43c" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,7 +82,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../open-street-a-star-master" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
@@ -153,7 +139,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="3dd3dead-7751-47f9-9078-61e24f362b69" name="Default Changelist" comment="" />
+      <changelist id="98830841-eeb6-49cc-9171-ac58fdbfb43c" name="Default Changelist" comment="" />
       <created>1601475969856</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -279,6 +265,10 @@
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state x="131" y="70" key="MergeDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601482398409" />
+    <state x="128" y="23" width="1024" height="777" key="SettingsEditor" timestamp="1602442505581">
+      <screen x="0" y="0" width="1280" height="800" />
+    </state>
+    <state x="128" y="23" width="1024" height="777" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1602442505581" />
     <state x="277" y="169" key="Vcs.Push.Dialog.v2" timestamp="1602092477028">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
