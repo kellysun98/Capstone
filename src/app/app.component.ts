@@ -52,7 +52,7 @@ export class AppComponent {
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   public useDefault = true;
   public show: boolean = false;
-  
+  value;
 
 
   constructor(private http: HttpClient, public dialog: MatDialog){
@@ -464,5 +464,6 @@ heatmapControl(event: MatSlideToggleChange){
   toggle(){
     this.show = !this.show;
   }
+
 
 }
