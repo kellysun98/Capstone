@@ -12,6 +12,7 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 import { StartlocationComponent } from '../startlocation/startlocation.component';
 import { debounceTime, distinctUntilChanged, map, pairwise } from 'rxjs/operators';
 import { combineLatest, forkJoin } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 // interface DialogData {
 //   value: string;
@@ -31,7 +32,6 @@ export class QuestionaireComponent implements OnInit {
   df1: any = ["Walking"];
   df2: any = 'Less than 5 minutes';
   df3: any = ['I want to avoid hospital/covid-19 assessment center'];
-  combined_forms: FormArray;
 
   autoCompleteValues = [];
   // selected = 'nolimit';
@@ -50,14 +50,16 @@ export class QuestionaireComponent implements OnInit {
 
   // safeties = new FormControl('', Validators.required);
   safetyList: string[] = ['I want to avoid hospital/covid-19 assessment center', 'I want to avoid public gathering places (e.g.: shopping malls)','I want to avoid over-crowded streets','I don\'t have a specific concern'];
-  // dialog: any;
+  answer: any
   
 
   constructor(
     public dialogRef: MatDialogRef<QuestionaireComponent>,
     public dialog: MatDialog,
     // @Inject(MAT_DIALOG_DATA) public data: DialogData, 
-    private fb: FormBuilder) {}
+    private fb: FormBuilder,
+    private http: HttpClient
+    ) {}
     
   
   onNoClick(): void {
@@ -76,27 +78,11 @@ export class QuestionaireComponent implements OnInit {
       thirdCtrl: ['', Validators.required]
     });
 
-
-
-    // forkJoin([this.firstFormGroup.valueChanges, this.secondFormGroup.valueChanges, this.thirdFormGroup.valueChanges])
-    // .pipe(
-    //   debounceTime(400),
-    //   distinctUntilChanged(),
-      // map(data=>data.reduce((result, arr) => [...result, ...arr], []))
-    // ).subscribe((data=>
-    //   {
-    //     // this.autoCompleteValues=data;
-    //     console.log(data)
-    //   }
-    // ))
-
-    // this.firstFormGroup.valueChanges.pipe(
-    //   debounceTime(400),
-    //   distinctUntilChanged()
-    //   ).subscribe(
-    //     (res)=>console.log(res)
-    //   );
-    
+    // this.answer = {
+    //   "q1": [""],
+    //   "q2": "",
+    //   "q3": [""]
+    // }
   }
 
   openNav(): void {
@@ -126,10 +112,17 @@ export class QuestionaireComponent implements OnInit {
     //   })
     // this.combined_forms.push(this.firstFormGroup.value)
     // console.log('combined values: '+this.combined_forms)
+    this.answer = {
+      "q1": Object.values(this.firstFormGroup.value)[0],
+      "q2": Object.values(this.secondFormGroup.value)[0],
+      "q3": Object.values(this.thirdFormGroup.value)[0]
+    }
+    // console.log(Object.values(this.firstFormGroup.value)[0]) //['Walking']
+    // console.log(Object.values(this.secondFormGroup.value)[0]) //'less than 5 minutes'
+    // console.log('3. '+ this.thirdFormGroup.value)   
+    // console.log(this.answer["q3"])
+    this.http.post('http://localhost:8080/questionnaire',this.answer)
 
-    console.log(Object.values(this.firstFormGroup.value)[0]) //['Walking']
-    console.log(Object.values(this.secondFormGroup.value)[0]) //'less than 5 minutes'
-    console.log('3. '+ this.thirdFormGroup.value)   
   }
 
 }  
