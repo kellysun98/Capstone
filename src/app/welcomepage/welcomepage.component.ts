@@ -32,5 +32,4 @@ export class WelcomepageComponent implements OnInit {
 
 
   }
-
 }
