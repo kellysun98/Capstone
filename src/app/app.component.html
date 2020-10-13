@@ -19,8 +19,11 @@
             </mat-form-field>
 
             <div>
-                <button mat-raised-button (click)="setMarker();drawLine2();toggle();hideit()">Find My Route</button></div>
-
+                <button mat-raised-button (click)="setMarker(); drawLine2(); toggle(); hideit()">Find My Route</button>
+            </div>
+            <div>
+                <button (click)="openWelcome()" style="text-decoration:underline; padding: 0; border: none; background: none; margin-left: 35px!important; margin-top:10px!important; color:blue">Go Back to Questionnaire</button>
+            </div>
         </div>
         <ng-container *ngIf="show">
             <app-mybar></app-mybar>
@@ -41,9 +44,6 @@
             </mat-card-content>
         </mat-card>
         <div>
-            <mat-slide-toggle [disabled]="" [checked]=""> Go Back to Questionaire</mat-slide-toggle>
-        </div>
-        <div>
             <mat-slide-toggle [checked]="useDefault" (change)="heatmapControl($event)"> Show COVID-19 Map</mat-slide-toggle>
         </div>
 
@@ -53,6 +53,3 @@
         <div id="mouse-position"></div>
     </mat-sidenav-content>
 </mat-sidenav-container>
-
-<!-- <div id = "map" class map></div>
-<button mat-raised-button (click) = "setMapToFullScreen()">Go</button> -->

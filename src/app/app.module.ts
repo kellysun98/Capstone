@@ -21,6 +21,7 @@ import { MybarComponent } from './mybar/mybar.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
+import { MatSliderModule } from '@angular/material/slider'; 
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { MatListModule } from '@angular/material/list';
     MatIconModule,
     MatSidenavModule,
     MatTabsModule,
-    MatListModule
+    MatListModule,
+    MatSliderModule
   ],
   exports: [MatFormFieldModule],
   providers: [],
