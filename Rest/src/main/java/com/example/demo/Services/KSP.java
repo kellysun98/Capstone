@@ -2,6 +2,7 @@ package com.example.demo.Services;
 
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
@@ -84,8 +85,10 @@ public class KSP {
 
     public static String KSPtoJson(ArrayList<Path> ksp_sol) {
         ArrayList solution = new ArrayList<>();
+
         for (Path p : ksp_sol) {
-            HashMap<Double, String> path_map = new HashMap<>();
+//            HashMap<Integer, ArrayList<String>> path_map = new HashMap<>();
+            ArrayList<String> return_value = new ArrayList<>();
             List<MapNode> node_list = p.getNodes();
             String mn_toString = new String();
             for (MapNode mn : node_list) {
@@ -94,10 +97,14 @@ public class KSP {
                 mn_toString += ('[' + longitude.toString() + ',' + latitude.toString() + ']' + ',');
             }
             Double cost = p.getTotalCost();
-            path_map.put(cost, mn_toString.substring(0, mn_toString.length() - 1));
-//            System.out.println(cost);
-//            System.out.print(mn_toString.substring(0, mn_toString.length() - 1));
-            solution.add(path_map);
+            Double time = p.getTotalTime();
+            return_value.add(cost.toString());
+            return_value.add(mn_toString.substring(0, mn_toString.length() - 1));
+            return_value.add(time.toString());
+            return_value.add(p.getDescription());
+//            path_map.put(count, return_value);
+
+            solution.add(return_value); //[cost, nodelist, totaltime, description]
         }
         String solution_to_string = new Gson().toJson(solution);
         return solution_to_string;

@@ -46,6 +46,12 @@ public class Path implements Comparable<Path>{
         this.totalTime = (this.totalLength/5000.0)*60.0;
         return this.totalTime;
     }
+
+    public String getDescription(){
+        String str = "要速度还是要命";
+        return str;
+    }
+
     public int size(){return this.nodes.size(); }
     public MapNode get(int idx){return this.nodes.get(idx);}
 

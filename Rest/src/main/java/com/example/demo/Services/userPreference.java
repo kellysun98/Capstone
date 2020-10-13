@@ -20,7 +20,7 @@ public class userPreference {
     }
 
     public List<String> getQ1(){
-        return this.q1;
+        return q1;
     }
 
     public String getQ2() {
