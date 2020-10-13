@@ -12,7 +12,7 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 import { StartlocationComponent } from '../startlocation/startlocation.component';
 import { debounceTime, distinctUntilChanged, map, pairwise } from 'rxjs/operators';
 import { combineLatest, forkJoin } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 // interface DialogData {
 //   value: string;
@@ -121,7 +121,9 @@ export class QuestionaireComponent implements OnInit {
     // console.log(Object.values(this.secondFormGroup.value)[0]) //'less than 5 minutes'
     // console.log('3. '+ this.thirdFormGroup.value)   
     // console.log(this.answer["q3"])
-    this.http.post('http://localhost:8080/questionnaire',this.answer)
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.post('http://localhost:8080/questionnaire',this.answer, { headers: headers })
+    .subscribe(response => { console.log(response) })
 
   }
 
