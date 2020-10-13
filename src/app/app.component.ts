@@ -164,33 +164,8 @@ export class AppComponent {
     view.setCenter(ol.proj.fromLonLat([this.longitude, this.latitude]));
     view.setZoom(10);
   }
-//return observable
-  // getAllCoords(){
-  //   let start_obs = this.http.get(this.getUrl(this.start_add));
-  //   let end_obs = this.http.get(this.getUrl(this.end_add));
-
-  //   forkJoin([start_obs, end_obs]).subscribe(
-  //     result => {
-  //       let params = new HttpParams().set('longitude', result[0][0]['lon'].toString())
-  //                                 .set('latitude', result[0][0]['lat'].toString())
-  //                                 .set('end_long', result[1][0]['lon'].toString())
-  //                                 .set('end_lat', result[1][0]['lat'].toString())
-  //       this.http.get('http://localhost:8080/api', {params:params})
-  //     }
-  //   )
-
-    // let params = new HttpParams().set('longitude', this.getLon(this.start_add).toString())
-    //                               .set('latitude', this.getLat(this.start_add).toString())
-    //                               .set('end_long', this.getLon(this.end_add).toString())
-    //                               .set('end_lat', this.getLat(this.end_add).toString())
-    // return this.http.get('http://localhost:8080/api', {params:params})
-  //}
 
   setMarker(){
-    // console.log(this.longitude.toString());
-    // let params = new HttpParams().set('longitude', this.longitude.toString()).set('latitude', this.latitude.toString()).set('end_long',this.end_long.toString()).set('end_lat', this.end_lat.toString())
-    // this.http.get("http://localhost:8080/api", {params:params})
-    // .subscribe((response) => {this.response})
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
 
@@ -255,13 +230,6 @@ export class AppComponent {
 
           this.map.getLayers().forEach(function(layer) {
             console.log(layer.get('name'));  });    
-        // tslint:disable-next-line:prefer-const
-        // var vectorLayer = new ol.layer.Vector({
-        //   source: vectorSource,
-        //   name: 'markers',
-        // });
-        
-        // this.map.addLayer(vectorLayer);
     
       }
     )    
@@ -273,10 +241,6 @@ drawLine2(){
 
   forkJoin([start_obs, end_obs]).subscribe(
     result => {
-      // let params = new HttpParams().set('longitude', result[0][0]['lon'].substring(0,10))
-      //                           .set('latitude', result[0][0]['lat'].substring(0,9))
-      //                           .set('end_long', result[1][0]['lon'].substring(0,10))
-      //                           .set('end_lat', result[1][0]['lat'].substring(0,9));
 
       let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
       this.http.get('http://localhost:8080/api', {params:params}).subscribe(
@@ -298,17 +262,7 @@ drawLine2(){
             for (let key of Object.keys(this.response[index])){
               var route = JSON.parse('[' + this.response[index][key] + ']');
               console.log('second loop: ' + route)
-              
-          // for (let key of Object.keys(this.response)){
-          //   var route = this.response[key];
-          //   route = '[' + route + ']';
-          //   try{
-          //     route = JSON.parse(route)
-          //   }catch{
-          //     console.log(route.length);
-          //     continue;
-          //   }
-              
+                            
               var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
               var g_color = Math.floor(Math.random() * (225 - 0 + 1) + 0);
               var b_color = Math.floor(Math.random() * (225 - 0 + 1) + 0);
@@ -446,24 +400,24 @@ heatmapControl(event: MatSlideToggleChange){
 }
 
 
-  hideit(){
-    var x = document.getElementById("willhide");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
-    var y = document.getElementById("willshow");
-    if (y.style.display === "none") {
-      y.style.display = "block";
-    } else {
-      y.style.display = "none";
-    }
+hideit(){
+  var x = document.getElementById("willhide");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
   }
+  var y = document.getElementById("willshow");
+  if (y.style.display === "none") {
+    y.style.display = "block";
+  } else {
+    y.style.display = "none";
+  }
+}
 
-  toggle(){
-    this.show = !this.show;
-  }
+toggle(){
+  this.show = !this.show;
+}
 
 
 }

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
-
+import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
   selector: 'app-mybar',
