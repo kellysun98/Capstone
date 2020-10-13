@@ -2,12 +2,11 @@ package com.example.demo;
 
 
 import com.example.demo.Services.*;
+import com.fasterxml.jackson.databind.util.BeanUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,18 +70,27 @@ public class DemoApplication {
 			return resultList;
 		}
 
-			@GetMapping("/heatmap")
-			public HashMap<Integer, String> getNeighbourCoord(){
-				HashMap results = new HashMap<Integer, String>();
-				results = getNeighbourhoodCoordinate();
-				return results;
-			}
-
-			@GetMapping("/heatmap2")
-			public HashMap<String, Double> getPedCount(@RequestParam(required = false) String start_time,@RequestParam(required = false) String end_time){
-				HashMap results = new HashMap<String, Double>();
-				results = getPedCountHeatmap(start_time,end_time);
+		@GetMapping("/heatmap")
+		public HashMap<Integer, String> getNeighbourCoord(){
+			HashMap results = new HashMap<Integer, String>();
+			results = getNeighbourhoodCoordinate();
 			return results;
+		}
+
+		@GetMapping("/heatmap2")
+		public HashMap<String, Double> getPedCount(@RequestParam(required = false) String start_time,@RequestParam(required = false) String end_time){
+			HashMap results = new HashMap<String, Double>();
+			results = getPedCountHeatmap(start_time,end_time);
+			return results;
+		}
+
+		@PostMapping("/questionnaire")
+		public userPreference postPref(@RequestBody userPreference pref){
+			userPreference returnValue = new userPreference();
+			returnValue.setQ1(pref.getQ1());
+			returnValue.setQ2(pref.getQ2());
+			returnValue.setQ3(pref.getQ3());
+			return returnValue;
 		}
 		
 	}
