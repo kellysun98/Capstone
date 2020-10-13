@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Collections;
 
 import static com.example.demo.PSQLConnect.getNeighbourhoodCoordinate;
 import static com.example.demo.PSQLConnect.getPedCountHeatmap;
+import static com.example.demo.Services.Graph.getDistance;
 
 
 @SpringBootApplication
@@ -56,18 +58,46 @@ public class DemoApplication {
 			//torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
 			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
 
-			for (MapNode n : nodeMap.values()) {
-				System.out.println("lon: " + n.longitude + " lat: " + n.latitude);
-			}
+			// Get start and end node of this tour (Address)
+			MapNode startNode = getElement(nodeMap, bound_start);
+			MapNode endNode = getElement(nodeMap, bound_end);
+			// Using lat long
+//			MapNode startNode = getElement(nodeMap, bound_start);
+//			MapNode endNode = getElement(nodeMap, bound_end);
 
+			torontoGraph.prepareNormalization(endNode);
+//			ArrayList<Double> edgeLength_list = new ArrayList<Double>(); // list of length of all edges
+//			ArrayList<Double> euclid_list = new ArrayList<Double>(); // list of euclid distance for each node to end node
+//			ArrayList<Double> pedCount_list = new ArrayList<Double>(); // list of ped count for each node
+//
+//			for (MapNode n : nodeMap.values()) {
+//				pedCount_list.add(n.getPedCount());
+//				euclid_list.add(getDistance(n, endNode));
+//				for (MapEdge e : n.getEdges()){
+//					edgeLength_list.add(e.getLength("distance"));
+//				}
+////				System.out.println("lon: " + n.longitude + " lat: " + n.latitude);
+//			}
+//			// Find max and min vals in 3 lists above for normalization purpose
+//			double max_length = Collections.max(edgeLength_list);
+//			double min_length = Collections.min(edgeLength_list);
+//			double max_euclid = Collections.max(euclid_list);
+//			double min_euclid = Collections.min(euclid_list);
+//			double max_pedCont = Collections.max(pedCount_list);
+//			double min_pedCount = Collections.min(pedCount_list);
 
 			Planner planner = new Planner();
 			//List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
 //			HashMap<Integer, Path> resultList = planner.toHashMap(planner.plan(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance"));
-
-			ArrayList<Path> kspresultList = KSP.ksp(torontoGraph, getElement(nodeMap, bound_start), getElement(nodeMap, bound_end),"distance", 9);
-			String resultList = KSP.KSPtoJson(kspresultList);
-			return resultList;
+//			ArrayList<Path> distancekspresultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
+//			System.out.println("distance ksp completed!");
+			ArrayList<Path> covidkspresultList = KSP.ksp(torontoGraph, startNode, endNode,"covid", 3);
+			System.out.println("covid ksp completed!");
+//			for (Path p:covidkspresultList){
+//				System.out.println("Time: " + p.getTotalTime());
+//			}
+			String result = KSP.KSPtoJson(covidkspresultList);
+			return result;
 		}
 
 		@GetMapping("/heatmap")
