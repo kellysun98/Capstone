@@ -2,14 +2,17 @@ package com.example.demo.Services;
 
 import java.text.DecimalFormat;
 
+import static com.example.demo.Services.Graph.normalize;
+
 public class MapEdge {
     public MapRoute mapRoute;
     public MapNode destinationNode;
     public MapNode sourceNode;
     public Integer accidentsCount;
-    public Double weight;
+    public Double length; // length of the edge
     public static Graph graph;
     public static DecimalFormat df = new DecimalFormat("#.###");
+    public double normalized_length; //normalized length of each edge
 
     // Get source node id of MapEdge
     public double getSourceNodeID(){return this.sourceNode.id;}
@@ -22,7 +25,8 @@ public class MapEdge {
         this.mapRoute = mapRoute;
         this.sourceNode = sourceNode;
         this.destinationNode = destinationNode;
-        this.weight = graph.getDistance(this.sourceNode, this.destinationNode); // Set weight of the edge as distance from src to dest MapNode
+        this.length = graph.getDistance(this.sourceNode, this.destinationNode); // Set weight of the edge as distance from src to dest MapNode
+//        this.normalized_length = normalize(this.length, graph.min_length, graph.max_length);
 //        try {
         double lon = Double.parseDouble(df.format(destinationNode.longitude));
         double lat = Double.parseDouble(df.format(destinationNode.latitude));
@@ -31,7 +35,10 @@ public class MapEdge {
 //            accidentsCount = null;
 //        }
     }
-    public double getCost(String costFunction){
+    public double getNormalized_length(){
+        return this.normalized_length;
+    }
+    public double getLength(String costFunction){
         double euclideanDistance = graph.getDistance(sourceNode,destinationNode);
         if (costFunction.equals("distance")){
             return euclideanDistance;

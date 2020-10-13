@@ -18,6 +18,8 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static com.example.demo.Services.Graph.normalize;
+
 public class Planner {
     public JXMapViewer mapViewer;
     public JFrame frame;
@@ -26,47 +28,83 @@ public class Planner {
     public Planner(){}
 
     public Path plan(Graph graph, MapNode startNode, MapNode goalNode, String costFunction){
+        if (costFunction.equals("distance")){
+            this.graph = graph;
+            HashMap<MapNode, MapNode> parents = new HashMap<>();
+            HashMap<MapNode, Double> costs = new HashMap<>();
+            PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>();
 
-        this.graph = graph;
-        HashMap<MapNode, MapNode> parents = new HashMap<>();
-        HashMap<MapNode, Double> costs = new HashMap<>();
-        PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>();
+            startNode.estimatedCost = heuristics(startNode,goalNode,costFunction);
+            parents.put(startNode,null);
+            costs.put(startNode,0.0);
+            priorityQueue.add(startNode);
 
-        startNode.estimatedCost = heuristics(startNode,goalNode);
-        parents.put(startNode,null);
-        costs.put(startNode,0.0);
-        priorityQueue.add(startNode);
+            while (!priorityQueue.isEmpty()){
+                MapNode node = priorityQueue.remove();
+                if(node.id == goalNode.id){
+    //                double total_cost = 0;
+    //                for(double c:costs.values()){total_cost+=c;};
+    //                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
+                    Path fastestRoute = new Path(getGeoList(parents,goalNode));
+                    return fastestRoute;
+                }
+                for (MapEdge edge:node.edges){
+                    MapNode nextNode = edge.destinationNode;
+                    double newCost = costs.get(node) + edge.getLength("distance"); //newCost = g(n)
+                    if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
+                        parents.put(nextNode,node);
+                        costs.put(nextNode,newCost);
+                        nextNode.estimatedCost = heuristics(nextNode,goalNode,costFunction) + newCost; // estimatedCost=f(n)=h(n)+g(n)
+                        priorityQueue.add(nextNode);
+                    }
+                }
+            }
+        }else if (costFunction.equals("covid")){
+            this.graph = graph;
+            HashMap<MapNode, MapNode> parents = new HashMap<>();
+            HashMap<MapNode, Double> costs = new HashMap<>();
+            PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>();
 
-        while (!priorityQueue.isEmpty()){
-            MapNode node = priorityQueue.remove();
-            if(node.id == goalNode.id){
+            startNode.estimatedCost = heuristics(startNode,goalNode,costFunction);
+            parents.put(startNode,null);
+            costs.put(startNode,0.0);
+            priorityQueue.add(startNode);
+
+            while (!priorityQueue.isEmpty()){
+                MapNode node = priorityQueue.remove();
+                if(node.id == goalNode.id){
 //                double total_cost = 0;
 //                for(double c:costs.values()){total_cost+=c;};
 //                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
-                Path fastestRoute = new Path(getGeoList(parents,goalNode));
-                return fastestRoute;
-            }
-            for (MapEdge edge:node.edges){
-                MapNode nextNode = edge.destinationNode;
-                double newCost = costs.get(node) + edge.getCost(costFunction);
-                if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
-                    parents.put(nextNode,node);
-                    costs.put(nextNode,newCost);
-                    nextNode.estimatedCost = heuristics(nextNode,goalNode) + newCost;
-                    priorityQueue.add(nextNode);
+                    Path fastestRoute = new Path(getGeoList(parents,goalNode));
+                    return fastestRoute;
+                }
+                for (MapEdge edge:node.edges){
+                    edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
+
+                    MapNode nextNode = edge.destinationNode;
+                    double newCost = costs.get(node) + edge.getNormalized_length(); //newCost = g(n)
+                    System.out.println("newCost: "+newCost);
+                    if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
+                        parents.put(nextNode,node);
+                        costs.put(nextNode,newCost);
+                        nextNode.estimatedCost = heuristics(nextNode,goalNode,costFunction) + newCost; // estimatedCost=f(n)=h(n)+g(n)
+                        priorityQueue.add(nextNode);
+                    }
                 }
             }
+
         }
         return null;
     }
 
-    public List<MapNode> planBestFirst(MapNode startNode, MapNode goalNode){
+    public List<MapNode> planBestFirst(MapNode startNode, MapNode goalNode,String costFunction){
 
         HashMap<MapNode, MapNode> parents = new HashMap<>();
         HashMap<MapNode, Double> costs = new HashMap<>();
         PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>(); // Create a priority queue for best first search
 
-        startNode.estimatedCost = heuristics(startNode,goalNode);
+        startNode.estimatedCost = heuristics(startNode,goalNode,costFunction);
         parents.put(startNode,null);
         costs.put(startNode,0.0);
         priorityQueue.add(startNode);
@@ -82,7 +120,7 @@ public class Planner {
                 if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
                     parents.put(nextNode,node);
                     costs.put(nextNode,newCost);
-                    nextNode.estimatedCost = heuristics(nextNode,goalNode) + newCost;
+                    nextNode.estimatedCost = heuristics(nextNode,goalNode,costFunction) + newCost;
                     priorityQueue.add(nextNode);
                 }
             }
@@ -116,8 +154,16 @@ public class Planner {
         return null;
     }
 
-    public double heuristics(MapNode node, MapNode goalNode){
-        return graph.getDistance(node,goalNode);
+    /* Heuristic function that calculates cost of next node.
+    *  "distance" sets cost of next node = length from curr node to next node
+    *  "covidrisk" sets cost of next node = number of pedestrian at next node */
+    public double heuristics(MapNode node, MapNode goalNode, String objective){
+        double res = 0;
+        if (objective.equals("distance"))
+            res = graph.getDistance(node,goalNode);
+        else if (objective.equals("covid"))
+            res = 0.5*goalNode.normalized_pedCount + 0.5*goalNode.normalized_euclid;
+        return res;
     }
 
     public ArrayList<MapNode> getGeoList(HashMap<MapNode, MapNode> parents, MapNode goalNode){

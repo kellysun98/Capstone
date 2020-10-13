@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.*;
 public class PSQLConnect {
-    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto";
+    public static String url = "jdbc:REMOVEDql://localhost:5432/Toronto";
     public static String user = "REMOVED";
     public static String password = "REMOVED";
 
