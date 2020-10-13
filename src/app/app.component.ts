@@ -241,21 +241,31 @@ export class AppComponent {
   
     forkJoin([start_obs, end_obs]).subscribe(
       result => {
+        this.map.getLayers().forEach(function(layer) {
+          if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+            // var features = layer.getSource().getFeatures();
+            // features.forEach((feature) => {
+            //     layer.getSource().removeFeature(feature);
+            // });          
+          layer.getSource().clear();
+          console.log("routes removed")   //one layer with the names lines removed 
+          }
+      });
   
         let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
         this.http.get('http://localhost:8080/api', {params:params}).subscribe(
           (res)=>{
   
-            this.map.getLayers().forEach(function(layer) {
-              if (layer.get('name') != undefined && layer.get('name') === 'lines') {
-                // var features = layer.getSource().getFeatures();
-                // features.forEach((feature) => {
-                //     layer.getSource().removeFeature(feature);
-                // });          
-              layer.getSource().clear();
-              console.log("routes removed")
-              }
-          });
+          //   this.map.getLayers().forEach(function(layer) {
+          //     if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+          //       // var features = layer.getSource().getFeatures();
+          //       // features.forEach((feature) => {
+          //       //     layer.getSource().removeFeature(feature);
+          //       // });          
+          //     layer.getSource().clear();
+          //     console.log("routes removed")   //one layer with the names lines removed 
+          //     }
+          // });
   
             this.response = res; 
             var myroutes = []
@@ -283,10 +293,11 @@ export class AppComponent {
                 // vectorLine.addFeature(featureLine);
 
                 myroutes.push(featureLine)
-              }
+              }   //one route generated for this navigation
+
               var vectorSource = new ol.source.Vector({
                 features: myroutes,
-              });
+              }); //multiple routes added 
               
               var indicator = 0;
               this.map.getLayers().forEach(function(layer) {
