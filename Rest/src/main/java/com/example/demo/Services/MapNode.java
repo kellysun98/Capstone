@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.demo.Services.Graph.getDistance;
+import static com.example.demo.Services.Graph.normalize;
+
 public class MapNode implements Comparable<MapNode>{
     public Graph graph;
     public Element element;
@@ -15,7 +18,15 @@ public class MapNode implements Comparable<MapNode>{
     public double longitude;
     public double latitude;
     public List<MapEdge> edges;
-    public double estimatedCost;
+    public double estimatedCost;// f(n);
+    public double pedCount; // number of people at the node; h(n)
+    public double normalized_pedCount; // normalized pedCount
+    public double normalized_euclid; // normalized euclidean distance from this node to destination node
+
+
+    public double getPedCount(){
+        return this.pedCount;
+    }
 
     public List<MapEdge> getEdges(){
         return edges;
@@ -30,6 +41,11 @@ public class MapNode implements Comparable<MapNode>{
         longitude = -1;
         latitude = -1;
         edges = new ArrayList<>();
+        pedCount = getRandomNumber(0,10);
+    }
+    /**/
+    public int getRandomNumber(int min, int max){
+        return (int) ((Math.random()*(max-min))+min);
     }
 
     public MapNode (Element e){
@@ -37,6 +53,9 @@ public class MapNode implements Comparable<MapNode>{
         longitude = Double.parseDouble(e.getAttribute("lon"));
         latitude = Double.parseDouble(e.getAttribute("lat"));
         edges = new ArrayList<>();
+        pedCount = getRandomNumber(0,20);
+//        euclid = getDistance()
+//        normalized_pedCount = normalize(this.pedCount, graph.min_pedCount, graph.max_pedCont);
     }
 
     public MapNode clone(){
