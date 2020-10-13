@@ -7,27 +7,45 @@ import static com.example.demo.Services.Graph.getDistance;
 
 public class Path implements Comparable<Path>{
     private ArrayList<MapNode> nodes;
-    private double totalCost;
+    private double totalLength;
+    private double totalTime; // in minutes
+    private double totalRisk;
+
 
     public Path(){
         nodes = new ArrayList<MapNode>();
-        totalCost =0;
+        totalLength =0;
     }
 
+    /** Path constructor
+     * @param input_nodes
+     * set totalLength and totalTime of the path
+    * */
     public Path(ArrayList<MapNode> input_nodes){
         nodes = input_nodes;
-        totalCost = 0;
+        totalLength = 0;
         for (int i=0; i< input_nodes.size()-1;i++){
-            totalCost+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
+            totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
         }
+        setTime(); // set total time of the path in mins
     }
+
     public Path(ArrayList<MapNode> input_nodes, double total_cost){
         nodes = input_nodes;
-        totalCost = total_cost;
+        totalLength = total_cost;
+    }
+
+    public void setTime(){
+        totalTime = (totalLength/5000.0)*60.0;
     }
 
     public List<MapNode> getNodes(){return nodes;}
-    public double getTotalCost(){return totalCost;}
+    public double getTotalCost(){return totalLength;}
+
+    public double getTotalTime() {
+        this.totalTime = (this.totalLength/5000.0)*60.0;
+        return this.totalTime;
+    }
     public int size(){return this.nodes.size(); }
     public MapNode get(int idx){return this.nodes.get(idx);}
 
@@ -77,8 +95,8 @@ public class Path implements Comparable<Path>{
 
     @Override
     public int compareTo(Path o) {
-        if(this.totalCost == o.totalCost)
+        if(this.totalLength == o.totalLength)
             return 0;
-        return this.totalCost < o.totalCost ? -1 : 1;
+        return this.totalLength < o.totalLength ? -1 : 1;
     }
 }

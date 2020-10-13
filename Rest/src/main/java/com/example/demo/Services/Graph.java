@@ -9,11 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
+import java.util.*;
 
 
 public class Graph {
@@ -27,6 +23,41 @@ public class Graph {
 
     public static double MPERLAT = 111320;
     public static double MPERLON;
+
+    // members needed for normalization
+    public ArrayList<Double> edgeLength_list = new ArrayList<Double>(); // list of length of all edges
+    public ArrayList<Double> euclid_list = new ArrayList<Double>(); // list of euclid distance for each node to end node
+    public ArrayList<Double> pedCount_list = new ArrayList<Double>(); // list of ped count for each node
+    public double max_length = -1;
+    public double min_length = -1;
+    public double max_euclid = -1;
+    public double min_euclid = -1;
+    public double max_pedCont = -1;
+    public double min_pedCount = -1;
+
+
+    // prepare for normalization
+    public void prepareNormalization( MapNode endNode){
+        for (MapNode n : this.routeNodes.values()) {
+            pedCount_list.add(n.getPedCount());
+            euclid_list.add(getDistance(n, endNode));
+            for (MapEdge e : n.getEdges()){
+                edgeLength_list.add(e.getLength("distance"));
+            }
+        }
+        max_length = Collections.max(edgeLength_list);
+        min_length = Collections.min(edgeLength_list);
+        max_euclid = Collections.max(euclid_list);
+        min_euclid = Collections.min(euclid_list);
+        max_pedCont = Collections.max(pedCount_list);
+        min_pedCount = Collections.min(pedCount_list);
+
+    }
+
+    // normalize datapoint "me" based on min and max of dataset
+    public static double normalize(double me, double min, double max){
+        return (me-min)/(max-min);
+    }
 
     public Graph() {
         this("./data/toronto.osm","./data/Cyclists.csv");
