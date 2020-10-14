@@ -318,11 +318,11 @@ Popups(evt){
                 // var vectorLine = new ol.source.Vector({});
                 // vectorLine.addFeature(featureLine);
 
-                var linestyle = new Style({
-                  fill: new Fill({
+                var linestyle = new ol.style.Style({
+                  fill: new ol.style.Fill({
                     color: color, weight: 5,
                   }),
-                  stroke: new Stroke({
+                  stroke: new ol.style.Stroke({
                     color: color, width: 5
                   }),
                 });
