@@ -24,10 +24,6 @@ public class DemoApplication {
 	public MapNode mapNode;
 	public Planner planner;
 
-	public HashMap<Double, MapNode> nodeMap;
-
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 
@@ -54,16 +50,13 @@ public class DemoApplication {
 	@RestController
 	@CrossOrigin(origins = "http://localhost:4200")
 	class nodeController{
-		@PostMapping("/init")
-		public void initNodeMap(@RequestParam String one){
-			System.out.println("initializing toronto graph");
-			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
-			//torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
-			nodeMap = torontoGraph.routeNodes;
-		}
+
 		@GetMapping("/api")
 		public String getList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end) {
 
+			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
+			//torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
+			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
 
 			// Get start and end node of this tour (Address)
 			MapNode startNode = getElement(nodeMap, bound_start);
@@ -129,6 +122,6 @@ public class DemoApplication {
 			returnValue.setQ3(pref.getQ3());
 			return returnValue;
 		}
-		
+
 	}
 }
