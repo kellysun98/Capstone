@@ -40,7 +40,8 @@ public class KSP {
                 // The sequence of nodes from the source to the spur node of the previous k-shortest path.
                 Path rootPath = previousPath.subPath(0, i);
                 // Clone spurNode for restore purpose
-                MapNode spurNode_copy = spurNode.clone();
+                //MapNode spurNode_copy = spurNode.clone();
+                MapNode spurNode_copy = new MapNode(spurNode);
 
 
                 // Remove edges

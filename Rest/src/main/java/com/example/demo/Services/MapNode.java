@@ -36,6 +36,13 @@ public class MapNode implements Comparable<MapNode>{
         return outsider.id == this.id;
     }
 
+    public MapNode(MapNode newMapNode){
+        id = newMapNode.id;
+        longitude = newMapNode.longitude;
+        latitude = newMapNode.latitude;
+        edges = new ArrayList<>(newMapNode.edges);
+        pedCount = newMapNode.pedCount;
+    }
     public MapNode (){
         id = -1;
         longitude = -1;
@@ -69,6 +76,7 @@ public class MapNode implements Comparable<MapNode>{
         return copy;
 
     }
+
     public void removeEdges(MapNode Node2Remove){
         for (int i=0; i<this.edges.size(); i++){
             if (edges.get(i).getDestinationNodeID() == Node2Remove.id){

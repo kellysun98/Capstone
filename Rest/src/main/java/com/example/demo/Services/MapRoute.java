@@ -13,6 +13,15 @@ public class MapRoute {
     public int maxSpeed;
     public int lanes;
 
+    public MapRoute(MapRoute newMapRoute){
+        routeId = newMapRoute.routeId;
+        this.routeName = newMapRoute.routeName;
+        this.routeType = newMapRoute.routeType;
+        this.maxSpeed = newMapRoute.maxSpeed;
+        this.lanes = newMapRoute.lanes;
+        this.bikeLane = newMapRoute.bikeLane;
+        steps = newMapRoute.steps;
+    }
     public MapRoute(Element route, String routeName, String routeType, boolean bikeLane, int maxSpeed, int lanes){
         routeId = Double.parseDouble(route.getAttribute("id"));
         this.routeName = routeName;
