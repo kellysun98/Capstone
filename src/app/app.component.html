@@ -18,9 +18,15 @@
                 <mat-icon matSuffix>keyboard_arrow_right</mat-icon>
             </mat-form-field>
 
+            
             <div>
+                <button mat-raised-button (click)="setMarker()">See location</button>
+
                 <button mat-raised-button (click)="setMarker(); drawLine2(); toggle(); hideit()">Find My Route</button>
             </div>
+
+           
+
             <div>
                 <button (click)="openWelcome()" style="text-decoration:underline; padding: 0; border: none; background: none; margin-left: 35px!important; margin-top:10px!important; color:blue">Go Back to Questionnaire</button>
             </div>
