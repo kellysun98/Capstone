@@ -21,6 +21,7 @@ import static com.example.demo.Services.Graph.getDistance;
 @SpringBootApplication
 public class DemoApplication {
 	public Graph torontoGraph;
+	public HashMap<Double, MapNode> nodeMap;
 	public MapNode mapNode;
 	public Planner planner;
 
@@ -53,10 +54,6 @@ public class DemoApplication {
 
 		@GetMapping("/api")
 		public String getList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end) {
-
-			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
-			//torontoGraph.loadFiles("./data/toronto.osm", "./data/Cyclists.csv");
-			HashMap<Double, MapNode> nodeMap = torontoGraph.routeNodes;
 
 			// Get start and end node of this tour (Address)
 			MapNode startNode = getElement(nodeMap, bound_start);
@@ -121,6 +118,14 @@ public class DemoApplication {
 			returnValue.setQ2(pref.getQ2());
 			returnValue.setQ3(pref.getQ3());
 			return returnValue;
+		}
+
+		@GetMapping("/init")
+		public String initTorontoGraph(@RequestParam String init_num){
+			System.out.println("initializing graph");
+			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
+			nodeMap = torontoGraph.routeNodes;
+			return ("TorontoGraph Loaded");
 		}
 
 	}

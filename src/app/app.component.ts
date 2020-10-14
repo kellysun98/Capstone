@@ -156,15 +156,13 @@ Popups(evt){
   // }
 
   initBackEnd(){
-    this.http.post("http://localhost:8080/init",'1');
+    let params = new HttpParams().set('init_num', 'loading request');    
+    this.http.get("http://localhost:8080/init", {params:params}).subscribe(
+      res=>console.log('Process Complete'+res)
+    );
     console.log('loading')
   }
   
-  setMapToFullScreen(){
-    var elem = document.getElementById('map');
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-  }}
 
   getUrl(addr){
     var nomUrl = 'https://nominatim.openstreetmap.org/?addressdetails=1&q='
