@@ -32,7 +32,10 @@ public class DemoApplication {
 
 	public MapNode getElement(HashMap<Double, MapNode> nodeMap, String bound) {
 		MapNode res = new MapNode();
-
+		double[] focus = new double[]{(-79.4054900 + -79.3886400) / 2, (43.6613600 + 43.6687500) / 2};
+		double MPERLAT = 111320;
+		double MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
+		double dist = 100000;
 		// 43.668459,43.6698816,-79.3891804,-79.3876308
 		ArrayList<String> l = new ArrayList<>(Arrays.asList(bound.split(",")));
 
@@ -43,6 +46,17 @@ public class DemoApplication {
 					(nodeMap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
 				res = nodeMap.get(key);
 				break;
+			}
+		}
+		if(res.id == -1){
+			for (Double key : nodeMap.keySet()) {
+				double dx = (nodeMap.get(key).longitude - Double.parseDouble(l.get(2))) * MPERLON;
+				double dy = (nodeMap.get(key).latitude - Double.parseDouble(l.get(0))) * MPERLAT;
+				double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+				if (tempdist < dist) {
+					dist = tempdist;
+					res = nodeMap.get(key);
+				}
 			}
 		}
 		return res;

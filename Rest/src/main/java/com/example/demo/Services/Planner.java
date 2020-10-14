@@ -42,9 +42,9 @@ public class Planner {
             while (!priorityQueue.isEmpty()){
                 MapNode node = priorityQueue.remove();
                 if(node.id == goalNode.id){
-    //                double total_cost = 0;
-    //                for(double c:costs.values()){total_cost+=c;};
-    //                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
+                    //                double total_cost = 0;
+                    //                for(double c:costs.values()){total_cost+=c;};
+                    //                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
                     Path fastestRoute = new Path(getGeoList(parents,goalNode));
                     return fastestRoute;
                 }
@@ -59,6 +59,7 @@ public class Planner {
                     }
                 }
             }
+            return null;
         }else if (costFunction.equals("covid")){
             this.graph = graph;
             HashMap<MapNode, MapNode> parents = new HashMap<>();
@@ -92,8 +93,7 @@ public class Planner {
                         priorityQueue.add(nextNode);
                     }
                 }
-            }
-
+            }return null;
         }
         return null;
     }
@@ -155,8 +155,8 @@ public class Planner {
     }
 
     /* Heuristic function that calculates cost of next node.
-    *  "distance" sets cost of next node = length from curr node to next node
-    *  "covidrisk" sets cost of next node = number of pedestrian at next node */
+     *  "distance" sets cost of next node = length from curr node to next node
+     *  "covidrisk" sets cost of next node = number of pedestrian at next node */
     public double heuristics(MapNode node, MapNode goalNode, String objective){
         double res = 0;
         if (objective.equals("distance"))
@@ -178,44 +178,39 @@ public class Planner {
 
         return geoList;
     }
-/**
-    public void initializeMapViewer(){
-        mapViewer = new JXMapViewer();
-
-        // Create a TileFactoryInfo for OpenStreetMap
-        TileFactoryInfo info = new OSMTileFactoryInfo();
-        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
-        mapViewer.setTileFactory(tileFactory);
-        // Use 8 threads in parallel to load the tiles
-        tileFactory.setThreadPoolSize(8);
-
-        // Set the focus
-        MapNode toronto = new MapNode(graph.focus[1], graph.focus[0]);
-        mapViewer.setZoom(5);
-        mapViewer.setAddressLocation(toronto);
-
-        // Add mouse listeners for panning and zooming
-        MouseInputListener mia = new PanMouseInputListener(mapViewer);
-        mapViewer.addMouseListener(mia);
-        mapViewer.addMouseMotionListener(mia);
-        mapViewer.addMouseListener(new CenterMapListener(mapViewer));
-        mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCursor(mapViewer));
-        mapViewer.addKeyListener(new PanKeyListener(mapViewer));
-
-        // Add mouse listener for placing waypoints
-        frame = new JFrame("OpenStreetAStar");
-        WayPointAdapter wayPointAdapter = new WayPointAdapter(mapViewer, graph.routeNodes, this, frame);
-
-        // Display the viewer in a JFrame
-        frame.setLayout(new BorderLayout());
-        String text = "Use left mouse button to pan, mouse wheel to zoom and right mouse button to set waypoints";
-        frame.add(new JLabel(text), BorderLayout.NORTH);
-        frame.getContentPane().add(mapViewer);
-        frame.setSize(800, 800);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }
-*/
+    /**
+     public void initializeMapViewer(){
+     mapViewer = new JXMapViewer();
+     // Create a TileFactoryInfo for OpenStreetMap
+     TileFactoryInfo info = new OSMTileFactoryInfo();
+     DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+     mapViewer.setTileFactory(tileFactory);
+     // Use 8 threads in parallel to load the tiles
+     tileFactory.setThreadPoolSize(8);
+     // Set the focus
+     MapNode toronto = new MapNode(graph.focus[1], graph.focus[0]);
+     mapViewer.setZoom(5);
+     mapViewer.setAddressLocation(toronto);
+     // Add mouse listeners for panning and zooming
+     MouseInputListener mia = new PanMouseInputListener(mapViewer);
+     mapViewer.addMouseListener(mia);
+     mapViewer.addMouseMotionListener(mia);
+     mapViewer.addMouseListener(new CenterMapListener(mapViewer));
+     mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCursor(mapViewer));
+     mapViewer.addKeyListener(new PanKeyListener(mapViewer));
+     // Add mouse listener for placing waypoints
+     frame = new JFrame("OpenStreetAStar");
+     WayPointAdapter wayPointAdapter = new WayPointAdapter(mapViewer, graph.routeNodes, this, frame);
+     // Display the viewer in a JFrame
+     frame.setLayout(new BorderLayout());
+     String text = "Use left mouse button to pan, mouse wheel to zoom and right mouse button to set waypoints";
+     frame.add(new JLabel(text), BorderLayout.NORTH);
+     frame.getContentPane().add(mapViewer);
+     frame.setSize(800, 800);
+     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     frame.setVisible(true);
+     }
+     */
 
     public List<List<Double>> getCoordinates(List<MapNode> plan_result){
         List<List<Double>> coordinates = new ArrayList<>();
@@ -274,10 +269,10 @@ public class Planner {
 
 
 /**
-    public static void main(String[] args){
-        String osmFile = "./data/toronto.osm";
-        Graph torontoGraph = new Graph(osmFile);
-        Planner planner = new Planner(torontoGraph);
-        planner.initializeMapViewer();
-    }*/
+ public static void main(String[] args){
+ String osmFile = "./data/toronto.osm";
+ Graph torontoGraph = new Graph(osmFile);
+ Planner planner = new Planner(torontoGraph);
+ planner.initializeMapViewer();
+ }*/
 }
