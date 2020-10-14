@@ -1,5 +1,7 @@
 import { Component, ErrorHandler, ViewChild } from '@angular/core';
 import Map from 'ol/Map';
+import Stroke from 'ol/style/Stroke';
+import Fill from 'ol/style/Fill';
 import View from 'ol/View';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -102,11 +104,44 @@ export class AppComponent {
       var lon = lonlat[0];
       var lat = lonlat[1];
       alert(`lat: ${lat} long: ${lon}`);
+      this.Popups(args);
     });
 
-  }
+    var highlightStyle = new Style({
+      fill: new Fill({
+        color: 'rgba(255,255,255,0.7)',
+      }),
+      stroke: new Stroke({
+        color: '#3399CC',
+        width: 3,
+      }),
+    });
 
-  
+  //   this.map.on('pointermove', function (e) {
+  //   if (selected !== null) {
+  //     console.log(selected);
+  //     selected.setStyle(undefined);
+  //     selected = null;
+  // }
+
+  // this.map.on('click',function (evt){
+  //   this.Popups(evt);
+  // });
+}
+
+Popups(evt){
+  this.http.get("http://localhost:8080/heatmap")
+  .subscribe(() => {
+    var feat = this.map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+      return feature;
+    });
+    if (feat){
+      console.log(feat)}
+  });
+  //selected = f;
+  //f.setStyle(highlightStyle);
+
+}
   // openDialog(): void {
   //   const dialogRef = this.dialog.open(QuestionaireComponent, {
   //     width: '500px',
@@ -231,8 +266,10 @@ export class AppComponent {
           this.map.getLayers().forEach(function(layer) {
             console.log(layer.get('name'));  });    
     
-      }
-    )    
+      
+       }
+    
+      )    
   }
 
   drawLine2(){
@@ -243,29 +280,14 @@ export class AppComponent {
       result => {
         this.map.getLayers().forEach(function(layer) {
           if (layer.get('name') != undefined && layer.get('name') === 'lines') {
-            // var features = layer.getSource().getFeatures();
-            // features.forEach((feature) => {
-            //     layer.getSource().removeFeature(feature);
-            // });          
           layer.getSource().clear();
-          console.log("routes removed")   //one layer with the names lines removed 
+          console.log("routes removed")   
           }
-      });
+      });   //remove routes once the drawline function is called 
   
         let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
         this.http.get('http://localhost:8080/api', {params:params}).subscribe(
           (res)=>{
-  
-          //   this.map.getLayers().forEach(function(layer) {
-          //     if (layer.get('name') != undefined && layer.get('name') === 'lines') {
-          //       // var features = layer.getSource().getFeatures();
-          //       // features.forEach((feature) => {
-          //       //     layer.getSource().removeFeature(feature);
-          //       // });          
-          //     layer.getSource().clear();
-          //     console.log("routes removed")   //one layer with the names lines removed 
-          //     }
-          // });
   
             this.response = res; 
             var myroutes = []
@@ -277,8 +299,8 @@ export class AppComponent {
                 //console.log('second loop: ' + route)
                               
                 var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
-                var g_color = Math.floor(Math.random() * (225 - 0 + 1) + 0);
-                var b_color = Math.floor(Math.random() * (225 - 0 + 1) + 0);
+                var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
                 var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5'+')';
   
                 for (var i = 0; i < route.length; i++) {
@@ -292,6 +314,15 @@ export class AppComponent {
                 // var vectorLine = new ol.source.Vector({});
                 // vectorLine.addFeature(featureLine);
 
+                var linestyle = new Style({
+                  fill: new Fill({
+                    color: color, weight: 5,
+                  }),
+                  stroke: new Stroke({
+                    color: color, width: 5
+                  }),
+                });
+                featureLine.setStyle(linestyle);
                 myroutes.push(featureLine)
               }   //one route generated for this navigation
 
@@ -314,10 +345,10 @@ export class AppComponent {
                   console.log("new layer created"); 
                   var vectorLineLayer = new ol.layer.Vector({
                     source: vectorSource,
-                    style: new ol.style.Style({
-                        fill: new ol.style.Fill({ color: color, weight: 5 }),
-                        stroke: new ol.style.Stroke({ color: color, width: 5})
-                    }),
+                    // style: new ol.style.Style({
+                    //     fill: new ol.style.Fill({ color: color, weight: 5 }),
+                    //     stroke: new ol.style.Stroke({ color: color, width: 5})
+                    // }),
                     name: 'lines',
                 });
                 this.map.addLayer(vectorLineLayer);
@@ -411,7 +442,7 @@ Heatmap2(){
 
 heatmapControl(event: MatSlideToggleChange){
   this.http.get("http://localhost:8080/heatmap")
-  .subscribe((heatmap) => {
+  .subscribe(() => {
     console.log(event.checked);
   this.map.getLayers().forEach(function(layer) {
     if (layer.get('name') != undefined && layer.get('name') === 'heatmap' && event.checked === true) {
