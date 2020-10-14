@@ -59,6 +59,7 @@ public class Planner {
                     }
                 }
             }
+            return null;
         }else if (costFunction.equals("covid")){
             this.graph = graph;
             HashMap<MapNode, MapNode> parents = new HashMap<>();
@@ -92,8 +93,7 @@ public class Planner {
                         priorityQueue.add(nextNode);
                     }
                 }
-            }
-
+            }return null;
         }
         return null;
     }

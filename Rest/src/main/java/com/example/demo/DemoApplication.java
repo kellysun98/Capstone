@@ -103,8 +103,8 @@ public class DemoApplication {
 			Planner planner = new Planner();
 			//List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
 //			HashMap<Integer, Path> resultList = planner.toHashMap(planner.plan(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance"));
-//			ArrayList<Path> distancekspresultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
-//			System.out.println("distance ksp completed!");
+			ArrayList<Path> distancekspresultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
+			System.out.println("distance ksp completed!");
 			ArrayList<Path> covidkspresultList = KSP.ksp(torontoGraph, startNode, endNode,"covid", 3);
 			System.out.println("covid ksp completed!");
 //			for (Path p:covidkspresultList){
