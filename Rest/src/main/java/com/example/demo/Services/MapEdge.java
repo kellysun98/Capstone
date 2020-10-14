@@ -19,7 +19,14 @@ public class MapEdge {
     // Get destination node id of MapEdge
     public double getDestinationNodeID(){return this.destinationNode.id;}
 
-
+    public MapEdge(MapEdge newMapEdge) {
+        this.mapRoute = new MapRoute(newMapEdge.mapRoute);
+        this.sourceNode = new MapNode(newMapEdge.sourceNode);
+        this.destinationNode = new MapNode(newMapEdge.sourceNode);
+        this.length = newMapEdge.length;
+        double lon = Double.parseDouble(df.format(destinationNode.longitude));
+        double lat = Double.parseDouble(df.format(destinationNode.latitude));
+    }
 
     public MapEdge(MapRoute mapRoute, MapNode sourceNode, MapNode destinationNode) {
         this.mapRoute = mapRoute;
