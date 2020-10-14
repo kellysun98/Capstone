@@ -102,12 +102,24 @@ public class DemoApplication {
 //			HashMap<Integer, Path> resultList = planner.toHashMap(planner.plan(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance"));
 //			ArrayList<Path> distancekspresultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
 //			System.out.println("distance ksp completed!");
-			ArrayList<Path> covidkspresultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
-			System.out.println("covid ksp completed!");
+//			ArrayList<Path> covidkspresultList = KSP.ksp(torontoGraph, startNode, endNode,"covid", 3);
+//			System.out.println("covid ksp completed!");
+
+			// Test detour_ksp function
+			Path pure_distance_shortestpath = planner.plan(torontoGraph, startNode, endNode,"distance");
+			Path covid_shortestpath = planner.plan(torontoGraph, startNode, endNode,"covid");
+			ArrayList<Path> detourcovidresultList_001 = KSP.detour_ksp(torontoGraph, startNode, endNode,"covid", 3,0.01);
+			ArrayList<Path> detourcovidresultList_5 = KSP.detour_ksp(torontoGraph, startNode, endNode,"covid", 3,5);
+			ArrayList<Path> detourcovidresultList_10 = KSP.detour_ksp(torontoGraph, startNode, endNode,"covid", 3,10);
+			System.out.println("covid detour ksp completed!");
+			// Example usage of detour_ksp with 5 mins detour time
+			ArrayList<Path> detourcovidresultList = KSP.detour_ksp(torontoGraph, startNode, endNode,"covid", 3,5);
+
+
 //			for (Path p:covidkspresultList){
 //				System.out.println("Time: " + p.getTotalTime());
 //			}
-			String result = KSP.KSPtoJson(covidkspresultList);
+			String result = KSP.KSPtoJson(detourcovidresultList);
 			return result;
 		}
 
