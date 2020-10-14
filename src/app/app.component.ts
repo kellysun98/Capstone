@@ -63,7 +63,7 @@ export class AppComponent {
       this.openWelcome();
       //this.Heatmap();
       this.Heatmap2();
-      this.initBackEnd();   
+      // this.initBackEnd();   
       //this.setMapToFullScreen();
     //this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
