@@ -60,7 +60,8 @@ export class AppComponent {
     ngOnInit() {
       this.openWelcome();
       //this.Heatmap();
-      this.Heatmap2();   
+      this.Heatmap2();
+      this.initBackEnd();   
       //this.setMapToFullScreen();
     //this.getAllCoords();
     var mousePositionControl = new ol.control.MousePosition({
@@ -118,6 +119,11 @@ export class AppComponent {
   //     this.email = result;
   //   });
   // }
+
+  initBackEnd(){
+    this.http.post("http://localhost:8080/init",'1');
+    console.log('loading')
+  }
   
   setMapToFullScreen(){
     var elem = document.getElementById('map');
