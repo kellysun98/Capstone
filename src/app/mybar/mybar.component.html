@@ -33,10 +33,11 @@
             <h2>COVID-19 Safety Level</h2>
             <div id = "{{'container-' + slider.value}}">
                 <mat-slider #slider
+                (change)="updateSetting($event)"
                 max="5"
                 min="0"
                 thumbLabel=true
-                value = "1">
+                value = "0">
                 </mat-slider>
             </div>    
             </mat-card-content>
