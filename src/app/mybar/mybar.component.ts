@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import {MatSliderModule} from '@angular/material/slider';
-import { SliderService } from '../slider.service';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-mybar',
@@ -26,7 +26,7 @@ export class MybarComponent implements OnInit {
   // myCallbackFunction = (): void=>{
   //   console.log(this.gridsize)
   // }
-  constructor(private sliderService:SliderService) { }
+  constructor(private sliderService:DataService) { }
 
   newMessage(){
     this.sliderService.changeMessage(this.gridsize)

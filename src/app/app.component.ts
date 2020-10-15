@@ -1,3 +1,4 @@
+import { DataService } from './data.service';
 import { Component, ErrorHandler, ViewChild } from '@angular/core';
 import Map from 'ol/Map';
 import Stroke from 'ol/style/Stroke';
@@ -28,7 +29,7 @@ import { ɵBrowserPlatformLocation } from '@angular/common';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MybarComponent } from './mybar/mybar.component';
 import { Input, Directive } from '@angular/core';
-import { SliderService } from './slider.service';
+
 
 
 
@@ -59,15 +60,13 @@ export class AppComponent {
   public useDefault = true;
   public show: boolean = false;
   value;
-  data: string;
 
-
-  constructor(private http: HttpClient, public dialog: MatDialog, private sliderServcie:SliderService){
+  constructor(private http: HttpClient, private slider:DataService, public dialog: MatDialog){
   }
   ngOnInit() {
     this.openWelcome();
     this.Heatmap2();
-
+    this.slider.currentMessage.subscribe(res=>console.log(res));
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
