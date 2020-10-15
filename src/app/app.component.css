@@ -50,3 +50,6 @@ mat-sidenav {
 .mat-slide-toggle{
     margin-left: 35px;
 }
+mat-slider{
+  width: 300px;
+}

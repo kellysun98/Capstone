@@ -33,6 +33,20 @@
         </div>
         <ng-container *ngIf="show">
             <app-mybar></app-mybar>
+            <mat-card class="result-card">
+                <mat-card-content>
+                <h2>COVID-19 Safety Level</h2>
+                <div id = "{{'container-' + slider.value}}">
+                    <mat-slider #slider
+                    (change) = "updateSetting($event);sliderLine()"
+                    max="5"
+                    min="0"
+                    thumbLabel=true
+                    value = "0">
+                    </mat-slider>
+                </div>    
+                </mat-card-content>
+              </mat-card>    
         </ng-container>
 
         <mat-card>

@@ -84,19 +84,19 @@ public class DemoApplication {
 
 				if(userPref.getQ3().contains("I don't have a specific concern")){ // Case 1.1: user不care covid risk, 直接叫ksp with distance
 					long timeStart = System.currentTimeMillis();
-					resultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
+					resultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 10);
 					long timeFinish = System.currentTimeMillis();
 					System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
 
 				}else { // Case 1.2: user在q3 check off了一些东西，证明他care about covid risk, 同时user在q2选择了: 1)具体detour time limit 或者 2)他没选detour time limit then we default set timeLimit = -1
 					long timeStart = System.currentTimeMillis();
-					resultList = KSP.detour_ksp(torontoGraph, startNode, endNode, "covid", 3, timeLimit);
+					resultList = KSP.detour_ksp(torontoGraph, startNode, endNode, "covid", 10, timeLimit);
 					long timeFinish = System.currentTimeMillis();
 					System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
 				}
 
 			}else{ // Case 2: user skip了questionnaire，默认为他only care about distance, 给他三条距离最短的路线
-				resultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
+				resultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 10);
 			}
 			String result = KSP.KSPtoJson(resultList);
 			return result;
