@@ -3,6 +3,7 @@ package com.example.demo;
 
 import com.example.demo.Services.*;
 import com.fasterxml.jackson.databind.util.BeanUtil;
+import com.google.gson.Gson;
 import org.springframework.beans.BeanUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -100,6 +101,28 @@ public class DemoApplication {
 			}
 			String result = KSP.KSPtoJson(resultList);
 			return result;
+		}
+
+		@GetMapping("/demo")
+		public String getTwoList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end){
+			MapNode startNode = getElement(nodeMap, bound_start);
+			MapNode endNode = getElement(nodeMap, bound_end);
+			// Prepare for normalization for "covid" heuristic
+			torontoGraph.prepareNormalization(endNode);
+
+			Planner planner = new Planner();
+			ArrayList<Path> resultList1 = new ArrayList<Path>();
+			ArrayList<Path> resultList2 = new ArrayList<Path>();
+			ArrayList<String> temp_result = new ArrayList<>();
+
+			resultList1=KSP.ksp(torontoGraph, startNode, endNode,"distance", 2);
+			resultList2=KSP.ksp(torontoGraph, startNode,endNode,"covid",2);
+			temp_result.add(KSP.KSPtoJson(resultList1));
+			temp_result.add(KSP.KSPtoJson(resultList2));
+
+			return new Gson().toJson(temp_result);
+
+
 		}
 
 		@GetMapping("/heatmap")
