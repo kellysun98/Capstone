@@ -20,7 +20,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { ThrowStmt } from '@angular/compiler';
 import { Observable, forkJoin, EMPTY } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import GeoJSON from 'ol/format/GeoJSON';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 import {FullScreen, defaults as defaultControls} from 'ol/control';
@@ -66,14 +66,9 @@ export class AppComponent {
   ngOnInit() {
     this.openWelcome();
     this.Heatmap2();
-    this.slider.currentMessage.subscribe(res=>console.log(res));
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
-      // comment the following two lines to have the mouse position
-      // be placed within the map.
-      // className: 'custom-mouse-position',
-      // target: document.getElementById('mouse-position'),
       undefinedHTML: '&nbsp;'
     });
 
@@ -209,7 +204,7 @@ export class AppComponent {
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
 
-    forkJoin([start_obs, end_obs]).subscribe(
+    forkJoin([start_obs, end_obs]).pipe(take(1)).subscribe(
       result => {
         this.map.getLayers().forEach(function(layer) {
           console.log(layer.get('name'));
@@ -277,6 +272,12 @@ export class AppComponent {
       )    
   }
 
+  receiveSliderVal(){
+    this.slider.currentMessage.pipe(take(1)).subscribe(
+      res=>console.log('Slider Value '+res)
+    )
+  }
+
   drawLine2(){
 
     // this.sliderServcie.currentMessage.subscribe(
@@ -285,7 +286,7 @@ export class AppComponent {
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
   
-    forkJoin([start_obs, end_obs]).subscribe(
+    forkJoin([start_obs, end_obs]).pipe(take(1)).subscribe(
       result => {
         this.map.getLayers().forEach(function(layer) {
           if (layer.get('name') != undefined && layer.get('name') === 'lines') {

@@ -52,6 +52,9 @@
         <div>
             <mat-slide-toggle [checked]="useDefault" (change)="heatmapControl($event)"> Show COVID-19 Map</mat-slide-toggle>
         </div>
+        <div>
+            <button (click)="receiveSliderVal()">Slider Value</button>
+        </div>
 
     </mat-sidenav>
     <mat-sidenav-content>

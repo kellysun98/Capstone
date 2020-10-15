@@ -11,6 +11,8 @@ import { DataService } from '../data.service';
 })
 export class MybarComponent implements OnInit {
   ngOnInit(): void {
+    // this.newMessage();
+    this.sliderService.currentMessage.subscribe(mess=>console.log(mess))
   }
   
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
@@ -20,7 +22,7 @@ export class MybarComponent implements OnInit {
   updateSetting(event) {
     this.gridsize = event.value;
     // this.sendSliderValue.emit(event.value);
-    console.log(this.gridsize);
+    //console.log(this.gridsize);
   }
 
   // myCallbackFunction = (): void=>{
@@ -29,6 +31,7 @@ export class MybarComponent implements OnInit {
   constructor(private sliderService:DataService) { }
 
   newMessage(){
+    console.log(this.gridsize)
     this.sliderService.changeMessage(this.gridsize)
   }
 
