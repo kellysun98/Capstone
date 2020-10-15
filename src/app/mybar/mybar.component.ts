@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import {MatSliderModule} from '@angular/material/slider';
+import { SliderService } from '../slider.service';
 
 @Component({
   selector: 'app-mybar',
@@ -9,11 +10,26 @@ import {MatSliderModule} from '@angular/material/slider';
   styleUrls: ['./mybar.component.css']
 })
 export class MybarComponent implements OnInit {
+  ngOnInit(): void {
+  }
   
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
-  @Input() inputSideNav: MatSidenav;
+  gridsize: number;
+  // message = 'I am here!'
+  // @Output() sendSliderValue = new EventEmitter<number>();
+  updateSetting(event) {
+    this.gridsize = event.value;
+    // this.sendSliderValue.emit(event.value);
+    console.log(this.gridsize);
+  }
 
-  constructor() { }
-  ngOnInit(): void {
-  };
+  // myCallbackFunction = (): void=>{
+  //   console.log(this.gridsize)
+  // }
+  constructor(private sliderService:SliderService) { }
+
+  newMessage(){
+    this.sliderService.changeMessage(this.gridsize)
+  }
+
 }

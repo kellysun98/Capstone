@@ -26,6 +26,9 @@ import {FullScreen, defaults as defaultControls} from 'ol/control';
 import XYZ from 'ol/source/XYZ';
 import { ɵBrowserPlatformLocation } from '@angular/common';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MybarComponent } from './mybar/mybar.component';
+import { Input, Directive } from '@angular/core';
+import { SliderService } from './slider.service';
 
 
 
@@ -34,10 +37,11 @@ declare var ol: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  @ViewChild('sidenav') public sidenav: MatSidenav;
+
+
   open: boolean;
   heatmap: Object;
   start_add: String = 'St. Michael\'s College parking, Bay Street, Toronto Centre, Old Toronto, Toronto';
@@ -55,17 +59,15 @@ export class AppComponent {
   public useDefault = true;
   public show: boolean = false;
   value;
+  data: string;
 
 
-  constructor(private http: HttpClient, public dialog: MatDialog){
+  constructor(private http: HttpClient, public dialog: MatDialog, private sliderServcie:SliderService){
   }
-    ngOnInit() {
-      this.openWelcome();
-      //this.Heatmap();
-      this.Heatmap2();
-      // this.initBackEnd();   
-      //this.setMapToFullScreen();
-    //this.getAllCoords();
+  ngOnInit() {
+    this.openWelcome();
+    this.Heatmap2();
+
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -130,20 +132,20 @@ export class AppComponent {
   // });
 }
 
-Popups(evt){
-  this.http.get("http://localhost:8080/heatmap")
-  .subscribe(() => {
-    var feat = this.map.forEachFeatureAtPixel(evt.pixel, function (feature) {
-      return feature;
+  Popups(evt){
+    this.http.get("http://localhost:8080/heatmap")
+    .subscribe(() => {
+      var feat = this.map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+        return feature;
+      });
+      if (feat){
+        console.log(feat)}
     });
-    if (feat){
-      console.log(feat)}
-  });
-  //selected = f;
-  //f.setStyle(highlightStyle);
+    //selected = f;
+    //f.setStyle(highlightStyle);
 
-}
-  // openDialog(): void {
+  }
+    // openDialog(): void {
   //   const dialogRef = this.dialog.open(QuestionaireComponent, {
   //     width: '500px',
   //     height: '500px',
@@ -277,6 +279,10 @@ Popups(evt){
   }
 
   drawLine2(){
+
+    // this.sliderServcie.currentMessage.subscribe(
+    //   res=>console.log('Slider Value '+res)
+    // )
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
   
@@ -480,6 +486,5 @@ hideit(){
 toggle(){
   this.show = !this.show;
 }
-
 
 }
