@@ -73,7 +73,7 @@ public class DemoApplication {
 			// Get start and end node of this tour (Address)
 			MapNode startNode = getElement(nodeMap, bound_start);
 			MapNode endNode = getElement(nodeMap, bound_end);
-			// Prepare for normalization for "covid" heurstic
+			// Prepare for normalization for "covid" heuristic
 			torontoGraph.prepareNormalization(endNode);
 
 			Planner planner = new Planner();

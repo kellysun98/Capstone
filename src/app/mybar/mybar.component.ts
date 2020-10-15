@@ -12,27 +12,28 @@ import { DataService } from '../data.service';
 export class MybarComponent implements OnInit {
   ngOnInit(): void {
     // this.newMessage();
-    this.sliderService.currentMessage.subscribe(mess=>console.log(mess))
+    //this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
+    this.sliderService.currentActive.subscribe(active => console.log(active));
   }
   
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   gridsize: number;
-  // message = 'I am here!'
-  // @Output() sendSliderValue = new EventEmitter<number>();
+  active:boolean;
+
   updateSetting(event) {
     this.gridsize = event.value;
-    // this.sendSliderValue.emit(event.value);
-    //console.log(this.gridsize);
+    this.active = true;
   }
 
-  // myCallbackFunction = (): void=>{
-  //   console.log(this.gridsize)
-  // }
   constructor(private sliderService:DataService) { }
 
   newMessage(){
     console.log(this.gridsize)
     this.sliderService.changeMessage(this.gridsize)
+  }
+
+  newActive(){
+    this.sliderService.changeActive(this.active)
   }
 
 }
