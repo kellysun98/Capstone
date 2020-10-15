@@ -394,7 +394,7 @@ export class AppComponent {
     });
     var vectorLine = new ol.source.Vector({});
 
-    this.http.get("http://localhost:8080/heatmap")
+    this.http.get("http://localhost:8080/heatmap").pipe(take(1))
     .subscribe((heatmap) => {
       this.heatmap = heatmap;
       for (let key of Object.keys(this.heatmap)){
@@ -426,7 +426,7 @@ Heatmap2(){
   var test = new ol.source.Vector({});
   var points = new Array();
   let params = new HttpParams().set('start_time', "2020-09-11 00:00:00").set('end_time', "2020-09-13 00:00:00")
-  this.http.get("http://localhost:8080/heatmap2",{params:params}).subscribe((data)=>{
+  this.http.get("http://localhost:8080/heatmap2",{params:params}).pipe(take(1)).subscribe((data)=>{
     for (let key of Object.keys(data)){
 
       var coord  = '[ ' + key + ' ]';
@@ -467,7 +467,7 @@ Heatmap2(){
 }
 
 heatmapControl(event: MatSlideToggleChange){
-  this.http.get("http://localhost:8080/heatmap")
+  this.http.get("http://localhost:8080/heatmap").pipe(take(1))
   .subscribe(() => {
     console.log(event.checked);
   this.map.getLayers().forEach(function(layer) {
