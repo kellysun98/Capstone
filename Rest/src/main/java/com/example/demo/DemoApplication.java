@@ -24,6 +24,7 @@ public class DemoApplication {
 	public HashMap<Double, MapNode> nodeMap;
 	public MapNode mapNode;
 	public Planner planner;
+	public userPreference userPref;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -72,54 +73,32 @@ public class DemoApplication {
 			// Get start and end node of this tour (Address)
 			MapNode startNode = getElement(nodeMap, bound_start);
 			MapNode endNode = getElement(nodeMap, bound_end);
-			// Using lat long
-//			MapNode startNode = getElement(nodeMap, bound_start);
-//			MapNode endNode = getElement(nodeMap, bound_end);
-
+			// Prepare for normalization for "covid" heurstic
 			torontoGraph.prepareNormalization(endNode);
-//			ArrayList<Double> edgeLength_list = new ArrayList<Double>(); // list of length of all edges
-//			ArrayList<Double> euclid_list = new ArrayList<Double>(); // list of euclid distance for each node to end node
-//			ArrayList<Double> pedCount_list = new ArrayList<Double>(); // list of ped count for each node
-//
-//			for (MapNode n : nodeMap.values()) {
-//				pedCount_list.add(n.getPedCount());
-//				euclid_list.add(getDistance(n, endNode));
-//				for (MapEdge e : n.getEdges()){
-//					edgeLength_list.add(e.getLength("distance"));
-//				}
-////				System.out.println("lon: " + n.longitude + " lat: " + n.latitude);
-//			}
-//			// Find max and min vals in 3 lists above for normalization purpose
-//			double max_length = Collections.max(edgeLength_list);
-//			double min_length = Collections.min(edgeLength_list);
-//			double max_euclid = Collections.max(euclid_list);
-//			double min_euclid = Collections.min(euclid_list);
-//			double max_pedCont = Collections.max(pedCount_list);
-//			double min_pedCount = Collections.min(pedCount_list);
 
 			Planner planner = new Planner();
-			//List<List<List<Double>>> resultList = planner.runSearches(getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat));
-//			HashMap<Integer, Path> resultList = planner.toHashMap(planner.plan(torontoGraph, getElement(nodeMap, longitude,latitude), getElement(nodeMap, end_long, end_lat),"distance"));
-//			ArrayList<Path> distancekspresultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
-//			System.out.println("distance ksp completed!");
-//			ArrayList<Path> covidkspresultList = KSP.ksp(torontoGraph, startNode, endNode,"covid", 3);
-//			System.out.println("covid ksp completed!");
+			ArrayList<Path> resultList = new ArrayList<Path>();
 
-			// Test detour_ksp function
-			Path pure_distance_shortestpath = planner.plan(torontoGraph, startNode, endNode,"distance");
-			Path covid_shortestpath = planner.plan(torontoGraph, startNode, endNode,"covid");
-			ArrayList<Path> detourcovidresultList_001 = KSP.detour_ksp(torontoGraph, startNode, endNode,"covid", 3,0.01);
-			ArrayList<Path> detourcovidresultList_5 = KSP.detour_ksp(torontoGraph, startNode, endNode,"covid", 3,5);
-			ArrayList<Path> detourcovidresultList_10 = KSP.detour_ksp(torontoGraph, startNode, endNode,"covid", 3,10);
-			System.out.println("covid detour ksp completed!");
-			// Example usage of detour_ksp with 5 mins detour time
-			ArrayList<Path> detourcovidresultList = KSP.detour_ksp(torontoGraph, startNode, endNode,"covid", 3,5);
+			if (userPref!=null){ // Case 1: user填写了questionnaire
+				double timeLimit = userPref.getTimefromQ2();
 
+				if(userPref.getQ3().contains("I don't have a specific concern")){ // Case 1.1: user不care covid risk, 直接叫ksp with distance
+					long timeStart = System.currentTimeMillis();
+					resultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
+					long timeFinish = System.currentTimeMillis();
+					System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
 
-//			for (Path p:covidkspresultList){
-//				System.out.println("Time: " + p.getTotalTime());
-//			}
-			String result = KSP.KSPtoJson(detourcovidresultList);
+				}else { // Case 1.2: user在q3 check off了一些东西，证明他care about covid risk, 同时user在q2选择了: 1)具体detour time limit 或者 2)他没选detour time limit then we default set timeLimit = -1
+					long timeStart = System.currentTimeMillis();
+					resultList = KSP.detour_ksp(torontoGraph, startNode, endNode, "covid", 3, timeLimit);
+					long timeFinish = System.currentTimeMillis();
+					System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
+				}
+
+			}else{ // Case 2: user skip了questionnaire，默认为他only care about distance, 给他三条距离最短的路线
+				resultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 3);
+			}
+			String result = KSP.KSPtoJson(resultList);
 			return result;
 		}
 
@@ -139,11 +118,12 @@ public class DemoApplication {
 
 		@PostMapping("/questionnaire")
 		public userPreference postPref(@RequestBody userPreference pref){
-			userPreference returnValue = new userPreference();
-			returnValue.setQ1(pref.getQ1());
-			returnValue.setQ2(pref.getQ2());
-			returnValue.setQ3(pref.getQ3());
-			return returnValue;
+			userPref = new userPreference();
+			userPref.setQ1(pref.getQ1());
+			userPref.setQ2(pref.getQ2());
+			userPref.setQ3(pref.getQ3());
+			System.out.println("finished fetch user questionnaire answers");
+			return userPref;
 		}
 
 		@GetMapping("/init")
