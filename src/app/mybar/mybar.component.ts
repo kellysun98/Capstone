@@ -12,8 +12,8 @@ import { DataService } from '../data.service';
 export class MybarComponent implements OnInit {
   ngOnInit(): void {
     // this.newMessage();
-    //this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
-    this.sliderService.currentActive.subscribe(active => console.log(active));
+    // this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
+    // this.sliderService.currentActive.subscribe(active => console.log(active));
   }
   
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
