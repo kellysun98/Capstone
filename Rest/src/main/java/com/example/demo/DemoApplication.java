@@ -103,8 +103,8 @@ public class DemoApplication {
 			return result;
 		}
 
-		@GetMapping("/demo")
-		public String getTwoList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end){
+		@GetMapping("/demo1")
+		public String getDemoList1(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end){
 			MapNode startNode = getElement(nodeMap, bound_start);
 			MapNode endNode = getElement(nodeMap, bound_end);
 			// Prepare for normalization for "covid" heuristic
@@ -112,15 +112,26 @@ public class DemoApplication {
 
 			Planner planner = new Planner();
 			ArrayList<Path> resultList1 = new ArrayList<Path>();
-			ArrayList<Path> resultList2 = new ArrayList<Path>();
-			ArrayList<String> temp_result = new ArrayList<>();
 
 			resultList1=KSP.ksp(torontoGraph, startNode, endNode,"distance", 2);
-			resultList2=KSP.ksp(torontoGraph, startNode,endNode,"covid",2);
-			temp_result.add(KSP.KSPtoJson(resultList1));
-			temp_result.add(KSP.KSPtoJson(resultList2));
 
-			return new Gson().toJson(temp_result);
+			return KSP.KSPtoJson(resultList1);
+
+
+		}
+		@GetMapping("/demo2")
+		public String getDemoList2(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end){
+			MapNode startNode = getElement(nodeMap, bound_start);
+			MapNode endNode = getElement(nodeMap, bound_end);
+			// Prepare for normalization for "covid" heuristic
+			torontoGraph.prepareNormalization(endNode);
+
+			Planner planner = new Planner();
+			ArrayList<Path> resultList2 = new ArrayList<Path>();
+
+			resultList2=KSP.ksp(torontoGraph, startNode,endNode,"covid",2);
+
+			return KSP.KSPtoJson(resultList2);
 
 
 		}
