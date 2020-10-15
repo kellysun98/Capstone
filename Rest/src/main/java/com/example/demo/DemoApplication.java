@@ -103,6 +103,36 @@ public class DemoApplication {
 			return result;
 		}
 
+		@GetMapping("/api2")
+		public String gettwoList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end) {
+
+			// Get start and end node of this tour (Address)
+			MapNode startNode = getElement(nodeMap, bound_start);
+			MapNode endNode = getElement(nodeMap, bound_end);
+			// Prepare for normalization for "covid" heuristic
+			torontoGraph.prepareNormalization(endNode);
+
+			Planner planner = new Planner();
+			ArrayList<Path> resultList_distance = new ArrayList<Path>();
+			ArrayList<Path> resultList_covid = new ArrayList<Path>();
+
+
+			if (userPref!=null){ // Case 1: user填写了questionnaire
+				double timeLimit = userPref.getTimefromQ2();
+				resultList_distance = KSP.ksp(torontoGraph, startNode, endNode,"distance", 2);
+
+				resultList_covid = KSP.ksp(torontoGraph, startNode, endNode, "covid", 2);
+
+			}else{ // Case 2: user skip了questionnaire，默认为他only care about distance, 给他三条距离最短的路线
+				resultList_distance = KSP.ksp(torontoGraph, startNode, endNode,"distance", 2);
+				resultList_covid = KSP.ksp(torontoGraph, startNode, endNode, "covid", 2);
+
+			}
+			String result = KSP.KSPSToJson(resultList_distance,resultList_covid);
+			return result;
+		}
+
+
 		@GetMapping("/demo1")
 		public String getDemoList1(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end){
 			MapNode startNode = getElement(nodeMap, bound_start);

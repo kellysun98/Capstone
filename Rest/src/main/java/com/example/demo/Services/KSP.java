@@ -100,6 +100,48 @@ public class KSP {
         return solution_to_string;
     }
 
+    public static ArrayList KSPToStrings(ArrayList <Path> temp,String cost_function){
+        ArrayList solution = new ArrayList<>();
+        int i = 0;
+        for (Path p : temp) {
+//            HashMap<Integer, ArrayList<String>> path_map = new HashMap<>();
+
+//            if (i == 2){
+//                break;
+//            }  //only 2 routes per cost funcion
+            ArrayList<String> return_value = new ArrayList<>();
+            List<MapNode> node_list = p.getNodes();
+            String mn_toString = new String();
+            for (MapNode mn : node_list) {
+                Double longitude = mn.longitude;
+                Double latitude = mn.latitude;
+                mn_toString += ('[' + longitude.toString() + ',' + latitude.toString() + ']' + ',');
+            }
+            Double cost = p.getTotalCost();
+            Double time = p.getTotalTime();
+            return_value.add(cost.toString());
+            return_value.add(mn_toString.substring(0, mn_toString.length() - 1));
+            return_value.add(time.toString());
+            return_value.add(p.getDescription());
+            return_value.add(cost_function);
+//            path_map.put(count, return_value);
+            solution.add(return_value); //[cost, nodelist, totaltime, description,cost_func]
+            i = i++;
+        }
+            return solution;
+    }
+
+    public static String KSPSToJson(ArrayList <Path> distance, ArrayList<Path> covid){
+            ArrayList sol1 = KSPToStrings(distance, "distance");
+            ArrayList sol2 = KSPToStrings(covid, "covid");
+            sol1.addAll(sol2);
+            String sol = new Gson().toJson(sol1);
+
+            return sol;
+
+    }
+
+
     /* Find k shortest routes that satisfy user's input for "max time spent detouring route"*/
     public static ArrayList<Path> detour_ksp(Graph graph, MapNode src, MapNode dest, String costFunction, int K, double detour_time) {
         double detour_distance = detour_time/60*5000;
