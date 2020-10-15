@@ -29,6 +29,7 @@ import { ɵBrowserPlatformLocation } from '@angular/common';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MybarComponent } from './mybar/mybar.component';
 import { Input, Directive } from '@angular/core';
+import { MAT_RIPPLE_GLOBAL_OPTIONS } from '@angular/material/core';
 
 
 
@@ -42,7 +43,7 @@ declare var ol: any;
 })
 export class AppComponent {
 
-
+  active: boolean;
   open: boolean;
   heatmap: Object;
   start_add: String = 'St. Michael\'s College parking, Bay Street, Toronto Centre, Old Toronto, Toronto';
@@ -59,7 +60,7 @@ export class AppComponent {
   amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   public useDefault = true;
   public show: boolean = false;
-  value;
+  slider_val: number;
 
   constructor(private http: HttpClient, private slider:DataService, public dialog: MatDialog){
   }
@@ -272,17 +273,32 @@ export class AppComponent {
       )    
   }
 
-  receiveSliderVal(){
-    this.slider.currentMessage.pipe(take(1)).subscribe(
-      res=>console.log('Slider Value '+res)
+  // receiveSliderVal(){
+  //   this.slider.currentMessage.pipe(take(1)).subscribe(
+  //     res=>console.log('Slider Value '+res)
+  //   )
+  // }
+
+
+  sliderLine(){
+    //add a listener for the activation of a mat-slider
+    this.slider.currentActive.pipe(take(1)).subscribe(
+      res=>this.active = res
     )
+      if(this.active == false){
+        console.log('Recieved is false')
+      }else{
+        console.log('Received is true')
+      }
   }
 
+  //initialize to the lowest cost
   drawLine2(){
 
     // this.sliderServcie.currentMessage.subscribe(
     //   res=>console.log('Slider Value '+res)
     // )
+
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
   
