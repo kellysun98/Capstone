@@ -293,6 +293,187 @@ export class AppComponent {
   //   )
   // }
 
+  demoCovidLine(){
+    let start_obs = this.http.get(this.getUrl(this.start_add));
+    let end_obs = this.http.get(this.getUrl(this.end_add));
+  
+    forkJoin([start_obs, end_obs]).pipe(take(1)).subscribe(
+      result => {
+      //   this.map.getLayers().forEach(function(layer) {
+      //     if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+      //     layer.getSource().clear();
+      //     console.log("routes removed")   
+      //     }
+      // });   //remove routes once the drawline function is called 
+  
+        let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
+        this.http.get('http://localhost:8080/demo2', {params:params}).subscribe(
+          (res)=>{
+  
+            this.response = res; 
+            var myroutes = []
+            // console.log('From backend: ' + JSON.parse(res.toString()));
+            for(var index=0; index<2; index++){
+              console.log('first loop: ' + this.response[index])
+              // for (let key of Object.keys(this.response[index])){
+                var route = JSON.parse('[' + this.response[index][1] + ']');
+                //console.log('second loop: ' + route)
+                              
+                var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                // var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                // var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var color = 'rgba('+r_color+','+255+','+255+', 0.5'+')';
+  
+                for (var i = 0; i < route.length; i++) {
+                  console.log('length enumeration '+i);
+                  route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+                }
+                var featureLine = new ol.Feature({
+                  geometry: new ol.geom.LineString(route)
+                });
+
+                // var vectorLine = new ol.source.Vector({});
+                // vectorLine.addFeature(featureLine);
+
+                var linestyle = new ol.style.Style({
+                  fill: new ol.style.Fill({
+                    color: color, weight: 5,
+                  }),
+                  stroke: new ol.style.Stroke({
+                    color: color, width: 5
+                  }),
+                });
+                featureLine.setStyle(linestyle);
+                myroutes.push(featureLine)
+              }   //one route generated for this navigation
+
+              var vectorSource = new ol.source.Vector({
+                features: myroutes,
+              }); //multiple routes added 
+              
+              var indicator = 0;
+              this.map.getLayers().forEach(function(layer) {
+                if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+                  myroutes.forEach((feature) => {
+                    layer.getSource().addFeature(feature);            
+                  });    
+                    indicator = 1;   
+                    console.log("feature added to existing layer"); 
+                }
+              });
+      
+                if(indicator  === 0) {  
+                  console.log("new layer created"); 
+                  var vectorLineLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                    // style: new ol.style.Style({
+                    //     fill: new ol.style.Fill({ color: color, weight: 5 }),
+                    //     stroke: new ol.style.Stroke({ color: color, width: 5})
+                    // }),
+                    name: 'lines',
+                });
+                this.map.addLayer(vectorLineLayer);
+              }
+      
+                this.map.getLayers().forEach(function(layer) {
+                  console.log(layer.get('name'));  });    
+          
+            }
+          )    
+        })
+
+  }
+
+  demoDistanceLine(){
+    let start_obs = this.http.get(this.getUrl(this.start_add));
+    let end_obs = this.http.get(this.getUrl(this.end_add));
+  
+    forkJoin([start_obs, end_obs]).pipe(take(1)).subscribe(
+      result => {
+      //   this.map.getLayers().forEach(function(layer) {
+      //     if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+      //     layer.getSource().clear();
+      //     console.log("routes removed")   
+      //     }
+      // });   //remove routes once the drawline function is called 
+  
+        let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
+        this.http.get('http://localhost:8080/demo1', {params:params}).subscribe(
+          (res)=>{
+  
+            this.response = res; 
+            var myroutes = []
+            // console.log('From backend: ' + JSON.parse(res.toString()));
+            for(var index=0; index<2; index++){
+              console.log('first loop: ' + this.response[index])
+              // for (let key of Object.keys(this.response[index])){
+                var route = JSON.parse('[' + this.response[index][1] + ']');
+                //console.log('second loop: ' + route)
+                              
+                // var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                // var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var color = 'rgba('+255+','+g_color+','+225+', 0.5'+')';
+  
+                for (var i = 0; i < route.length; i++) {
+                  console.log('length enumeration '+i);
+                  route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+                }
+                var featureLine = new ol.Feature({
+                  geometry: new ol.geom.LineString(route)
+                });
+
+                // var vectorLine = new ol.source.Vector({});
+                // vectorLine.addFeature(featureLine);
+
+                var linestyle = new ol.style.Style({
+                  fill: new ol.style.Fill({
+                    color: color, weight: 5,
+                  }),
+                  stroke: new ol.style.Stroke({
+                    color: color, width: 5
+                  }),
+                });
+                featureLine.setStyle(linestyle);
+                myroutes.push(featureLine)
+              }   //one route generated for this navigation
+
+              var vectorSource = new ol.source.Vector({
+                features: myroutes,
+              }); //multiple routes added 
+              
+              var indicator = 0;
+              this.map.getLayers().forEach(function(layer) {
+                if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+                  myroutes.forEach((feature) => {
+                    layer.getSource().addFeature(feature);            
+                  });    
+                    indicator = 1;   
+                    console.log("feature added to existing layer"); 
+                }
+              });
+      
+                if(indicator  === 0) {  
+                  console.log("new layer created"); 
+                  var vectorLineLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                    // style: new ol.style.Style({
+                    //     fill: new ol.style.Fill({ color: color, weight: 5 }),
+                    //     stroke: new ol.style.Stroke({ color: color, width: 5})
+                    // }),
+                    name: 'lines',
+                });
+                this.map.addLayer(vectorLineLayer);
+              }
+      
+                this.map.getLayers().forEach(function(layer) {
+                  console.log(layer.get('name'));  });    
+          
+            }
+          )    
+        })
+
+  }
 
   sliderLine(){
     //add a listener for the activation of a mat-slider
