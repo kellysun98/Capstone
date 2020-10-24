@@ -25,6 +25,29 @@ public class PSQLConnect {
 //    public static String user = "REMOVED";
 //    public static String password = "REMOVED";
 
+    public static MapNode getNodebyID(String id){
+        MapNode node = new MapNode();
+
+        try (Connection con = DriverManager.getConnection(url, user, password);
+             PreparedStatement pst = con.prepareStatement(
+                     "SELECT * FROM planet_osm_nodes" +
+                             " WHERE (id = '" + id + "');"
+             );
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()){
+                node = new MapNode();
+                node.id = new Double (rs.getLong("id"));
+                node.latitude = new Double (rs.getInt("lat"));
+                node.longitude = new Double (rs.getInt("lon"));
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Connection failure.");
+            ex.printStackTrace();
+        }
+        return node;
+    }
+
     public static HashMap<Double,MapNode> getNodeList(){
         HashMap<Double,MapNode> nodelist = new HashMap<Double,MapNode>();
         try (Connection con = DriverManager.getConnection(url, user, password);
