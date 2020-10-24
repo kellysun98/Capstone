@@ -1,9 +1,13 @@
 package com.example.demo;
+import com.example.demo.Services.MapNode;
+import org.w3c.dom.NodeList;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -13,14 +17,54 @@ import java.sql.*;
 //joyce database connection
 public class PSQLConnect {
 //kelly's db conn
-//    public static String url = "jdbc:postgresql://localhost:5432/osm";
-//    public static String user = "yixinsun";
-//    public static String password = "smile01981124";
-
-    public static String url = "jdbc:postgresql://localhost:5432/toronto";
+    public static String url = "jdbc:postgresql://localhost:5432/torontodata";
     public static String user = "postgres";
-    public static String password = "postgres";
+    public static String password = "1";
 
+//    public static String url = "jdbc:postgresql://localhost:5432/toronto";
+//    public static String user = "postgres";
+//    public static String password = "postgres";
+
+    public static HashMap<Double,MapNode> getNodeList(){
+        HashMap<Double,MapNode> nodelist = new HashMap<Double,MapNode>();
+        try (Connection con = DriverManager.getConnection(url, user, password);
+             PreparedStatement pst = con.prepareStatement(
+                     "SELECT * FROM planet_osm_nodes;"
+             );
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()){
+                MapNode node = new MapNode();
+                node.id = new Double (rs.getInt("id"));
+                node.latitude = new Double (rs.getInt("lat"));
+                node.longitude = new Double (rs.getInt("lon"));
+                nodelist.put(node.id,node);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Connection failure.");
+            ex.printStackTrace();
+        }
+        return nodelist;
+    }
+    public static ArrayList<ArrayList<String>> getRouteList(){
+        ArrayList<ArrayList<String>> routelist = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection(url, user, password);
+             PreparedStatement pst = con.prepareStatement(
+                     "SELECT nodes FROM planet_osm_ways;"
+             );
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()){
+                ArrayList<String> newnodelist = new ArrayList<String>(Arrays.asList(rs.getString("nodes").substring(1, rs.getString("nodes").length() -1).split(",",0)));
+
+                routelist.add(newnodelist);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Connection failure.");
+            ex.printStackTrace();
+        }
+        return routelist;
+    }
     //get node id from longitude and latitude
     public static Double getNodeID(String longitude, String latitude){
         Double id = null;

@@ -1,5 +1,6 @@
 package com.example.demo.Services;
 
+import com.example.demo.PSQLConnect;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -7,6 +8,7 @@ import org.w3c.dom.NodeList;
 import java.io.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.lang.reflect.Array;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -59,10 +61,8 @@ public class Graph {
         return (me-min)/(max-min);
     }
 
-    public Graph() {
-        this("./data/toronto.osm","./data/Cyclists.csv");
-    }
 
+    //build graph from osm
     public Graph(String osmFilePath, String accidentsFilePath) {
 
         accidents = new HashMap<>();
@@ -77,7 +77,20 @@ public class Graph {
         MapEdge.graph = this;
         buildGraph();
     }
+    //build graph from db
+    public Graph() {
 
+        accidents = new HashMap<>();
+        nodes = new HashMap<>();
+        routeNodes = new HashMap<>();
+        routes = new HashMap<>();
+//        polygons = new ArrayList<>();
+
+        getFocus();
+        MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
+        MapEdge.graph = this;
+        buildGraph_db();
+    }
 
     public void loadFiles(String osmFilePath, String accidentsFilePath){
         // load osm file
@@ -144,7 +157,31 @@ public class Graph {
 //            e.printStackTrace();
 //        }
     }
+    public void buildGraph_db() {
+        nodes = PSQLConnect.getNodeList();
+        ArrayList<ArrayList<String>> routeList = PSQLConnect.getRouteList();
+/*        for (int i = 0; i < nodeList.getLength(); i++) {
+            Element node = (Element) nodeList.item(i);
+            MapNode newNode = new MapNode(node);
+            nodes.put(newNode.id, newNode);
+        }*/
 
+        for (int i = 0; i < routeList.size(); i++) {
+            //NodeList nodesInRoute = route.getElementsByTagName("nd");
+
+            double thisNode = Double.parseDouble(routeList.get(i).get(0)); //nodeid
+            double nextNode;
+            for (int j = 1; j < routeList.get(i).size(); j++) {
+                nextNode = Double.parseDouble(routeList.get(i).get(j));
+                nodes.get(thisNode).edges.add(new MapEdge(null, nodes.get(thisNode), nodes.get(nextNode)));
+                thisNode = nextNode;
+            }
+            for (String nodeId : routeList.get(i)) {
+                routeNodes.put(Double.parseDouble(nodeId), nodes.get(nodeId));
+            }
+        }
+        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
+    }
     public void buildGraph() {
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
@@ -216,12 +253,10 @@ public class Graph {
     }
 
     private void getFocus() {
-        NodeList boundsList = osmDoc.getElementsByTagName("bounds");
-        Element bounds = (Element) boundsList.item(0);
-        double minLat = Double.parseDouble(bounds.getAttribute("minlat"));
-        double maxLat = Double.parseDouble(bounds.getAttribute("maxlat"));
-        double minLon = Double.parseDouble(bounds.getAttribute("minlon"));
-        double maxLon = Double.parseDouble(bounds.getAttribute("maxlon"));
+        double minLat = 43.48;
+        double maxLat = 43.92;
+        double minLon = -79.7899999;
+        double maxLon = -78.9999999;
         focus = new double[]{(minLon + maxLon) / 2, (minLat + maxLat) / 2};
     }
 
