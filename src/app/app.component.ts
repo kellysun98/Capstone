@@ -60,6 +60,9 @@ export class AppComponent {
   public show: boolean = false;
   slider_val: number;
   gridsize: number;
+  featureOverlay:any;
+  highlight:any;
+  
   // private slider:DataService
 
   constructor(private http: HttpClient, public dialog: MatDialog){
@@ -95,16 +98,6 @@ export class AppComponent {
       
     });
 
-    this.map.on('click', function (args) {
-      console.log(args.coordinate);
-      var lonlat = ol.proj.transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
-      console.log(lonlat);
-      var lon = lonlat[0];
-      var lat = lonlat[1];
-      alert(`lat: ${lat} long: ${lon}`);
-      this.Popups(args);
-    });
-
     var highlightStyle = new Style({
       fill: new Fill({
         color: 'rgba(255,255,255,0.7)',
@@ -115,16 +108,51 @@ export class AppComponent {
       }),
     });
 
-  //   this.map.on('pointermove', function (e) {
-  //   if (selected !== null) {
-  //     console.log(selected);
-  //     selected.setStyle(undefined);
-  //     selected = null;
-  // }
 
-  // this.map.on('click',function (evt){
-  //   this.Popups(evt);
-  // });
+    this.featureOverlay = new VectorLayer({
+      source: new VectorSource(),
+      style: function (feature) {
+        highlightStyle.getText().setText(feature.get('name'));
+        return highlightStyle;
+      },
+    });
+
+    var temphighlight = function (pixel){
+        this.http.get("http://localhost:8080/heatmap")
+        .pipe(take(1)).subscribe(() => {
+          this.map.getLayers().forEach(function(layer) {
+            if (layer.get('name') != undefined && layer.get('name') === 'markers') {
+                layer.getFeatures(pixel).forEach (function (feature){
+                  console.log(feature.get('name'));
+                  if (feature !== this.highlight) {
+                    if (this.highlight) {
+                      this.featureOverlay.getSource().removeFeature(this.highlight);
+                    }
+                    if (feature) {
+                      this.featureOverlay.getSource().addFeature(feature);
+                    }
+                    this.highlight = feature;
+                  }
+                })
+            }
+        }); 
+        })
+
+    }
+
+    this.map.on('click', function (args) {
+      console.log(args.coordinate);
+      var lonlat = ol.proj.transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
+      console.log(lonlat);
+      var lon = lonlat[0];
+      var lat = lonlat[1];
+      alert(`lat: ${lat} long: ${lon}`);
+      //console.log(args.pixel);
+      temphighlight(args.pixel);  
+
+    });
+
+
 }
 
 
@@ -132,19 +160,27 @@ export class AppComponent {
     this.gridsize = event.value;
   }
 
-  // Popups(evt){
-  //   this.http.get("http://localhost:8080/heatmap")
-  //   .subscribe(() => {
-  //     var feat = this.map.forEachFeatureAtPixel(evt.pixel, function (feature) {
-  //       return feature;
-  //     });
-  //     if (feat){
-  //       console.log(feat)}
-  //   });
-  //   //selected = f;
-  //   //f.setStyle(highlightStyle);
-
-  // }
+  highlightFeature(pixel){
+    this.http.get("http://localhost:8080/heatmap")
+    .pipe(take(1)).subscribe(() => {
+      this.map.getLayers().forEach(function(layer) {
+        if (layer.get('name') != undefined && layer.get('name') === 'markers') {
+            layer.getFeatures(pixel).forEach (function (feature){
+              console.log(feature.get('name'));
+              if (feature !== this.highlight) {
+                if (this.highlight) {
+                  this.featureOverlay.getSource().removeFeature(this.highlight);
+                }
+                if (feature) {
+                  this.featureOverlay.getSource().addFeature(feature);
+                }
+                this.highlight = feature;
+              }
+            })
+        }
+    }); 
+    })
+  }
     // openDialog(): void {
   //   const dialogRef = this.dialog.open(QuestionaireComponent, {
   //     width: '500px',
@@ -239,7 +275,8 @@ export class AppComponent {
           var latitude = item.lat;
       
           var iconFeature = new ol.Feature({
-              geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857'))
+              geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857')),
+              name: 'markericon'
           });    
           
           var iconStyle = new ol.style.Style({
@@ -293,6 +330,187 @@ export class AppComponent {
   //   )
   // }
 
+  demoCovidLine(){
+    let start_obs = this.http.get(this.getUrl(this.start_add));
+    let end_obs = this.http.get(this.getUrl(this.end_add));
+  
+    forkJoin([start_obs, end_obs]).pipe(take(1)).subscribe(
+      result => {
+      //   this.map.getLayers().forEach(function(layer) {
+      //     if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+      //     layer.getSource().clear();
+      //     console.log("routes removed")   
+      //     }
+      // });   //remove routes once the drawline function is called 
+  
+        let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
+        this.http.get('http://localhost:8080/demo2', {params:params}).subscribe(
+          (res)=>{
+  
+            this.response = res; 
+            var myroutes = []
+            // console.log('From backend: ' + JSON.parse(res.toString()));
+            for(var index=0; index<2; index++){
+              console.log('first loop: ' + this.response[index])
+              // for (let key of Object.keys(this.response[index])){
+                var route = JSON.parse('[' + this.response[index][1] + ']');
+                //console.log('second loop: ' + route)
+                              
+                var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                // var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                // var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var color = 'rgba('+r_color+','+255+','+255+', 0.5'+')';
+  
+                for (var i = 0; i < route.length; i++) {
+                  console.log('length enumeration '+i);
+                  route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+                }
+                var featureLine = new ol.Feature({
+                  geometry: new ol.geom.LineString(route)
+                });
+
+                // var vectorLine = new ol.source.Vector({});
+                // vectorLine.addFeature(featureLine);
+
+                var linestyle = new ol.style.Style({
+                  fill: new ol.style.Fill({
+                    color: color, weight: 5,
+                  }),
+                  stroke: new ol.style.Stroke({
+                    color: color, width: 5
+                  }),
+                });
+                featureLine.setStyle(linestyle);
+                myroutes.push(featureLine)
+              }   //one route generated for this navigation
+
+              var vectorSource = new ol.source.Vector({
+                features: myroutes,
+              }); //multiple routes added 
+              
+              var indicator = 0;
+              this.map.getLayers().forEach(function(layer) {
+                if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+                  myroutes.forEach((feature) => {
+                    layer.getSource().addFeature(feature);            
+                  });    
+                    indicator = 1;   
+                    console.log("feature added to existing layer"); 
+                }
+              });
+      
+                if(indicator  === 0) {  
+                  console.log("new layer created"); 
+                  var vectorLineLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                    // style: new ol.style.Style({
+                    //     fill: new ol.style.Fill({ color: color, weight: 5 }),
+                    //     stroke: new ol.style.Stroke({ color: color, width: 5})
+                    // }),
+                    name: 'lines',
+                });
+                this.map.addLayer(vectorLineLayer);
+              }
+      
+                this.map.getLayers().forEach(function(layer) {
+                  console.log(layer.get('name'));  });    
+          
+            }
+          )    
+        })
+
+  }
+
+  demoDistanceLine(){
+    let start_obs = this.http.get(this.getUrl(this.start_add));
+    let end_obs = this.http.get(this.getUrl(this.end_add));
+  
+    forkJoin([start_obs, end_obs]).pipe(take(1)).subscribe(
+      result => {
+      //   this.map.getLayers().forEach(function(layer) {
+      //     if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+      //     layer.getSource().clear();
+      //     console.log("routes removed")   
+      //     }
+      // });   //remove routes once the drawline function is called 
+  
+        let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
+        this.http.get('http://localhost:8080/demo1', {params:params}).subscribe(
+          (res)=>{
+  
+            this.response = res; 
+            var myroutes = []
+            // console.log('From backend: ' + JSON.parse(res.toString()));
+            for(var index=0; index<2; index++){
+              console.log('first loop: ' + this.response[index])
+              // for (let key of Object.keys(this.response[index])){
+                var route = JSON.parse('[' + this.response[index][1] + ']');
+                //console.log('second loop: ' + route)
+                              
+                // var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                // var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var color = 'rgba('+255+','+g_color+','+225+', 0.5'+')';
+  
+                for (var i = 0; i < route.length; i++) {
+                  console.log('length enumeration '+i);
+                  route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+                }
+                var featureLine = new ol.Feature({
+                  geometry: new ol.geom.LineString(route)
+                });
+
+                // var vectorLine = new ol.source.Vector({});
+                // vectorLine.addFeature(featureLine);
+
+                var linestyle = new ol.style.Style({
+                  fill: new ol.style.Fill({
+                    color: color, weight: 5,
+                  }),
+                  stroke: new ol.style.Stroke({
+                    color: color, width: 5
+                  }),
+                });
+                featureLine.setStyle(linestyle);
+                myroutes.push(featureLine)
+              }   //one route generated for this navigation
+
+              var vectorSource = new ol.source.Vector({
+                features: myroutes,
+              }); //multiple routes added 
+              
+              var indicator = 0;
+              this.map.getLayers().forEach(function(layer) {
+                if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+                  myroutes.forEach((feature) => {
+                    layer.getSource().addFeature(feature);            
+                  });    
+                    indicator = 1;   
+                    console.log("feature added to existing layer"); 
+                }
+              });
+      
+                if(indicator  === 0) {  
+                  console.log("new layer created"); 
+                  var vectorLineLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                    // style: new ol.style.Style({
+                    //     fill: new ol.style.Fill({ color: color, weight: 5 }),
+                    //     stroke: new ol.style.Stroke({ color: color, width: 5})
+                    // }),
+                    name: 'lines',
+                });
+                this.map.addLayer(vectorLineLayer);
+              }
+      
+                this.map.getLayers().forEach(function(layer) {
+                  console.log(layer.get('name'));  });    
+          
+            }
+          )    
+        })
+
+  }
 
   sliderLine(){
     //add a listener for the activation of a mat-slider
@@ -396,27 +614,27 @@ export class AppComponent {
       });   //remove routes once the drawline function is called 
   
         let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
-        this.http.get('http://localhost:8080/api2', {params:params}).subscribe(  //modified
+        this.http.get('http://localhost:8080/api', {params:params}).subscribe(  //modified
           (res)=>{
   
             this.response = res; 
             var myroutes = []
             // console.log('From backend: ' + JSON.parse(res.toString()));
-            for(var index=0; index<4; index++){
+            for(var index=0; index<2; index++){
               console.log('first loop: ' + this.response[index])
               // for (let key of Object.keys(this.response[index])){
                 var route = JSON.parse('[' + this.response[index][1] + ']');
                 //console.log('second loop: ' + route)
                               
-                // var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
-                // var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-                // var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-                // var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5)';  //random opacity for same cost function
-                if (this.response[index][4] === "distance" && index < 2) {
-                var color = 'rgba(255,0,0,'+ Math.random()+')';}
-                else if 
-                 (this.response[index][4] === "covid" && index < 4) {
-                  var color = 'rgba(255,255,0,'+ Math.random()+')';}
+                var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5)';  //random opacity for same cost function
+                // if (this.response[index][4] === "distance" && index < 2) {
+                // var color = 'rgba(255,0,0,'+ Math.random()+')';}
+                // else if 
+                //  (this.response[index][4] === "covid" && index < 4) {
+                //   var color = 'rgba(255,255,0,'+ Math.random()+')';}
                   //random opacity for same cost function
 
 
