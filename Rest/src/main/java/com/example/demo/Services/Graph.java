@@ -17,7 +17,7 @@ import java.util.*;
 public class Graph {
     public Document osmDoc;
     public double[] focus;
-    public HashMap<Double, MapNode> nodes;
+    public HashMap<String, MapNode> nodes;
     public HashMap<Double, MapNode> routeNodes;
     public HashMap<Double, MapRoute> routes;
     public HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
@@ -158,7 +158,7 @@ public class Graph {
 //        }
     }
     public void buildGraph_db() {
-        nodes = PSQLConnect.getNodeList();
+        //nodes = PSQLConnect.getNodeList();
         ArrayList<ArrayList<String>> routeList = PSQLConnect.getRouteList();
 /*        for (int i = 0; i < nodeList.getLength(); i++) {
             Element node = (Element) nodeList.item(i);
@@ -169,11 +169,22 @@ public class Graph {
         for (int i = 0; i < routeList.size(); i++) {
             //NodeList nodesInRoute = route.getElementsByTagName("nd");
 
-            double thisNode = Double.parseDouble(routeList.get(i).get(0)); //nodeid
-            double nextNode;
+            String thisNode = routeList.get(i).get(0); //nodeid
+            String nextNode;
+            MapNode thisnode = new MapNode();
+            MapNode nextnode = new MapNode();
             for (int j = 1; j < routeList.get(i).size(); j++) {
-                nextNode = Double.parseDouble(routeList.get(i).get(j));
-                nodes.get(thisNode).edges.add(new MapEdge(null, nodes.get(thisNode), nodes.get(nextNode)));
+                nextNode = routeList.get(i).get(j);
+                thisnode = PSQLConnect.getNodebyID(thisNode);
+                nextnode = PSQLConnect.getNodebyID(nextNode);
+                if(nodes.containsKey(thisNode)){
+                    nodes.get(thisNode).edges.add(new MapEdge(null, thisnode, nextnode));
+                }
+                else{
+                    thisnode.edges.add(new MapEdge(null, thisnode, nextnode));
+                    nodes.put(thisNode, thisnode);
+                }
+                //nodes.get(thisNode).edges.add(new MapEdge(null, nodes.get(thisNode), nodes.get(nextNode)));
                 thisNode = nextNode;
             }
             for (String nodeId : routeList.get(i)) {
@@ -188,7 +199,7 @@ public class Graph {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element node = (Element) nodeList.item(i);
             MapNode newNode = new MapNode(node);
-            nodes.put(newNode.id, newNode);
+            nodes.put(Double.toString(newNode.id), newNode);
         }
         for (int i = 0; i < routeList.getLength(); i++) {
             Element route = (Element) routeList.item(i);
