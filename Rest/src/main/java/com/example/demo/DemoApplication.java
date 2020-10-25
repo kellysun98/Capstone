@@ -193,7 +193,8 @@ public class DemoApplication {
 		@GetMapping("/init")
 		public String initTorontoGraph(@RequestParam String init_num){
 			System.out.println("initializing graph");
-			torontoGraph = new Graph();
+			//torontoGraph = new Graph();
+			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
 			nodeMap = torontoGraph.routeNodes;
 			return ("TorontoGraph Loaded");
 		}
