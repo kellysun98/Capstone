@@ -77,7 +77,7 @@ public class KSP {
         ArrayList solution = new ArrayList<>();
 
         for (Path p : ksp_sol) {
-//            HashMap<Integer, ArrayList<String>> path_map = new HashMap<>();
+            HashMap<String, String> path_map = new HashMap<>();
             ArrayList<String> return_value = new ArrayList<>();
             List<MapNode> node_list = p.getNodes();
             String mn_toString = new String();
@@ -88,6 +88,10 @@ public class KSP {
             }
             Double cost = p.getTotalCost();
             Double time = p.getTotalTime();
+//            path_map.put("cost", cost.toString());
+//            path_map.put("routeNode", mn_toString.substring(0, mn_toString.length() - 1));
+//            path_map.put("time", time.toString());
+//            path_map.put("description", p.getDescription());
             return_value.add(cost.toString());
             return_value.add(mn_toString.substring(0, mn_toString.length() - 1));
             return_value.add(time.toString());
@@ -128,7 +132,7 @@ public class KSP {
             solution.add(return_value); //[cost, nodelist, totaltime, description,cost_func]
             i = i++;
         }
-            return solution;
+        return solution;
     }
 
     public static String KSPSToJson(ArrayList <Path> distance, ArrayList<Path> covid){
