@@ -199,7 +199,7 @@ export class AppComponent {
   initBackEnd(){
     let params = new HttpParams().set('init_num', 'loading request');    
     this.http.get("http://localhost:8080/init", {params:params}).subscribe(
-      res=>console.log('Process Complete'+res)
+      res=>console.log('Process Complete')
     );
     console.log('loading')
   }
@@ -246,14 +246,6 @@ export class AppComponent {
   }
 
   setMarker(){
-    // if(this.gridsize==0){
-    //   console.log("slider has not been used!")
-    // }
-    // else if(this.gridsize == undefined){
-    //   console.log("UNDEFINED!!slider has not been used!")
-    // }else{
-    //   console.log(this.gridsize + " slider has been used!")
-    // }
 
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
@@ -327,91 +319,78 @@ export class AppComponent {
       )    
   }
 
-  // receiveSliderVal(){
-  //   this.slider.currentMessage.pipe(take(1)).subscribe(
-  //     res=>console.log('Slider Value '+res)
-  //   )
-  // }
-
   sliderLine(){
-    //add a listener for the activation of a mat-slider
-    let start_obs = this.http.get(this.getUrl(this.start_add));
-    let end_obs = this.http.get(this.getUrl(this.end_add));
   
-    forkJoin([start_obs, end_obs]).pipe(take(1)).subscribe(
-      result => {
+    this.http.get('http://localhost:8080/api').subscribe(
+      (res)=>{
         this.map.getLayers().forEach(function(layer) {
           if (layer.get('name') != undefined && layer.get('name') === 'lines') {
           layer.getSource().clear();
           console.log("routes removed")   
           }
       });   //remove routes once the drawline function is called 
-  
-        let params = new HttpParams().set('bound_start', result[0][0]['boundingbox']).set('bound_end', result[1][0]['boundingbox'])
-        this.http.get('http://localhost:8080/api', {params:params}).subscribe(
-          (res)=>{
-  
-            this.response = res; 
-            var myroutes = []
-            // console.log('From backend: ' + JSON.parse(res.toString()));
-              for(var index=this.gridsize*2 ; index<this.gridsize*2+2; index++){   
-                console.log(index);
-                var route = JSON.parse('[' + this.response[index][1] + ']');
-                console.log('second loop: ' + route)
-                              
-                var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
-                var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-                var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-                var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5'+')';
-  
-                for (var i = 0; i < route.length; i++) {
-                  console.log('length enumeration '+i);
-                  route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
-                }
-                var featureLine = new ol.Feature({
-                  geometry: new ol.geom.LineString(route)
-                });
 
-                // var vectorLine = new ol.source.Vector({});
-                // vectorLine.addFeature(featureLine);
+        this.response = res; 
+        var myroutes = []
+        // console.log('From backend: ' + JSON.parse(res.toString()));
+        for(var index = this.gridsize * 2 ; index < this.gridsize * 2 + 2; index++){   
+          console.log(index);
+          var route = JSON.parse('[' + this.response[index][1] + ']');
+          console.log('second loop: ' + route)
+                        
+          var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
+          var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+          var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+          var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5'+')';
 
-                var linestyle = new ol.style.Style({
-                  fill: new ol.style.Fill({
-                    color: color, weight: 5,
-                  }),
-                  stroke: new ol.style.Stroke({
-                    color: color, width: 5
-                  }),
-                });
-                featureLine.setStyle(linestyle);
-                myroutes.push(featureLine)
-              }
-              var vectorSource = new ol.source.Vector({
-                features: myroutes,
-              }); //multiple routes added 
-              
-              var indicator = 0;
-              this.map.getLayers().forEach(function(layer) {
-                if (layer.get('name') != undefined && layer.get('name') === 'lines') {
-                  myroutes.forEach((feature) => {
-                    layer.getSource().addFeature(feature);            
-                  });    
-                    indicator = 1;   
-                    console.log("feature added to existing layer"); 
-                }
-              });
-      
-                if(indicator  === 0) {  
-                  console.log("new layer created"); 
-                  var vectorLineLayer = new ol.layer.Vector({
-                    source: vectorSource,
-                    name: 'lines',
-                });
-                this.map.addLayer(vectorLineLayer);
-              }
-          
+          for (var i = 0; i < route.length; i++) {
+            console.log('length enumeration '+i);
+            route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+          }
+          var featureLine = new ol.Feature({
+            geometry: new ol.geom.LineString(route)
+          });
+
+          // var vectorLine = new ol.source.Vector({});
+          // vectorLine.addFeature(featureLine);
+
+          var linestyle = new ol.style.Style({
+            fill: new ol.style.Fill({
+              color: color, weight: 5,
+            }),
+            stroke: new ol.style.Stroke({
+              color: color, width: 5
+            }),
+          });
+          featureLine.setStyle(linestyle);
+          myroutes.push(featureLine)
+        }
+        var vectorSource = new ol.source.Vector({
+          features: myroutes,
+        }); //multiple routes added 
+        
+        var indicator = 0;
+        this.map.getLayers().forEach(function(layer) {
+          if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+            myroutes.forEach((feature) => {
+              layer.getSource().addFeature(feature);            
             });    
+              indicator = 1;   
+              console.log("feature added to existing layer"); 
+          }
         });
+
+          if(indicator  === 0) {  
+            console.log("new layer created"); 
+            var vectorLineLayer = new ol.layer.Vector({
+              source: vectorSource,
+              name: 'lines',
+          });
+          this.map.addLayer(vectorLineLayer);
+        }
+      
+      });    
+        //});
 
   }
 
@@ -420,98 +399,93 @@ export class AppComponent {
     let end_obs = this.http.get(this.getUrl(this.end_add));
     forkJoin([start_obs, end_obs]).pipe(take(1)).subscribe(
       result => {
-    var bound_list = {'start_bound': (result[0][0]['boundingbox']).toString(), 'end_bound': (result[1][0]['boundingbox']).toString()}
-    console.log(bound_list);
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    this.http.post('http://localhost:8080/address', bound_list, {headers:headers}).pipe(concatMap(
-      async (
-        val) => this.http.get('http://localhost:8080/api').subscribe((res)=>{
-          this.map.getLayers().forEach(function(layer) {
-            if (layer.get('name') != undefined && layer.get('name') === 'lines') {
-              layer.getSource().clear();
-              console.log("routes removed")   
-            }
-        });   //remove routes once the drawline function is called 
+        var bound_list = {'start_bound': (result[0][0]['boundingbox']).toString(), 'end_bound': (result[1][0]['boundingbox']).toString()}
+    // console.log(bound_list);
+        let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        this.http.post('http://localhost:8080/address', bound_list, { headers:headers }).pipe(
+          concatMap(
+            async (val) => this.http.get('http://localhost:8080/api').subscribe(
+              (res)=>{
+              this.map.getLayers().forEach(function(layer) {
+                if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+                  layer.getSource().clear();
+                  console.log("routes removed")   
+                }
+              });   //remove routes once the drawline function is called 
   
           this.response = res; 
           var myroutes = []
           // console.log('From backend: ' + JSON.parse(res.toString()));
-          for(var index=0; index<2; index++){
+          for(var index = 0; index < 2; index++){
             console.log('first loop: ' + this.response[index])
             // for (let key of Object.keys(this.response[index])){
-              var route = JSON.parse('[' + this.response[index][1] + ']');
-              //console.log('second loop: ' + route)
-                            
-              var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
-              var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-              var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-              var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5)';  //random opacity for same cost function
-              // if (this.response[index][4] === "distance" && index < 2) {
-              // var color = 'rgba(255,0,0,'+ Math.random()+')';}
-              // else if 
-              //  (this.response[index][4] === "covid" && index < 4) {
-              //   var color = 'rgba(255,255,0,'+ Math.random()+')';}
-                //random opacity for same cost function
-  
-  
-              for (var i = 0; i < route.length; i++) {
-                console.log('length enumeration '+i);
-                route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
-              }
-              var featureLine = new ol.Feature({
-                geometry: new ol.geom.LineString(route)
-              });
+            var route = JSON.parse('[' + this.response[index][1] + ']');
+              //console.log('second loop: ' + route)     
+            var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
+            var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+            var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+            var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5)';  //random opacity for same cost function
+
+            for (var i = 0; i < route.length; i++) {
+              console.log('length enumeration '+i);
+              route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+            }
+            var featureLine = new ol.Feature({
+              geometry: new ol.geom.LineString(route)
+            });
   
               // var vectorLine = new ol.source.Vector({});
               // vectorLine.addFeature(featureLine);
   
-              var linestyle = new ol.style.Style({
-                fill: new ol.style.Fill({
-                  color: color, weight: 5,
-                }),
-                stroke: new ol.style.Stroke({
-                  color: color, width: 5
-                }),
-              });
-              featureLine.setStyle(linestyle);
-              myroutes.push(featureLine)
-            }   //one route generated for this navigation
-  
-            var vectorSource = new ol.source.Vector({
-              features: myroutes,
-            }); //multiple routes added 
-            
-            var indicator = 0;
-            this.map.getLayers().forEach(function(layer) {
-              if (layer.get('name') != undefined && layer.get('name') === 'lines') {
-                myroutes.forEach((feature) => {
-                  layer.getSource().addFeature(feature);            
-                });    
-                  indicator = 1;   
-                  console.log("feature added to existing layer"); 
-              }
+            var linestyle = new ol.style.Style({
+              fill: new ol.style.Fill({
+                color: color, weight: 5,
+              }),
+              stroke: new ol.style.Stroke({
+                color: color, width: 5
+              }),
             });
-    
-              if(indicator === 0) {  
-                console.log("new layer created"); 
-                var vectorLineLayer = new ol.layer.Vector({
-                  source: vectorSource,
-                  // style: new ol.style.Style({
-                  //     fill: new ol.style.Fill({ color: color, weight: 5 }),
-                  //     stroke: new ol.style.Stroke({ color: color, width: 5})
-                  // }),
-                  name: 'lines',
-              });
-              this.map.addLayer(vectorLineLayer);
+            featureLine.setStyle(linestyle);
+            myroutes.push(featureLine)
+          }   //one route generated for this navigation
+
+          var vectorSource = new ol.source.Vector({
+            features: myroutes,
+          }); //multiple routes added 
+          
+          var indicator = 0;
+          this.map.getLayers().forEach(function(layer) {
+            if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+              myroutes.forEach((feature) => {
+                layer.getSource().addFeature(feature);            
+              });    
+                indicator = 1;   
+                console.log("feature added to existing layer"); 
             }
-    
-              this.map.getLayers().forEach(function(layer) {
-                console.log(layer.get('name'));  });    
-        
+          });
+  
+          if(indicator === 0) {  
+            console.log("new layer created"); 
+            var vectorLineLayer = new ol.layer.Vector({
+              source: vectorSource,
+              // style: new ol.style.Style({
+              //     fill: new ol.style.Fill({ color: color, weight: 5 }),
+              //     stroke: new ol.style.Stroke({ color: color, width: 5})
+              // }),
+              name: 'lines',
+          });
+            this.map.addLayer(vectorLineLayer);
+          }
+  
+          this.map.getLayers().forEach(function(layer) {
+            console.log(layer.get('name'));  
+          });    
+      
           })
-    ))
-    .subscribe(response=>console.log(response))
-      })
+    )).subscribe(
+      response=>console.log(response)
+    )
+    })
   }
 
 
