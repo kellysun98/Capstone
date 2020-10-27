@@ -8,7 +8,11 @@ public class userPreference {
     private String q2;
     private List<String> q3;
 
-    public userPreference(){};
+    public userPreference(List<String> q1, String q2, List<String> q3){
+        this.q1 = q1;
+        this.q2 = q2;
+        this.q3 = q3;
+    };
 
     public void setQ1(List<String> q1) {
         this.q1 = q1;

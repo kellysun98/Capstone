@@ -26,6 +26,10 @@ public class DemoApplication {
 	public MapNode mapNode;
 	public Planner planner;
 	public userPreference userPref;
+	public Address add = null;
+	public String result = new String();
+	public String startCheck = new String();
+	public String endCheck = new String();
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -69,38 +73,46 @@ public class DemoApplication {
 	class nodeController{
 
 		@GetMapping("/api")
-		public String getList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end) {
+		public String getList() {
+			if (result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))) {
+				// Get start and end node of this tour (Address)
+//			System.out.println("start bound: "+ add.getStart_bound());
+//			System.out.println("end bound: "+add.getEnd_bound());
 
-			// Get start and end node of this tour (Address)
-			MapNode startNode = getElement(nodeMap, bound_start);
-			MapNode endNode = getElement(nodeMap, bound_end);
-			// Prepare for normalization for "covid" heuristic
-			torontoGraph.prepareNormalization(endNode);
+				MapNode startNode = getElement(nodeMap, add.getStart_bound());
+				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
+				// Prepare for normalization for "covid" heuristic
+				torontoGraph.prepareNormalization(endNode);
 
-			Planner planner = new Planner();
-			ArrayList<Path> resultList = new ArrayList<Path>();
+				Planner planner = new Planner();
+				ArrayList<Path> resultList = new ArrayList<Path>();
 
-			if (userPref!=null){ // Case 1: user填写了questionnaire
-				double timeLimit = userPref.getTimefromQ2();
+				if (userPref != null) { // Case 1: user填写了questionnaire
+					double timeLimit = userPref.getTimefromQ2();
 
-				if(userPref.getQ3().contains("I don't have a specific concern")){ // Case 1.1: user不care covid risk, 直接叫ksp with distance
-					long timeStart = System.currentTimeMillis();
-					resultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 10);
-					long timeFinish = System.currentTimeMillis();
-					System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
+					if (userPref.getQ3().contains("I don't have a specific concern")) { // Case 1.1: user不care covid risk, 直接叫ksp with distance
+						long timeStart = System.currentTimeMillis();
+						resultList = KSP.ksp(torontoGraph, startNode, endNode, "distance", 10);
+						long timeFinish = System.currentTimeMillis();
+						System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
 
-				}else { // Case 1.2: user在q3 check off了一些东西，证明他care about covid risk, 同时user在q2选择了: 1)具体detour time limit 或者 2)他没选detour time limit then we default set timeLimit = -1
-					long timeStart = System.currentTimeMillis();
-					resultList = KSP.detour_ksp(torontoGraph, startNode, endNode, "covid", 10, timeLimit);
-					long timeFinish = System.currentTimeMillis();
-					System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
+					} else { // Case 1.2: user在q3 check off了一些东西，证明他care about covid risk, 同时user在q2选择了: 1)具体detour time limit 或者 2)他没选detour time limit then we default set timeLimit = -1
+						long timeStart = System.currentTimeMillis();
+						resultList = KSP.detour_ksp(torontoGraph, startNode, endNode, "covid", 10, timeLimit);
+						long timeFinish = System.currentTimeMillis();
+						System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
+					}
+
+				} else { // Case 2: user skip了questionnaire，默认为他only care about distance, 给他三条距离最短的路线
+					resultList = KSP.ksp(torontoGraph, startNode, endNode, "distance", 10);
 				}
-
-			}else{ // Case 2: user skip了questionnaire，默认为他only care about distance, 给他三条距离最短的路线
-				resultList = KSP.ksp(torontoGraph, startNode, endNode,"distance", 10);
+				result = KSP.KSPtoJson(resultList);
+				startCheck = add.getStart_bound();
+				endCheck = add.getEnd_bound();
+				return result;
+			} else{
+				return result;
 			}
-			String result = KSP.KSPtoJson(resultList);
-			return result;
 		}
 
 		@GetMapping("/api2")
@@ -182,21 +194,35 @@ public class DemoApplication {
 
 		@PostMapping("/questionnaire")
 		public userPreference postPref(@RequestBody userPreference pref){
-			userPref = new userPreference();
-			userPref.setQ1(pref.getQ1());
-			userPref.setQ2(pref.getQ2());
-			userPref.setQ3(pref.getQ3());
-			System.out.println("finished fetch user questionnaire answers");
+			userPref = new userPreference(pref.getQ1(), pref.getQ2(), pref.getQ3());
+//			userPref.setQ1(pref.getQ1());
+//			userPref.setQ2(pref.getQ2());
+//			userPref.setQ3(pref.getQ3());
+			System.out.println("finished fetching user questionnaire answers");
 			return userPref;
 		}
 
+		@PostMapping("/address")
+		public Address postAdd(@RequestBody Address address){
+			System.out.println("Initializing...");
+			System.out.println(address.getStart_bound());
+			System.out.println(address.getEnd_bound());
+
+			add = new Address(address.getStart_bound(), address.getEnd_bound());
+
+			System.out.println("Finishing...");
+			System.out.println(add.getStart_bound());
+			System.out.println(add.getEnd_bound());
+			return add;
+		}
+
 		@GetMapping("/init")
-		public String initTorontoGraph(@RequestParam String init_num){
+		public void initTorontoGraph(@RequestParam String init_num){
 			System.out.println("initializing graph");
 			//torontoGraph = new Graph();
 			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
 			nodeMap = torontoGraph.routeNodes;
-			return ("TorontoGraph Loaded");
+//			return ("TorontoGraph Loaded");
 		}
 
 	}
