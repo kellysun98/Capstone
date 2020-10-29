@@ -44,11 +44,11 @@ public class Path implements Comparable<Path>{
 
     public double getTotalTime() {
         this.totalTime = (this.totalLength/5000.0)*60.0;
-        return this.totalTime;
+        return Math.floor(this.totalTime * 1e2)/ 1e2;  //rounded time
     }
 
     public String getDescription(){
-        String str = "要速度还是要命";
+        String str = "Current best route ";//changed from 要速度还是要命
         return str;
     }
 
