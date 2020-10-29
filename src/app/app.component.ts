@@ -73,6 +73,7 @@ export class AppComponent {
   ngOnInit() {
     this.openWelcome();
     this.Heatmap2();
+    this.initBackEnd();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -196,7 +197,7 @@ export class AppComponent {
   initBackEnd(){
     let params = new HttpParams().set('init_num', 'loading request');    
     this.http.get("http://localhost:8080/init", {params:params}).subscribe(
-      res=>console.log('Process Complete')
+      res=>{console.log('Process Complete'), alert("Backend Initialization Complete!")}
     );
     console.log('loading')
   }
@@ -482,8 +483,8 @@ export class AppComponent {
       this.heatmap = heatmap;
       for (let key of Object.keys(this.heatmap)){
     
-        var test = this.heatmap[key];
-    test = test.replace(/\,-79/g, '),(-79').replace(/\(/g, '[').replace(/\)/g, ']');
+      var test = this.heatmap[key];
+      test = test.replace(/\,-79/g, '),(-79').replace(/\(/g, '[').replace(/\)/g, ']');
       test = '['+test+']';
       try{ test = JSON.parse(test) }
     // catch { console.log(key);
@@ -592,127 +593,141 @@ checked3 = false;
 
 showAssess(){ 
   if (this.checked1 === true){
-    return [this.assessmentCentre, 1];
+    return [this.amenities_data[0]['Covid-19 Assessment center'], 1];
   }else{return [false, 1]};
 }
 
 showPharm(){
   if (this.checked2 === true){
-    return [this.pharmacies, 2]
+    return [this.amenities_data[1]['Pharmacies Offering COVID-19 Testing'], 2]
   }else{return [false, 2]};
 }
 
 showMall(){
   if (this.checked3 === true){
-    return [this.malls, 3]
+    return [this.amenities_data[2]['Shopping Malls'], 3]
   }else{return [false, 3]};
 }
 
-toggleAmenities(item){
-  if(item[0] === false){
+toggleAmenities(amen){
+  console.log(amen[1])
+  if(amen[0] === false){
     this.map.getLayers().forEach(function(layer) {
       console.log(layer.get('name'));
-      if (layer.get('name') != undefined && layer.get('name') === ('markers'+item[1])) {
+      if (layer.get('name') != undefined && layer.get('name') === ('markers'+amen[1])) {
         layer.getSource().clear();
         console.log("markers removed ");
       }
   }); 
   }else{
-    for (let val of item[0]){
-      this.http.get(this.getUrl(val)).subscribe(
-        result=>{
-        var Markers = [{lat: JSON.parse(result[0]['lat']), lng: JSON.parse(result[0]['lon'])}];
-        console.log('Nominatim API: '+result[0]['lat'],result[0]['lon']);
-        var features = [];
-        for (var i = 0; i < Markers.length; i++) {
-          var item = Markers[i];
-          //console.log(item);
-          var longitude = item.lng;
-          var latitude = item.lat;
+    console.log('amen: '+amen[0][0]);
+    var Markers = amen[0];
+    var features = [];
+    for (var i = 0; i < Markers.length; i++) {
+      var item = Markers[i];
+      //console.log(item);
+      var longitude = item[1];
+      var latitude = item[0];
+  
+      var iconFeature = new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857')),
+          name: 'markericon'
+      });    
       
-          var iconFeature = new ol.Feature({
-              geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857')),
-              name: 'markericon'
-          });    
-          
-          var iconStyle = new ol.style.Style({
-              image: new ol.style.Icon(({
-                  anchor: [0.5, 1],
-                  src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
-              }))
-          });
-        
-          iconFeature.setStyle(iconStyle);
-          features.push(iconFeature);
+      var iconStyle = new ol.style.Style({
+          image: new ol.style.Icon(({
+              anchor: [0.5, 1],
+              src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
+          }))
+      });
     
-          //features.push(featureLine);
-        }
-      
-        var vectorSource = new ol.source.Vector({
-          features: features,
-        });
-        
-        var indicator = 0;
-        this.map.getLayers().forEach(function(layer) {
-          if (layer.get('name') != undefined && layer.get('name') === ('markers'+item[1])) {
-            features.forEach((feature) => {
-              layer.getSource().addFeature(feature);            
-            });    
-              indicator = 1;   
-              console.log("feature added to existing layer"); 
-          }
-        });
+      iconFeature.setStyle(iconStyle);
+      features.push(iconFeature);
 
-          if(indicator  === 0) {  
-            console.log("new layer created"); 
-            var vectorLayer = new ol.layer.Vector({
-              source: vectorSource,
-              name: 'markers'+item[1],
-            });
-          this.map.addLayer(vectorLayer);}
+      //features.push(featureLine);
+    }
+  
+    var vectorSource = new ol.source.Vector({
+      features: features,
+    });
+    
+    var indicator = 0;
+    this.map.getLayers().forEach(function(layer) {
+      if (layer.get('name') != undefined && layer.get('name') === ('markers'+amen[1])) {
+        features.forEach((feature) => {
+          layer.getSource().addFeature(feature);            
+        });    
+          indicator = 1;   
+          console.log("feature added to existing layer"); 
+      }
+    });
 
-          this.map.getLayers().forEach(function(layer) {
-            console.log(layer.get('name'));  
-          });    
+      if(indicator  === 0) {  
+        console.log("new layer created"); 
+        var vectorLayer = new ol.layer.Vector({
+          source: vectorSource,
+          name: ('markers'+amen[1]),
+        });
+      this.map.addLayer(vectorLayer);}
+
+      this.map.getLayers().forEach(function(layer) {
+        console.log(layer.get('name'));  
+      });    
       
       }
-    
-      )
-  }}
 }
 
-assessmentCentre: string[] = ['2 Janda Court Etobicoke', '200 Church Street North York', 
-'825 Coxwell Avenue Toronto', '600 University Avenue Toronto', '555 Finch Avenue West Toronto', '3030 Birchmount Road Scarborough', '2867 Ellesmere Road Scarborough', 
-'3050 Lawrence Ave E Scarborough', '2075 Bayview Avenue Toronto', '347 Bathurst Street Toronto', '30 The Queensway Toronto', '38 Shuter Street Toronto', 
-'76 Grenville Street Toronto', '4 The Market Place East York', '45 Overlea Boulevard Toronto', '22 Vaughan Road Toronto']
-
-pharmacies: string[] = ['Shoppers Drug Mart, 1630 Danforth Avenue',
-'Shoppers Drug Mart, 1601 Bayview Avenue',
-'Shoppers Drug Mart, 1027 Yonge Street',
-'Shoppers Drug Mart, 3446 Dundas Street West',
-'Shoppers Drug Mart, 1400 Dupont Street',
-'Shoppers Drug Mart, 360A Bloor Street West',
-'Shoppers Drug Mart, 123 Rexdale Boulevard',
-'Shoppers Drug Mart, 900 Albion Road',
-'Shoppers Drug Mart, 4841 Yonge Street',
-'Shoppers Drug Mart, 5095 Yonge Street',
-'Shoppers Drug Mart, 3874 Bathurst Street',
-'Shoppers Drug Mart, 2550 Finch Avenue West',
-'Shoppers Drug Mart, 2751 Eglinton Avenue East',
-'Shoppers Drug Mart, 629 Markham Road',
-'Shoppers Drug Mart, 2301 Kingston Road',
-'Shoppers Drug Mart, Unit A-1780 Markham Road',
-'Medicine Shoppe, 2600 Eglinton Avenue West',
-'Village Square Pharmacy, 2942 Finch Avenue East',
-'Rexall, 4459 Kingston Road',
-'Rexall, 250 Wincott Drive',
-'Rexall, 901 Eglinton Avenue West']
-
-malls: string[] = [
-  'Fairview Mall',
-  'Scarborough Town Centre',
-  'Sherway Gardens',
-  'Toronto Eaton Centre',
-  'Yorkdale Shopping Centre'
+amenities_data = [
+  {"Covid-19 Assessment center": [
+      [43.7230426, -79.601108], [43.7088966, -79.5072457], [43.689953200000005, -79.32493147310899], [43.657436849999996, -79.3903184208715],
+      [43.771426, -79.44728711605052], [43.80174045, -79.3091964718297], [43.65432, -79.3787717], [43.661733999999996, -79.38754180202815],
+      [43.6403905, -79.45014220870584], [43.7806321, -79.2055214], [43.697279, -79.424049], [43.689953200000005 , -79.32493147310899], 
+      [43.7806321 , -79.2055214], [43.75646975 , -79.24772575726186], [43.72285855 , -79.37566139839973], [43.70565595 , -79.34613324230222]
+  ]},
+  {"Pharmacies Offering COVID-19 Testing": [
+      [43.6839624 , -79.32225115772025], [43.7063262 , -79.3751848], [43.6777039 , -79.3895544], [43.6400616 , -79.53802386472626],
+      [43.6666823 , -79.4474682], [43.6665844 , -79.4051229], [43.7113345 , -79.56505991761807], [43.7358015 , -79.56011714788619], 
+      [43.649079 , -79.3776658], [43.649079 , -79.3776658], [43.6369239 , -79.3994356], [43.7561355 , -79.51578446064315], 
+      [43.7330733 , -79.2676115], [43.8536178 , -79.2571515], [43.725349 , -79.2306562], [43.7944521 , -79.2399838], [43.6907767 , -79.4729653], 
+      [43.700423 , -79.4272015], [44.250337 , -76.55354297448093], [43.6797074 , -79.5463636]
+  ]},
+  {"Shopping Malls": [
+      [43.777758500000004 , -79.34429375180316], [43.7761341 , -79.25843763592165], [43.6119 , -79.5571], [43.691600300000005 , -79.39028416035379], [43.7256238 , -79.45230789320112]
+  ]}
 ]
+
+// assessmentCentre: string[] = ['2 Janda Court Etobicoke', '200 Church Street North York', 
+// '825 Coxwell Avenue Toronto', '600 University Avenue Toronto', '555 Finch Avenue West Toronto', '3030 Birchmount Road Scarborough', '2867 Ellesmere Road Scarborough', 
+// '3050 Lawrence Ave E Scarborough', '2075 Bayview Avenue Toronto', '347 Bathurst Street Toronto', '30 The Queensway Toronto', '38 Shuter Street Toronto', 
+// '76 Grenville Street Toronto', '4 The Market Place East York', '45 Overlea Boulevard Toronto', '22 Vaughan Road Toronto']
+
+// pharmacies: string[] = ['Shoppers Drug Mart, 1630 Danforth Avenue',
+// 'Shoppers Drug Mart, 1601 Bayview Avenue',
+// 'Shoppers Drug Mart, 1027 Yonge Street',
+// 'Shoppers Drug Mart, 3446 Dundas Street West',
+// 'Shoppers Drug Mart, 1400 Dupont Street',
+// 'Shoppers Drug Mart, 360A Bloor Street West',
+// 'Shoppers Drug Mart, 123 Rexdale Boulevard',
+// 'Shoppers Drug Mart, 900 Albion Road',
+// 'Shoppers Drug Mart, 4841 Yonge Street',
+// 'Shoppers Drug Mart, 5095 Yonge Street',
+// 'Shoppers Drug Mart, 3874 Bathurst Street',
+// 'Shoppers Drug Mart, 2550 Finch Avenue West',
+// 'Shoppers Drug Mart, 2751 Eglinton Avenue East',
+// 'Shoppers Drug Mart, 629 Markham Road',
+// 'Shoppers Drug Mart, 2301 Kingston Road',
+// 'Shoppers Drug Mart, Unit A-1780 Markham Road',
+// 'Medicine Shoppe, 2600 Eglinton Avenue West',
+// 'Village Square Pharmacy, 2942 Finch Avenue East',
+// 'Rexall, 4459 Kingston Road',
+// 'Rexall, 250 Wincott Drive',
+// 'Rexall, 901 Eglinton Avenue West']
+
+// malls: string[] = [
+//   'Fairview Mall',
+//   'Scarborough Town Centre',
+//   'Sherway Gardens',
+//   'Toronto Eaton Centre',
+//   'Yorkdale Shopping Centre'
+// ]
 }

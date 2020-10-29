@@ -20,7 +20,7 @@
 
             
             <div>
-                <button mat-raised-button (click)="initBackEnd()">Initialize Navigation</button>
+                <!-- <button mat-raised-button (click)="initBackEnd()">Initialize Navigation</button> -->
                 <!-- <button mat-raised-button (click)="postAddress()">Click Me!</button> -->
                 <button mat-raised-button (click)="setMarker(); drawLine2(); toggle(); hideit()">Find My Routes</button>
             </div>
@@ -58,7 +58,7 @@
             <mat-card-content>
                 <h2 class="amentities">Toggle Amentities</h2>
                 <section>
-                    <ul>
+                    <ul style="list-style-type:none">
                         <li>
                             <mat-checkbox class="each" (change) = "toggleAmenities(showAssess())" [(ngModel)] = "checked1">
                                 Covid-19 Assessment center 
