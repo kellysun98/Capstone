@@ -56,18 +56,29 @@
 
         <mat-card>
             <mat-card-content>
-                <h2 class="amentities">Amentities Showing</h2>
+                <h2 class="amentities">Toggle Amentities</h2>
                 <section>
                     <ul>
-                        <li *ngFor="let amentity of amentities">
-                            <mat-checkbox class="each">
-                                {{amentity}}
+                        <li>
+                            <mat-checkbox class="each" (change) = "toggleAmenities(showAssess())" [(ngModel)] = "checked1">
+                                Covid-19 Assessment center 
+                            </mat-checkbox>
+                        </li>
+                        <li>
+                            <mat-checkbox class="each" (change) = "toggleAmenities(showPharm())" [(ngModel)] = "checked2">
+                                Pharmacies Offering COVID-19 Testing
+                            </mat-checkbox>
+                        </li>
+                        <li>
+                            <mat-checkbox class="each" (change) = "toggleAmenities(showMall())" [(ngModel)] = "checked3">
+                                Shopping Malls
                             </mat-checkbox>
                         </li>
                     </ul>
                 </section>
             </mat-card-content>
         </mat-card>
+        
         <div>
             <mat-slide-toggle [checked]="useDefault" (change)="heatmapControl($event)"> Show COVID-19 Map</mat-slide-toggle>
         </div>

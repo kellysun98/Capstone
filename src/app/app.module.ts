@@ -21,7 +21,8 @@ import { MybarComponent } from './mybar/mybar.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
-import { MatSliderModule } from '@angular/material/slider'; 
+import { MatSliderModule } from '@angular/material/slider';
+import { AmenitiesComponent } from './amenities/amenities.component'; 
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MatSliderModule } from '@angular/material/slider';
     WelcomepageComponent,
     StartlocationComponent,
     MybarComponent,
+    AmenitiesComponent,
   ],
   imports: [
     FormsModule,
