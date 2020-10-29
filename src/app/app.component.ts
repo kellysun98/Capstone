@@ -32,6 +32,7 @@ import { MybarComponent } from './mybar/mybar.component';
 import { Input, Directive } from '@angular/core';
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from '@angular/material/core';
 import { Route } from './route';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 
@@ -57,7 +58,6 @@ export class AppComponent {
   email: string;
   testArray: any[];
   coor: Coordinates[];
-  amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   public useDefault = true;
   public show: boolean = false;
   slider_val: number;
@@ -154,10 +154,7 @@ export class AppComponent {
       temphighlight(args.pixel);  
 
     });
-
-
 }
-
 
   updateSetting(event) {
     this.gridsize = event.value;
@@ -209,26 +206,10 @@ export class AppComponent {
     var nomUrl = 'https://nominatim.openstreetmap.org/?addressdetails=1&q='
     var tempUrl = addr.split(' ').join('+')
     var finalUrl = nomUrl+tempUrl+'&format=json&limit=1'
-    console.log(finalUrl)
+    //console.log(finalUrl)
     // var proxyUrl = 'https://cors-anywhere.herokuapp.com/'
 
     return (finalUrl)
-    // .then((
-    //   blob=>blob.json()
-    // ))
-    // .then((
-    //   data=>{
-    //     this.longitude = (data[0]['lon']);
-    //     console.table(data);
-    //     console.log(data[0]['lon']);
-    //     console.log(this.longitude)
-    // }))
-    // .catch(e => {
-    //   console.log(e);
-    //   return e;
-    // });
-    // console.log('Yvonne\'s longitude'+this.longitude);
-    // return this.longitude;
   }
 
   openWelcome(): void{
@@ -605,4 +586,133 @@ toggle(){
   this.show = !this.show;
 }
 
+checked1 = false;
+checked2 = false;
+checked3 = false;
+
+showAssess(){ 
+  if (this.checked1 === true){
+    return [this.assessmentCentre, 1];
+  }else{return [false, 1]};
+}
+
+showPharm(){
+  if (this.checked2 === true){
+    return [this.pharmacies, 2]
+  }else{return [false, 2]};
+}
+
+showMall(){
+  if (this.checked3 === true){
+    return [this.malls, 3]
+  }else{return [false, 3]};
+}
+
+toggleAmenities(item){
+  if(item[0] === false){
+    this.map.getLayers().forEach(function(layer) {
+      console.log(layer.get('name'));
+      if (layer.get('name') != undefined && layer.get('name') === ('markers'+item[1])) {
+        layer.getSource().clear();
+        console.log("markers removed ");
+      }
+  }); 
+  }else{
+    for (let val of item[0]){
+      this.http.get(this.getUrl(val)).subscribe(
+        result=>{
+        var Markers = [{lat: JSON.parse(result[0]['lat']), lng: JSON.parse(result[0]['lon'])}];
+        console.log('Nominatim API: '+result[0]['lat'],result[0]['lon']);
+        var features = [];
+        for (var i = 0; i < Markers.length; i++) {
+          var item = Markers[i];
+          //console.log(item);
+          var longitude = item.lng;
+          var latitude = item.lat;
+      
+          var iconFeature = new ol.Feature({
+              geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857')),
+              name: 'markericon'
+          });    
+          
+          var iconStyle = new ol.style.Style({
+              image: new ol.style.Icon(({
+                  anchor: [0.5, 1],
+                  src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
+              }))
+          });
+        
+          iconFeature.setStyle(iconStyle);
+          features.push(iconFeature);
+    
+          //features.push(featureLine);
+        }
+      
+        var vectorSource = new ol.source.Vector({
+          features: features,
+        });
+        
+        var indicator = 0;
+        this.map.getLayers().forEach(function(layer) {
+          if (layer.get('name') != undefined && layer.get('name') === ('markers'+item[1])) {
+            features.forEach((feature) => {
+              layer.getSource().addFeature(feature);            
+            });    
+              indicator = 1;   
+              console.log("feature added to existing layer"); 
+          }
+        });
+
+          if(indicator  === 0) {  
+            console.log("new layer created"); 
+            var vectorLayer = new ol.layer.Vector({
+              source: vectorSource,
+              name: 'markers'+item[1],
+            });
+          this.map.addLayer(vectorLayer);}
+
+          this.map.getLayers().forEach(function(layer) {
+            console.log(layer.get('name'));  
+          });    
+      
+      }
+    
+      )
+  }}
+}
+
+assessmentCentre: string[] = ['2 Janda Court Etobicoke', '200 Church Street North York', 
+'825 Coxwell Avenue Toronto', '600 University Avenue Toronto', '555 Finch Avenue West Toronto', '3030 Birchmount Road Scarborough', '2867 Ellesmere Road Scarborough', 
+'3050 Lawrence Ave E Scarborough', '2075 Bayview Avenue Toronto', '347 Bathurst Street Toronto', '30 The Queensway Toronto', '38 Shuter Street Toronto', 
+'76 Grenville Street Toronto', '4 The Market Place East York', '45 Overlea Boulevard Toronto', '22 Vaughan Road Toronto']
+
+pharmacies: string[] = ['Shoppers Drug Mart, 1630 Danforth Avenue',
+'Shoppers Drug Mart, 1601 Bayview Avenue',
+'Shoppers Drug Mart, 1027 Yonge Street',
+'Shoppers Drug Mart, 3446 Dundas Street West',
+'Shoppers Drug Mart, 1400 Dupont Street',
+'Shoppers Drug Mart, 360A Bloor Street West',
+'Shoppers Drug Mart, 123 Rexdale Boulevard',
+'Shoppers Drug Mart, 900 Albion Road',
+'Shoppers Drug Mart, 4841 Yonge Street',
+'Shoppers Drug Mart, 5095 Yonge Street',
+'Shoppers Drug Mart, 3874 Bathurst Street',
+'Shoppers Drug Mart, 2550 Finch Avenue West',
+'Shoppers Drug Mart, 2751 Eglinton Avenue East',
+'Shoppers Drug Mart, 629 Markham Road',
+'Shoppers Drug Mart, 2301 Kingston Road',
+'Shoppers Drug Mart, Unit A-1780 Markham Road',
+'Medicine Shoppe, 2600 Eglinton Avenue West',
+'Village Square Pharmacy, 2942 Finch Avenue East',
+'Rexall, 4459 Kingston Road',
+'Rexall, 250 Wincott Drive',
+'Rexall, 901 Eglinton Avenue West']
+
+malls: string[] = [
+  'Fairview Mall',
+  'Scarborough Town Centre',
+  'Sherway Gardens',
+  'Toronto Eaton Centre',
+  'Yorkdale Shopping Centre'
+]
 }
