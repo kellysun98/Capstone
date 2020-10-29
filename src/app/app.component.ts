@@ -182,7 +182,7 @@ export class AppComponent {
     //console.log(args.pixel);
     this.forEachFeatureAtPixel(args.pixel, function(feature,layer) {   //display route info when clicked on 
       console.log(feature.get('name'));
-      if ( feature.get('name') === 'nav_lines') {
+      if ( feature.get('name') === 'nav_line') {
            content.innerHTML = '<p>route information:</p><code>' + feature.get('description') + '</code>';
            popup.setPosition(args.coordinate);
       }  
@@ -344,7 +344,7 @@ export class AppComponent {
           var featureLine = new ol.Feature({
             geometry: new ol.geom.LineString(route),
             name: 'nav_line',
-            description: 'total time:' + this.response[index][2] + ', route description: ' + this.response[index][3],
+            description: 'total time:' + this.response[index][2] + ', \n route description: ' + this.response[index][3],
           });
 
           var linestyle = new ol.style.Style({
@@ -425,8 +425,8 @@ export class AppComponent {
             }
             var featureLine = new ol.Feature({
               geometry: new ol.geom.LineString(route),
-              name: 'nav_lines',
-              description: 'total time:' + this.response[index][2] + ', route description: ' + this.response[index][3],
+              name: 'nav_line',
+              description: 'total time:' + this.response[index][2] + ', \n route description: ' + this.response[index][3],
             });
   
             var linestyle = new ol.style.Style({
