@@ -33,6 +33,9 @@ import { Input, Directive } from '@angular/core';
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from '@angular/material/core';
 import { Route } from './route';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import Select from 'ol/interaction/Select';
+import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
+
 
 
 
@@ -80,6 +83,28 @@ export class AppComponent {
       undefinedHTML: '&nbsp;'
     });
 
+
+    var container = document.getElementById('popup');
+    var content = document.getElementById('popup-content');
+    var closer = document.getElementById('popup-closer');
+
+/**
+ * Create an overlay to anchor the popup to the map.
+ */
+    var popup = new ol.Overlay({
+      element: container,
+      autoPan: true,
+      autoPanAnimation: {
+      duration: 250,
+  },
+});
+
+  closer.onclick = function () {
+    popup.setPosition(undefined);
+    closer.blur();
+    return false;
+};
+
     this.map = new ol.Map({
       target: 'map',
       controls: ol.control.defaults({
@@ -99,8 +124,21 @@ export class AppComponent {
         center: ol.proj.fromLonLat([-79.3883, 43.6548]),
         zoom: 12
       })
-      
     });
+    this.map.addOverlay(popup);
+
+    var selected = null; // ref to currently selected interaction
+    // var selectPointerMove = new Select({
+    //   condition: pointerMove,
+    // });
+    // var changeInteraction = function () {
+    //   if (selected !== null) {
+    //     this.removeInteraction(selected);
+    //     selected = selectPointerMove;
+    //     if (selected !== null) {
+    //       this.addInteraction(selected);}
+    //   } 
+    // }
 
     var highlightStyle = new Style({
       fill: new Fill({
@@ -113,75 +151,49 @@ export class AppComponent {
     });
 
 
-    this.featureOverlay = new VectorLayer({
-      source: new VectorSource(),
-      style: function (feature) {
-        highlightStyle.getText().setText(feature.get('name'));
-        return highlightStyle;
-      },
+    this.map.on('pointermove', function(evt) {    //change pointer when on a feature 
+      this.getTargetElement().style.cursor = this.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
+      if (selected !== null) {
+        //selected.setStyle(undefined);
+        selected = null;
+      }
+      this.forEachFeatureAtPixel(evt.pixel, function (f) {
+        selected = f;
+        f.setStyle(highlightStyle);
+        return true;
+      });
+    //   this.forEachFeatureAtPixel(evt.pixel, function(feature,layer) {
+    //     console.log(feature.get('name'));
+    //     if ( feature.get('name') === "markericon" ) {
+    //          content.innerHTML = '<p>You clicked here:</p>'
+    //          popup.setPosition(evt.coordinate);
+    //     }  
+    // });
+  });
+
+
+  this.map.on('click', function (args) {
+    console.log(args.coordinate);
+    var lonlat = ol.proj.transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
+    console.log(lonlat);
+    //var lon = lonlat[0];
+    //var lat = lonlat[1];
+    //alert(`lat: ${lat} long: ${lon}`);
+    //console.log(args.pixel);
+    this.forEachFeatureAtPixel(args.pixel, function(feature,layer) {   //display route info when clicked on 
+      console.log(feature.get('name'));
+      if ( feature.get('name') === 'nav_lines') {
+           content.innerHTML = '<p>route information:</p><code>' + feature.get('description') + '</code>';
+           popup.setPosition(args.coordinate);
+      }  
     });
-
-    var temphighlight = function (pixel){
-        this.http.get("http://localhost:8080/heatmap")
-        .pipe(take(1)).subscribe(() => {
-          this.map.getLayers().forEach(function(layer) {
-            if (layer.get('name') != undefined && layer.get('name') === 'markers') {
-                layer.getFeatures(pixel).forEach (function (feature){
-                  console.log(feature.get('name'));
-                  if (feature !== this.highlight) {
-                    if (this.highlight) {
-                      this.featureOverlay.getSource().removeFeature(this.highlight);
-                    }
-                    if (feature) {
-                      this.featureOverlay.getSource().addFeature(feature);
-                    }
-                    this.highlight = feature;
-                  }
-                })
-            }
-        }); 
-        })
-
-    }
-
-    this.map.on('click', function (args) {
-      console.log(args.coordinate);
-      var lonlat = ol.proj.transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
-      console.log(lonlat);
-      var lon = lonlat[0];
-      var lat = lonlat[1];
-      alert(`lat: ${lat} long: ${lon}`);
-      //console.log(args.pixel);
-      temphighlight(args.pixel);  
-
-    });
+  });
 }
 
   updateSetting(event) {
     this.gridsize = event.value;
   }
 
-  highlightFeature(pixel){
-    this.http.get("http://localhost:8080/heatmap")
-    .pipe(take(1)).subscribe(() => {
-      this.map.getLayers().forEach(function(layer) {
-        if (layer.get('name') != undefined && layer.get('name') === 'markers') {
-            layer.getFeatures(pixel).forEach (function (feature){
-              console.log(feature.get('name'));
-              if (feature !== this.highlight) {
-                if (this.highlight) {
-                  this.featureOverlay.getSource().removeFeature(this.highlight);
-                }
-                if (feature) {
-                  this.featureOverlay.getSource().addFeature(feature);
-                }
-                this.highlight = feature;
-              }
-            })
-        }
-    }); 
-    })
-  }
     // openDialog(): void {
   //   const dialogRef = this.dialog.open(QuestionaireComponent, {
   //     width: '500px',
@@ -330,11 +342,10 @@ export class AppComponent {
             route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
           }
           var featureLine = new ol.Feature({
-            geometry: new ol.geom.LineString(route)
+            geometry: new ol.geom.LineString(route),
+            name: 'nav_line',
+            description: 'total time:' + this.response[index][2] + ', route description: ' + this.response[index][3],
           });
-
-          // var vectorLine = new ol.source.Vector({});
-          // vectorLine.addFeature(featureLine);
 
           var linestyle = new ol.style.Style({
             fill: new ol.style.Fill({
@@ -413,11 +424,10 @@ export class AppComponent {
               route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
             }
             var featureLine = new ol.Feature({
-              geometry: new ol.geom.LineString(route)
+              geometry: new ol.geom.LineString(route),
+              name: 'nav_lines',
+              description: 'total time:' + this.response[index][2] + ', route description: ' + this.response[index][3],
             });
-  
-              // var vectorLine = new ol.source.Vector({});
-              // vectorLine.addFeature(featureLine);
   
             var linestyle = new ol.style.Style({
               fill: new ol.style.Fill({
@@ -450,10 +460,6 @@ export class AppComponent {
             console.log("new layer created"); 
             var vectorLineLayer = new ol.layer.Vector({
               source: vectorSource,
-              // style: new ol.style.Style({
-              //     fill: new ol.style.Fill({ color: color, weight: 5 }),
-              //     stroke: new ol.style.Stroke({ color: color, width: 5})
-              // }),
               name: 'lines',
           });
             this.map.addLayer(vectorLineLayer);
