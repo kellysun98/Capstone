@@ -593,19 +593,19 @@ checked3 = false;
 
 showAssess(){ 
   if (this.checked1 === true){
-    return [this.amenities_data[0]['Covid-19 Assessment center'], 1];
+    return [this.amenities_data[0]['Covid-19 Assessment center'], 1, './assets/data/hospital.png'];
   }else{return [false, 1]};
 }
 
 showPharm(){
   if (this.checked2 === true){
-    return [this.amenities_data[1]['Pharmacies Offering COVID-19 Testing'], 2]
+    return [this.amenities_data[1]['Pharmacies Offering COVID-19 Testing'], 2, './assets/data/drug.png']
   }else{return [false, 2]};
 }
 
 showMall(){
   if (this.checked3 === true){
-    return [this.amenities_data[2]['Shopping Malls'], 3]
+    return [this.amenities_data[2]['Shopping Malls'], 3, './assets/data/shopping_bag.png']
   }else{return [false, 3]};
 }
 
@@ -637,7 +637,7 @@ toggleAmenities(amen){
       var iconStyle = new ol.style.Style({
           image: new ol.style.Icon(({
               anchor: [0.5, 1],
-              src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
+              src: amen[2]
           }))
       });
     
