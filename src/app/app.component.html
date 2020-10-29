@@ -59,19 +59,19 @@
                 <h2 class="amentities">Toggle Amentities</h2>
                 <section>
                     <ul style="list-style-type:none">
-                        <li>
+                        <li style = 'margin-bottom: 5px;'>
                             <mat-checkbox class="each" (change) = "toggleAmenities(showAssess())" [(ngModel)] = "checked1">
-                                Covid-19 Assessment center 
+                                Covid-19 Assessment center <mat-icon style='position: absolute; margin-left: 5px;'>device_thermostat</mat-icon>
                             </mat-checkbox>
                         </li>
-                        <li>
+                        <li style = 'margin-bottom: 5px;'>
                             <mat-checkbox class="each" (change) = "toggleAmenities(showPharm())" [(ngModel)] = "checked2">
-                                Pharmacies Offering COVID-19 Testing
+                                Pharmacies Offering COVID-19 Testing <mat-icon style='position: absolute; margin-left: 5px;'>local_pharmacy</mat-icon>
                             </mat-checkbox>
                         </li>
                         <li>
                             <mat-checkbox class="each" (change) = "toggleAmenities(showMall())" [(ngModel)] = "checked3">
-                                Shopping Malls
+                                Shopping Malls <mat-icon style='position: absolute; margin-left: 5px;'>shopping_bag</mat-icon>
                             </mat-checkbox>
                         </li>
                     </ul>
