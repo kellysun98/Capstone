@@ -293,7 +293,6 @@ public class Graph {
             NodeList tagsForRoute = route.getElementsByTagName("tag");
             for (int j = 0; j < tagsForRoute.getLength(); j++) {
                 Element tag = (Element) tagsForRoute.item(j);
-//                System.out.println(tag.getAttribute("v"));
                 if (tag.getAttribute("k").equals("highway")) {
                     if(tag.getAttribute("v").equals(("footway"))){
                         isHighway = true;
@@ -363,6 +362,7 @@ public class Graph {
                     nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
                 }
             }
+
             if (isBuilding){
                 ArrayList<MapNode> nodeContainer = new ArrayList<>();
                 NodeList nodesInRoute = route.getElementsByTagName("nd");
