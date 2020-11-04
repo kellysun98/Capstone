@@ -221,6 +221,7 @@ public class Graph {
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
         for (int i = 0; i < nodeList.getLength(); i++) {
+            boolean isShoppers = false; // set Shoppers node
             Element node = (Element) nodeList.item(i);
             MapNode newNode = new MapNode(node);
             nodes.put(newNode.id, newNode);
@@ -229,6 +230,7 @@ public class Graph {
             Element route = (Element) routeList.item(i);
             boolean isHighway = false;
             boolean isIndoor = false;
+            boolean isHospital = false;
             boolean oneWay = false;
             boolean bikeLane = false;
             boolean isBuilding = false;
@@ -241,11 +243,14 @@ public class Graph {
             NodeList tagsForRoute = route.getElementsByTagName("tag");
             for (int j = 0; j < tagsForRoute.getLength(); j++) {
                 Element tag = (Element) tagsForRoute.item(j);
+//                System.out.println(tag.getAttribute("v"));
                 if (tag.getAttribute("k").equals("highway")) {
                     isHighway = true;
                     routeType = tag.getAttribute("v");
                 } else if(tag.getAttribute("k").equals("level")){
                     isIndoor = true;
+                } else if(tag.getAttribute("v").contains("hospital")||tag.getAttribute("v").contains("Hospital")){
+                    isHospital = true;
                 } else if (tag.getAttribute("k").equals("building")){
                     isBuilding = true;
                 } else if (tag.getAttribute("k").equals("name")) {
@@ -265,10 +270,16 @@ public class Graph {
                     Element nd = (Element) nodesInRoute.item(j);
                     nodeIdList.add(Double.parseDouble(nd.getAttribute("ref")));
                 }
-                // set indoor nodes
+                // set indoor
                 if (isIndoor){
                     for (int j = 0; j<nodeIdList.size();j++){
                         nodes.get(nodeIdList.get(j)).setisIndoor(true);
+                    }
+                }
+                // set hospital
+                if (isHospital){
+                    for (int j = 0; j<nodeIdList.size();j++){
+                        nodes.get(nodeIdList.get(j)).setisHospital(true);
                     }
                 }
                 double thisNode = nodeIdList.get(0);
@@ -290,6 +301,14 @@ public class Graph {
                 routes.put(newRoute.routeId, newRoute);
                 for (double nodeId : nodeIdList) {
                     routeNodes.put(nodeId, nodes.get(nodeId));
+                }
+            }
+            // set hospital
+            if (isHospital){
+                NodeList nodesInRoute = route.getElementsByTagName("nd");
+                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+                    Element nd = (Element) nodesInRoute.item(j);
+                    nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
                 }
             }
             if (isBuilding){
