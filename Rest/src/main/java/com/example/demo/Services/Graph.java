@@ -53,7 +53,7 @@ public class Graph {
                 double dy = (n.longitude - l.get(1)) * MPERLON;
                 double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
                 for(int j = 0; j < k; j++){
-                    if(tempdist < countList.get(j).get(0)){
+                    if(tempdist <= countList.get(j).get(0)){
                         ArrayList<Double> newList = new ArrayList<>();
                         newList.add(tempdist);
                         newList.add(l.get(2));
