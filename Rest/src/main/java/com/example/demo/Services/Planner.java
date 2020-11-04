@@ -33,7 +33,7 @@ public class Planner {
         HashMap<MapNode, Double> costs = new HashMap<>();
         PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>();
 
-        startNode.estimatedCost = dynamic_heuristic(startNode, goalNode, dist_W, risk_W);
+        startNode.estimatedCost = dynamic_heuristic(startNode,dist_W, risk_W);
         parents.put(startNode, null);
         costs.put(startNode, 0.0);
         priorityQueue.add(startNode);
@@ -48,12 +48,12 @@ public class Planner {
                 edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
 
                 MapNode nextNode = edge.destinationNode;
-                double newCost = costs.get(node) + edge.getNormalized_length(); //newCost = g(n)
+                double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, dist_W, risk_W); //newCost = g(n)
                 //System.out.println("newCost: "+newCost);
                 if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
                     parents.put(nextNode, node);
                     costs.put(nextNode, newCost);
-                    nextNode.estimatedCost = dynamic_heuristic(nextNode, goalNode, dist_W, risk_W) + newCost; // estimatedCost=f(n)=h(n)+g(n)
+                    nextNode.estimatedCost = dynamic_heuristic(nextNode, dist_W, risk_W) + newCost; // estimatedCost=f(n)=h(n)+g(n)
                     priorityQueue.add(nextNode);
                 }
             }
@@ -200,7 +200,7 @@ public class Planner {
     }
 
     /** calculate heuristic cost based on different weights */
-    public double dynamic_heuristic(MapNode node, MapNode goalNode, double dist_W, double risk_W){
+    public double dynamic_heuristic(MapNode node, double dist_W, double risk_W){
         return risk_W * node.normalized_pedCount + dist_W * node.normalized_euclid;
 
     }
