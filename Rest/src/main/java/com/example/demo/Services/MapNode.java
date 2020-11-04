@@ -22,7 +22,9 @@ public class MapNode implements Comparable<MapNode>{
     public double pedCount; // number of people at the node; h(n)
     public double normalized_pedCount; // normalized pedCount
     public double normalized_euclid; // normalized euclidean distance from this node to destination node
-    public boolean isIndoor;
+    public boolean isIndoor; // whether node is indoor
+    public boolean isHospital; // whether node is hospital
+    public boolean isShoppers; // whether node is shoppers
 
     public double getPedCount(){
         return this.pedCount;
@@ -43,6 +45,8 @@ public class MapNode implements Comparable<MapNode>{
         edges = new ArrayList<>(newMapNode.edges);
         pedCount = newMapNode.pedCount;
         isIndoor = false;
+        isHospital = false;
+        isShoppers = false;
     }
     public MapNode (){
         id = -1;
@@ -51,9 +55,14 @@ public class MapNode implements Comparable<MapNode>{
         edges = new ArrayList<>();
         pedCount = getRandomNumber(0,20);
         isIndoor = false;
+        isHospital = false;
+        isShoppers = false;
     }
-
+    /** Set Function for isIndoor, isHospital, isShoppers
+     * */
     public void setisIndoor(boolean state){this.isIndoor=state;}
+    public void setisHospital(boolean state){this.isHospital=state;}
+    public void setisShoppers(boolean state){this.isShoppers=state;}
     /**/
     public int getRandomNumber(int min, int max){
         return (int) ((Math.random()*(max-min))+min);
@@ -68,6 +77,8 @@ public class MapNode implements Comparable<MapNode>{
         edges = new ArrayList<>();
         pedCount = getRandomNumber(0,20);
         isIndoor = false;
+        isHospital = false;
+        isShoppers = false;
 //        euclid = getDistance()
 //        normalized_pedCount = normalize(this.pedCount, graph.min_pedCount, graph.max_pedCont);
     }
@@ -79,6 +90,10 @@ public class MapNode implements Comparable<MapNode>{
         copy.estimatedCost = this.estimatedCost;
         copy.latitude = this.latitude;
         copy.longitude = this.longitude;
+        copy.pedCount = this.pedCount;
+        copy.isIndoor = this.isIndoor;
+        copy.isHospital = this.isHospital;
+        copy.isShoppers = this.isShoppers;
 
         return copy;
 
