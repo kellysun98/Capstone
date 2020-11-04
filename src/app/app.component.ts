@@ -50,8 +50,8 @@ export class AppComponent {
   active: boolean;
   open: boolean;
   heatmap: Object;
-  start_add: String = 'St. Michael\'s College parking, Bay Street, Toronto Centre, Old Toronto, Toronto';
-  end_add: String = '65, Queen\'s Park Crescent East, University—Rosedale, Old Toronto, Toronto';
+  start_add: String = 'massey hall, toronto';
+  end_add: String = 'city hall, toronto';
   latitude: number;
   longitude: number;
   // end_lat: number;
@@ -94,7 +94,7 @@ export class AppComponent {
   ngOnInit() {
     this.openWelcome();
     this.Heatmap2();
-    this.initBackEnd();
+    //this.initBackEnd();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -229,6 +229,7 @@ export class AppComponent {
   // }
 
   initBackEnd(){
+    console.log('init started')
     let params = new HttpParams().set('init_num', 'loading request');    
     this.http.get("http://localhost:8080/init", {params:params}).subscribe(
       res=>{console.log('Process Complete'), alert("Backend Initialization Complete!")}
