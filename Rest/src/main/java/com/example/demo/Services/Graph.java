@@ -60,7 +60,7 @@ public class Graph {
     }
 
     public Graph() {
-        this("./data/toronto.osm","./data/Cyclists.csv");
+        this("./data/DT.osm","./data/Cyclists.csv");
     }
 
     public Graph(String osmFilePath, String accidentsFilePath) {
@@ -169,8 +169,10 @@ public class Graph {
             for (int j = 0; j < tagsForRoute.getLength(); j++) {
                 Element tag = (Element) tagsForRoute.item(j);
                 if (tag.getAttribute("k").equals("highway")) {
-                    useMe = true;
-                    routeType = tag.getAttribute("v");
+                    if(tag.getAttribute("v").equals("footway")){
+                        useMe = true;
+                        routeType = tag.getAttribute("v");
+                    }
                 } else if (tag.getAttribute("k").equals("name")) {
                     routeName = tag.getAttribute("v");
                 } else if (tag.getAttribute("k").equals("oneway") && tag.getAttribute("v").equals("yes")) {
