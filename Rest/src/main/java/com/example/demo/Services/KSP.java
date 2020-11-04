@@ -82,8 +82,8 @@ public class KSP {
         for (int i=0;i<K;i++){
             double riskWeight = i/(double)K;
             double distWeight = 1 - riskWeight;
-            System.out.println("distWeight:"+String.valueOf(distWeight));
-            System.out.println("riskWeight:"+String.valueOf(riskWeight));
+            //System.out.println("distWeight:"+String.valueOf(distWeight));
+            //System.out.println("riskWeight:"+String.valueOf(riskWeight));
             Path temp = planner.AStar(graph, src, dest, costFunction, riskWeight, distWeight);
             result.add(temp);
         }

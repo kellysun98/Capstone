@@ -21,13 +21,13 @@ public class PSQLConnect {
 //    public static String user = "yixinsun";
 //    public static String password = "smile01981124";
 
-//    public static String url = "jdbc:postgresql://localhost:5432/toronto";
-//    public static String user = "postgres";
-//    public static String password = "postgres";
-
-    public static String url = "jdbc:postgresql://localhost:5432/Toronto";
+    public static String url = "jdbc:postgresql://localhost:5432/torontodata";
     public static String user = "postgres";
-    public static String password = "capstone";
+    public static String password = "1";
+
+    //public static String url = "jdbc:postgresql://localhost:5432/Toronto";
+    //public static String user = "postgres";
+    //public static String password = "capstone";
 
     public static MapNode getNodebyID(String id){
         MapNode node = new MapNode();
@@ -141,7 +141,7 @@ public class PSQLConnect {
                              "latitude, longitude,\n" +
                              "AVG (ped_count) AS avg_ped_count\n" +
                              "FROM pedestrian_count_data \n" +
-                             "WHERE time_stamp::time between '" + start_time + "' and '" + end_time + "'\n" +
+                             "WHERE time_stamp >= '" + start_time +"'AND  time_stamp <  '"+ end_time+ "'\n"+
                              "GROUP BY time_stamp, latitude, longitude;"
              );
              ResultSet rs = pst.executeQuery()) {
