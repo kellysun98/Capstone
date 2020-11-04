@@ -13,7 +13,7 @@ public class MapEdge {
     public static Graph graph;
     public static DecimalFormat df = new DecimalFormat("#.###");
     public double normalized_length; //normalized length of each edge
-    public boolean isIndoor = (sourceNode.isIndoor) && (destinationNode.isIndoor);
+    public boolean isIndoor ;
 
     // Get source node id of MapEdge
     public double getSourceNodeID(){return this.sourceNode.id;}
@@ -38,6 +38,7 @@ public class MapEdge {
 //        try {
         double lon = Double.parseDouble(df.format(destinationNode.longitude));
         double lat = Double.parseDouble(df.format(destinationNode.latitude));
+        this.isIndoor = (sourceNode.isIndoor) && (destinationNode.isIndoor);
 //            accidentsCount = graph.accidents.get(lon).get(lat);
 //        } catch (NullPointerException e){
 //            accidentsCount = null;

@@ -70,6 +70,7 @@ public class Graph {
         nodes = new HashMap<>();
         routeNodes = new HashMap<>();
         routes = new HashMap<>();
+        buildings = new HashMap<>();
 //        polygons = new ArrayList<>();
 
         loadFiles(osmFilePath, accidentsFilePath);
