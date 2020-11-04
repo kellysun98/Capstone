@@ -20,6 +20,7 @@ public class MapNode implements Comparable<MapNode>{
     public List<MapEdge> edges;
     public double estimatedCost;// f(n);
     public double pedCount; // number of people at the node; h(n)
+    public double euclid; // euclidean distance from this MapNode to destination node
     public double normalized_pedCount; // normalized pedCount
     public double normalized_euclid; // normalized euclidean distance from this node to destination node
     public boolean isIndoor; // whether node is indoor

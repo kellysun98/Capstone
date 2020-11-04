@@ -54,6 +54,7 @@ public class MapEdge {
     public double getNormalized_length(){
         return this.normalized_length;
     }
+
     public double getLength(String costFunction){
         double euclideanDistance = graph.getDistance(sourceNode,destinationNode);
         if (costFunction.equals("distance")){
