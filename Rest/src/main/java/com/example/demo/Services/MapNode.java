@@ -77,7 +77,7 @@ public class MapNode implements Comparable<MapNode>{
         longitude = Double.parseDouble(e.getAttribute("lon"));
         latitude = Double.parseDouble(e.getAttribute("lat"));
         edges = new ArrayList<>();
-        pedCount = getRandomNumber(0,20);
+        pedCount = -1;
         isIndoor = false;
         isHospital = false;
         isShoppers = false;
