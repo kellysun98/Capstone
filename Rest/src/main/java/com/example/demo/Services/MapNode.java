@@ -22,7 +22,7 @@ public class MapNode implements Comparable<MapNode>{
     public double pedCount; // number of people at the node; h(n)
     public double normalized_pedCount; // normalized pedCount
     public double normalized_euclid; // normalized euclidean distance from this node to destination node
-
+    public boolean isIndoor;
 
     public double getPedCount(){
         return this.pedCount;
@@ -42,25 +42,32 @@ public class MapNode implements Comparable<MapNode>{
         latitude = newMapNode.latitude;
         edges = new ArrayList<>(newMapNode.edges);
         pedCount = newMapNode.pedCount;
+        isIndoor = false;
     }
     public MapNode (){
         id = -1;
         longitude = -1;
         latitude = -1;
         edges = new ArrayList<>();
-        pedCount = getRandomNumber(0,10);
+        pedCount = getRandomNumber(0,20);
+        isIndoor = false;
     }
+
+    public void setisIndoor(boolean state){this.isIndoor=state;}
     /**/
     public int getRandomNumber(int min, int max){
         return (int) ((Math.random()*(max-min))+min);
     }
 
+    /** Used for osm initialization
+     * */
     public MapNode (Element e){
         id = Double.parseDouble(e.getAttribute("id"));
         longitude = Double.parseDouble(e.getAttribute("lon"));
         latitude = Double.parseDouble(e.getAttribute("lat"));
         edges = new ArrayList<>();
         pedCount = getRandomNumber(0,20);
+        isIndoor = false;
 //        euclid = getDistance()
 //        normalized_pedCount = normalize(this.pedCount, graph.min_pedCount, graph.max_pedCont);
     }

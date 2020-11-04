@@ -17,6 +17,7 @@ public class Graph {
     public double[] focus;
     public HashMap<Double, MapNode> nodes;
     public HashMap<Double, MapNode> routeNodes;
+    public HashMap<Double, Building> buildings; // HashMap of building boundaries; key= way id; value =
     public HashMap<Double, MapRoute> routes;
     public HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
 //    public static List<MapPolygon> polygons;
@@ -69,6 +70,7 @@ public class Graph {
         nodes = new HashMap<>();
         routeNodes = new HashMap<>();
         routes = new HashMap<>();
+        buildings = new HashMap<>();
 //        polygons = new ArrayList<>();
 
         loadFiles(osmFilePath, accidentsFilePath);
@@ -144,7 +146,77 @@ public class Graph {
 //            e.printStackTrace();
 //        }
     }
-
+//    public void buildEaton(){
+//        NodeList nodeList = osmDoc.getElementsByTagName("node");
+//        NodeList routeList = osmDoc.getElementsByTagName("way");
+//        for (int i = 0; i < nodeList.getLength(); i++) {
+//            Element node = (Element) nodeList.item(i);
+//            MapNode newNode = new MapNode(node);
+//            nodes.put(newNode.id, newNode);
+//        }
+//        for (int i = 0; i < routeList.getLength(); i++) {
+//            Element route = (Element) routeList.item(i);
+//            boolean useMe = false;
+//            boolean oneWay = false;
+//            boolean bikeLane = false;
+//            String routeName = "unnamed route";
+//            String routeType = "";
+//            int maxSpeed = -1;
+//            int lanes = -1;
+//            List<Double> nodeIdList = new ArrayList<>();
+//
+//            // this for loop is not inside the MapRoute init function because not every way is a route
+//            NodeList tagsForRoute = route.getElementsByTagName("tag");
+//            for (int j = 0; j < tagsForRoute.getLength(); j++) {
+//                Element tag = (Element) tagsForRoute.item(j);
+//                if (tag.getAttribute("k").equals("highway")) {
+//                    useMe = false;
+//                    routeType = tag.getAttribute("v");
+//                } else if (tag.getAttribute("k").equals("name")) {
+//                    routeName = tag.getAttribute("v");
+//                    if (routeName.equals("CF Toronto Eaton Centre"))
+//                            useMe= true;
+//                } else if (tag.getAttribute("k").equals("oneway") && tag.getAttribute("v").equals("yes")) {
+//                    oneWay = true;
+//                } else if (tag.getAttribute("k").equals("cycleway") || (tag.getAttribute("k").equals("bicycle") && (tag.getAttribute("v").equals("yes") || tag.getAttribute("v").equals("designated")))) {
+//                    bikeLane = true;
+//                } else if (tag.getAttribute("k").equals("maxspeed")){
+//                    maxSpeed = Integer.parseInt(tag.getAttribute("v"));
+//                } else if (tag.getAttribute("k").equals("lanes")){
+//                    lanes = Character.getNumericValue(tag.getAttribute("v").charAt(0));
+//                }
+//            }
+//            if (useMe) {
+//                MapRoute newRoute = new MapRoute(route, routeName, routeType, bikeLane, lanes);
+//                NodeList nodesInRoute = route.getElementsByTagName("nd");
+//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+//                    Element nd = (Element) nodesInRoute.item(j);
+//                    nodeIdList.add(Double.parseDouble(nd.getAttribute("ref")));
+//                }
+//                double thisNode = nodeIdList.get(0);
+//                double nextNode;
+//                for (int j = 1; j < nodeIdList.size(); j++) {
+//                    nextNode = nodeIdList.get(j);
+//                    nodes.get(thisNode).edges.add(new MapEdge(newRoute, nodes.get(thisNode), nodes.get(nextNode)));
+//                    thisNode = nextNode;
+//                }
+//                if (!oneWay) {
+//                    thisNode = nodeIdList.get(nodeIdList.size() - 1);
+//                    for (int j = nodeIdList.size() - 2; j > -1; j--) {
+//                        nextNode = nodeIdList.get(j);
+//                        nodes.get(thisNode).edges.add(new MapEdge(newRoute, nodes.get(thisNode), nodes.get(nextNode)));
+//                        thisNode = nextNode;
+//                    }
+//                }
+//                newRoute.nodeIds = nodeIdList;
+//                routes.put(newRoute.routeId, newRoute);
+//                for (double nodeId : nodeIdList) {
+//                    routeNodes.put(nodeId, nodes.get(nodeId));
+//                }
+//            }
+//        }
+//        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
+//    }
     public void buildGraph() {
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
@@ -155,12 +227,13 @@ public class Graph {
         }
         for (int i = 0; i < routeList.getLength(); i++) {
             Element route = (Element) routeList.item(i);
-            boolean useMe = false;
+            boolean isHighway = false;
+            boolean isIndoor = false;
             boolean oneWay = false;
             boolean bikeLane = false;
+            boolean isBuilding = false;
             String routeName = "unnamed route";
             String routeType = "";
-            int maxSpeed = -1;
             int lanes = -1;
             List<Double> nodeIdList = new ArrayList<>();
 
@@ -169,28 +242,34 @@ public class Graph {
             for (int j = 0; j < tagsForRoute.getLength(); j++) {
                 Element tag = (Element) tagsForRoute.item(j);
                 if (tag.getAttribute("k").equals("highway")) {
-                    if(tag.getAttribute("v").equals("footway")){
-                        useMe = true;
-                        routeType = tag.getAttribute("v");
-                    }
+                    isHighway = true;
+                    routeType = tag.getAttribute("v");
+                } else if(tag.getAttribute("k").equals("level")){
+                    isIndoor = true;
+                } else if (tag.getAttribute("k").equals("building")){
+                    isBuilding = true;
                 } else if (tag.getAttribute("k").equals("name")) {
                     routeName = tag.getAttribute("v");
                 } else if (tag.getAttribute("k").equals("oneway") && tag.getAttribute("v").equals("yes")) {
                     oneWay = true;
                 } else if (tag.getAttribute("k").equals("cycleway") || (tag.getAttribute("k").equals("bicycle") && (tag.getAttribute("v").equals("yes") || tag.getAttribute("v").equals("designated")))) {
                     bikeLane = true;
-                } else if (tag.getAttribute("k").equals("maxspeed")){
-                    maxSpeed = Integer.parseInt(tag.getAttribute("v"));
                 } else if (tag.getAttribute("k").equals("lanes")){
                     lanes = Character.getNumericValue(tag.getAttribute("v").charAt(0));
                 }
             }
-            if (useMe) {
-                MapRoute newRoute = new MapRoute(route, routeName, routeType, bikeLane, maxSpeed, lanes);
+            if (isHighway) {
+                MapRoute newRoute = new MapRoute(route, routeName, routeType, bikeLane, lanes);
                 NodeList nodesInRoute = route.getElementsByTagName("nd");
                 for (int j = 0; j < nodesInRoute.getLength(); j++) {
                     Element nd = (Element) nodesInRoute.item(j);
                     nodeIdList.add(Double.parseDouble(nd.getAttribute("ref")));
+                }
+                // set indoor nodes
+                if (isIndoor){
+                    for (int j = 0; j<nodeIdList.size();j++){
+                        nodes.get(nodeIdList.get(j)).setisIndoor(true);
+                    }
                 }
                 double thisNode = nodeIdList.get(0);
                 double nextNode;
@@ -213,9 +292,90 @@ public class Graph {
                     routeNodes.put(nodeId, nodes.get(nodeId));
                 }
             }
+            if (isBuilding){
+                ArrayList<MapNode> nodeContainer = new ArrayList<>();
+                NodeList nodesInRoute = route.getElementsByTagName("nd");
+                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+                    Element nd = (Element) nodesInRoute.item(j);
+                    nodeContainer.add(nodes.get(Double.parseDouble(nd.getAttribute("ref"))));
+                }
+                Building newBuilding = new Building(route, routeName, routeType,nodeContainer);
+                buildings.put(newBuilding.getbuildingID(), newBuilding);
+            }
         }
         System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
     }
+    /** Original buildGraph
+     * */
+//    public void buildGraph() {
+//        NodeList nodeList = osmDoc.getElementsByTagName("node");
+//        NodeList routeList = osmDoc.getElementsByTagName("way");
+//        for (int i = 0; i < nodeList.getLength(); i++) {
+//            Element node = (Element) nodeList.item(i);
+//            MapNode newNode = new MapNode(node);
+//            nodes.put(newNode.id, newNode);
+//        }
+//        for (int i = 0; i < routeList.getLength(); i++) {
+//            Element route = (Element) routeList.item(i);
+//            boolean useMe = false;
+//            boolean oneWay = false;
+//            boolean bikeLane = false;
+//            String routeName = "unnamed route";
+//            String routeType = "";
+//            int maxSpeed = -1;
+//            int lanes = -1;
+//            List<Double> nodeIdList = new ArrayList<>();
+//
+//            // this for loop is not inside the MapRoute init function because not every way is a route
+//            NodeList tagsForRoute = route.getElementsByTagName("tag");
+//            for (int j = 0; j < tagsForRoute.getLength(); j++) {
+//                Element tag = (Element) tagsForRoute.item(j);
+//                if (tag.getAttribute("k").equals("highway")) {
+//                    useMe = true;
+//                    routeType = tag.getAttribute("v");
+//                } else if (tag.getAttribute("k").equals("name")) {
+//                    routeName = tag.getAttribute("v");
+//                } else if (tag.getAttribute("k").equals("oneway") && tag.getAttribute("v").equals("yes")) {
+//                    oneWay = true;
+//                } else if (tag.getAttribute("k").equals("cycleway") || (tag.getAttribute("k").equals("bicycle") && (tag.getAttribute("v").equals("yes") || tag.getAttribute("v").equals("designated")))) {
+//                    bikeLane = true;
+//                } else if (tag.getAttribute("k").equals("maxspeed")){
+//                    maxSpeed = Integer.parseInt(tag.getAttribute("v"));
+//                } else if (tag.getAttribute("k").equals("lanes")){
+//                    lanes = Character.getNumericValue(tag.getAttribute("v").charAt(0));
+//                }
+//            }
+//            if (useMe) {
+//                MapRoute newRoute = new MapRoute(route, routeName, routeType, bikeLane, maxSpeed, lanes);
+//                NodeList nodesInRoute = route.getElementsByTagName("nd");
+//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+//                    Element nd = (Element) nodesInRoute.item(j);
+//                    nodeIdList.add(Double.parseDouble(nd.getAttribute("ref")));
+//                }
+//                double thisNode = nodeIdList.get(0);
+//                double nextNode;
+//                for (int j = 1; j < nodeIdList.size(); j++) {
+//                    nextNode = nodeIdList.get(j);
+//                    nodes.get(thisNode).edges.add(new MapEdge(newRoute, nodes.get(thisNode), nodes.get(nextNode)));
+//                    thisNode = nextNode;
+//                }
+//                if (!oneWay) {
+//                    thisNode = nodeIdList.get(nodeIdList.size() - 1);
+//                    for (int j = nodeIdList.size() - 2; j > -1; j--) {
+//                        nextNode = nodeIdList.get(j);
+//                        nodes.get(thisNode).edges.add(new MapEdge(newRoute, nodes.get(thisNode), nodes.get(nextNode)));
+//                        thisNode = nextNode;
+//                    }
+//                }
+//                newRoute.nodeIds = nodeIdList;
+//                routes.put(newRoute.routeId, newRoute);
+//                for (double nodeId : nodeIdList) {
+//                    routeNodes.put(nodeId, nodes.get(nodeId));
+//                }
+//            }
+//        }
+//        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
+//    }
 
     private void getFocus() {
         NodeList boundsList = osmDoc.getElementsByTagName("bounds");

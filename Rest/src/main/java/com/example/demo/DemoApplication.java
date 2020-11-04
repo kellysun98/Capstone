@@ -222,6 +222,7 @@ public class DemoApplication {
 			//torontoGraph = new Graph();
 			torontoGraph = new Graph("./data/DT.osm", "./data/Cyclists.csv");
 			nodeMap = torontoGraph.routeNodes;
+			System.out.println("complete");
 //			return ("TorontoGraph Loaded");
 		}
 
