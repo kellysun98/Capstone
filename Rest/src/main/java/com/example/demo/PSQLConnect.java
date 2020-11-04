@@ -25,6 +25,10 @@ public class PSQLConnect {
     public static String user = "postgres";
     public static String password = "postgres";
 
+    public static String url = "jdbc:postgresql://localhost:5432/Toronto";
+    public static String user = "postgres";
+    public static String password = "capstone";
+
     public static MapNode getNodebyID(String id){
         MapNode node = new MapNode();
 
