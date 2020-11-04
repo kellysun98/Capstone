@@ -242,8 +242,10 @@ public class Graph {
             for (int j = 0; j < tagsForRoute.getLength(); j++) {
                 Element tag = (Element) tagsForRoute.item(j);
                 if (tag.getAttribute("k").equals("highway")) {
-                    isHighway = true;
-                    routeType = tag.getAttribute("v");
+                    if(tag.getAttribute("v").equals(("footway"))){
+                        isHighway = true;
+                        routeType = tag.getAttribute("v");
+                    }
                 } else if(tag.getAttribute("k").equals("level")){
                     isIndoor = true;
                 } else if (tag.getAttribute("k").equals("building")){
