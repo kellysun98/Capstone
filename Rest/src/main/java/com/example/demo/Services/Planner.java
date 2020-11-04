@@ -85,7 +85,7 @@ public class Planner {
 
                     MapNode nextNode = edge.destinationNode;
                     double newCost = costs.get(node) + edge.getNormalized_length(); //newCost = g(n)
-                    System.out.println("newCost: "+newCost);
+                    //System.out.println("newCost: "+newCost);
                     if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
                         parents.put(nextNode,node);
                         costs.put(nextNode,newCost);
