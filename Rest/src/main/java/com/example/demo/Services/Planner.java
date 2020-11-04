@@ -27,6 +27,40 @@ public class Planner {
 
     public Planner(){}
 
+    public Path AStar(Graph graph, MapNode startNode, MapNode goalNode, String costFunction, double risk_W, double dist_W) {
+        this.graph = graph;
+        HashMap<MapNode, MapNode> parents = new HashMap<>();
+        HashMap<MapNode, Double> costs = new HashMap<>();
+        PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>();
+
+        startNode.estimatedCost = dynamic_heuristic(startNode, goalNode, dist_W, risk_W);
+        parents.put(startNode, null);
+        costs.put(startNode, 0.0);
+        priorityQueue.add(startNode);
+
+        while (!priorityQueue.isEmpty()) {
+            MapNode node = priorityQueue.remove();
+            if (node.id == goalNode.id) {
+                Path fastestRoute = new Path(getNodeList(parents, goalNode));
+                return fastestRoute;
+            }
+            for (MapEdge edge : node.edges) {
+                edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
+
+                MapNode nextNode = edge.destinationNode;
+                double newCost = costs.get(node) + edge.getNormalized_length(); //newCost = g(n)
+                //System.out.println("newCost: "+newCost);
+                if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
+                    parents.put(nextNode, node);
+                    costs.put(nextNode, newCost);
+                    nextNode.estimatedCost = dynamic_heuristic(nextNode, goalNode, dist_W, risk_W) + newCost; // estimatedCost=f(n)=h(n)+g(n)
+                    priorityQueue.add(nextNode);
+                }
+            }
+        }
+        return null;
+    }
+
     public Path plan(Graph graph, MapNode startNode, MapNode goalNode, String costFunction){
         if (costFunction.equals("distance")){
             this.graph = graph;
@@ -45,7 +79,7 @@ public class Planner {
                     //                double total_cost = 0;
                     //                for(double c:costs.values()){total_cost+=c;};
                     //                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
-                    Path fastestRoute = new Path(getGeoList(parents,goalNode));
+                    Path fastestRoute = new Path(getNodeList(parents,goalNode));
                     return fastestRoute;
                 }
                 for (MapEdge edge:node.edges){
@@ -77,7 +111,7 @@ public class Planner {
 //                double total_cost = 0;
 //                for(double c:costs.values()){total_cost+=c;};
 //                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
-                    Path fastestRoute = new Path(getGeoList(parents,goalNode));
+                    Path fastestRoute = new Path(getNodeList(parents,goalNode));
                     return fastestRoute;
                 }
                 for (MapEdge edge:node.edges){
@@ -112,7 +146,7 @@ public class Planner {
         while (!priorityQueue.isEmpty()){
             MapNode node = priorityQueue.remove();
             if(node.id == goalNode.id){
-                return getGeoList(parents,goalNode);
+                return getNodeList(parents,goalNode);
             }
             for (MapEdge edge:node.edges){
                 MapNode nextNode = edge.destinationNode;
@@ -129,7 +163,6 @@ public class Planner {
     }
 
     List<MapNode> planBreadthFirst(MapNode startNode, MapNode goalNode) {
-
         HashMap<MapNode, MapNode> parents = new HashMap<>();
         LinkedList<MapNode> queue = new LinkedList<>(); // Create a queue for BFS
 
@@ -140,7 +173,7 @@ public class Planner {
             // Dequeue a vertex from
             MapNode node = queue.poll();
             if(node.id == goalNode.id){
-                return getGeoList(parents,goalNode);
+                return getNodeList(parents,goalNode);
             }
             for (MapEdge edge:node.edges){
                 MapNode nextNode = edge.destinationNode;
@@ -166,7 +199,13 @@ public class Planner {
         return res;
     }
 
-    public ArrayList<MapNode> getGeoList(HashMap<MapNode, MapNode> parents, MapNode goalNode){
+    /** calculate heuristic cost based on different weights */
+    public double dynamic_heuristic(MapNode node, MapNode goalNode, double dist_W, double risk_W){
+        return risk_W * node.normalized_pedCount + dist_W * node.normalized_euclid;
+
+    }
+
+    public ArrayList<MapNode> getNodeList(HashMap<MapNode, MapNode> parents, MapNode goalNode){
         ArrayList<MapNode> geoList = new ArrayList<>();
         geoList.add(goalNode);
         MapNode thisNode = goalNode;
@@ -175,7 +214,6 @@ public class Planner {
             thisNode = parents.get(thisNode);
         }
         Collections.reverse(geoList);
-
         return geoList;
     }
     /**

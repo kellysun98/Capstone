@@ -72,6 +72,23 @@ public class KSP {
         }
         return A;
     }
+    /** Search K diverse routes */
+    public static ArrayList<Path> Diverse_K(Graph graph, MapNode src, MapNode dest, String costFunction, int K){
+        ArrayList<Path> result = new ArrayList<>();
+        Planner planner = new Planner();
+//        double distWeight = 1;
+//        double riskWeight = 0;
+
+        for (int i=0;i<K;i++){
+            double riskWeight = i/(double)K;
+            double distWeight = 1 - riskWeight;
+            System.out.println("distWeight:"+String.valueOf(distWeight));
+            System.out.println("riskWeight:"+String.valueOf(riskWeight));
+            Path temp = planner.AStar(graph, src, dest, costFunction, riskWeight, distWeight);
+            result.add(temp);
+        }
+        return result;
+    }
 
     public static String KSPtoJson(ArrayList<Path> ksp_sol) {
         ArrayList solution = new ArrayList<>();
@@ -146,7 +163,7 @@ public class KSP {
     }
 
 
-    /* Find k shortest routes that satisfy user's input for "max time spent detouring route"*/
+    /** Find k shortest routes that satisfy user's input for "max time spent detouring route"*/
     public static ArrayList<Path> detour_ksp(Graph graph, MapNode src, MapNode dest, String costFunction, int K, double detour_time) {
         double detour_distance = detour_time/60*5000;
         ArrayList<Path> A = new ArrayList<>();
@@ -248,7 +265,6 @@ public class KSP {
         }
         }
         return A;
-
     }
 
     }

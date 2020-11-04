@@ -38,10 +38,11 @@ public class Graph {
 
 
     // prepare for normalization
-    public void prepareNormalization( MapNode endNode){
+    public void prepareNormalization(MapNode endNode){
         for (MapNode n : this.routeNodes.values()) {
+            n.euclid = getDistance(n, endNode);
             pedCount_list.add(n.getPedCount());
-            euclid_list.add(getDistance(n, endNode));
+            euclid_list.add(n.euclid);
             for (MapEdge e : n.getEdges()){
                 edgeLength_list.add(e.getLength("distance"));
             }
@@ -53,8 +54,15 @@ public class Graph {
         max_pedCont = Collections.max(pedCount_list);
         min_pedCount = Collections.min(pedCount_list);
 
+        normalize_pedCount_and_euclid(endNode);
     }
 
+    public void normalize_pedCount_and_euclid(MapNode endNode){
+        for(MapNode n: this.routeNodes.values()){
+            n.normalized_pedCount = normalize(n.pedCount, min_pedCount, max_pedCont);
+            n.normalized_euclid = normalize(n.euclid, min_euclid, max_euclid);
+        }
+    }
     // normalize datapoint "me" based on min and max of dataset
     public static double normalize(double me, double min, double max){
         return (me-min)/(max-min);

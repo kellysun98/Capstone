@@ -86,7 +86,9 @@ public class DemoApplication {
 
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
-
+				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
+//				int temp = 0;
+				/**
 				if (userPref != null) { // Case 1: user填写了questionnaire
 					double timeLimit = userPref.getTimefromQ2();
 
@@ -105,7 +107,7 @@ public class DemoApplication {
 
 				} else { // Case 2: user skip了questionnaire，默认为他only care about distance, 给他三条距离最短的路线
 					resultList = KSP.ksp(torontoGraph, startNode, endNode, "distance", 10);
-				}
+				} */
 				result = KSP.KSPtoJson(resultList);
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
