@@ -1,5 +1,6 @@
 package com.example.demo.Services;
 
+import com.example.demo.PSQLConnect;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -10,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.lang.*;
 
 
 public class Graph {
@@ -36,6 +38,46 @@ public class Graph {
     public double max_pedCont = -1;
     public double min_pedCount = -1;
 
+    public void getPedestrianCountDistribution(String startTime, String endTime, int k){
+        ArrayList<ArrayList<Double>> pedCountMap = PSQLConnect.getPedestrianCount(startTime, endTime);
+
+        for (MapNode n : this.routeNodes.values()){
+            ArrayList<ArrayList<Double>> countList = new ArrayList<>();
+            for(int i = 0; i < k; i++){
+                ArrayList<Double> tempList = new ArrayList<>();
+                tempList.add(1000000.0);
+                countList.add(tempList);
+            }//for each node
+            for (ArrayList<Double> l : pedCountMap){ // find k closest camera
+                double dx = (n.latitude - l.get(0)) * MPERLAT;
+                double dy = (n.longitude - l.get(1)) * MPERLON;
+                double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                for(int j = 0; j < k; j++){
+                    if(tempdist < countList.get(j).get(0)){
+                        ArrayList<Double> newList = new ArrayList<>();
+                        newList.add(tempdist);
+                        newList.add(l.get(2));
+                        countList.set(j, newList);
+                        break;
+                    }
+                }
+            }
+            double sum = 0;
+            for(ArrayList<Double> list : countList){
+                sum += Math.abs(list.get(0));
+            }
+            double numerator = 0;
+            for(ArrayList<Double> list : countList){
+                numerator += sum * list.get(1) / Math.abs(list.get(0));
+            }
+            double denominator = 0;
+            for(ArrayList<Double> list : countList){
+                denominator += sum / Math.abs(list.get(0));
+            }
+            this.routeNodes.get(n.id).pedCount = numerator / denominator;
+        }
+        System.out.println("pedestrian counts initialized");
+    }
 
     // prepare for normalization
     public void prepareNormalization( MapNode endNode){

@@ -56,8 +56,8 @@ public class DemoApplication {
 		}
 		if(res.id == -1){
 			for (Double key : nodeMap.keySet()) {
-				double dx = (nodeMap.get(key).longitude - Double.parseDouble(l.get(2))) * MPERLON;
-				double dy = (nodeMap.get(key).latitude - Double.parseDouble(l.get(0))) * MPERLAT;
+				double dx = (nodeMap.get(key).longitude - (Double.parseDouble(l.get(2)) + Double.parseDouble(l.get(3)))/2) * MPERLON;
+				double dy = (nodeMap.get(key).latitude - (Double.parseDouble(l.get(0)) + Double.parseDouble(l.get(1)))/2) * MPERLAT;
 				double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 				if (tempdist < dist) {
 					dist = tempdist;
@@ -221,6 +221,7 @@ public class DemoApplication {
 			System.out.println("initializing graph");
 			//torontoGraph = new Graph();
 			torontoGraph = new Graph("./data/DT.osm", "./data/Cyclists.csv");
+			torontoGraph.getPedestrianCountDistribution("2020-09-11 00:00:00","2020-09-25 00:00:00", 3);
 			nodeMap = torontoGraph.routeNodes;
 			System.out.println("complete");
 //			return ("TorontoGraph Loaded");
