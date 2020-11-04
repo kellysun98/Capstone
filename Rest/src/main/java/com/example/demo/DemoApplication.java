@@ -220,8 +220,9 @@ public class DemoApplication {
 		public void initTorontoGraph(@RequestParam String init_num){
 			System.out.println("initializing graph");
 			//torontoGraph = new Graph();
-			torontoGraph = new Graph("./data/toronto.osm", "./data/Cyclists.csv");
+			torontoGraph = new Graph("./data/DT.osm", "./data/Cyclists.csv");
 			nodeMap = torontoGraph.routeNodes;
+			System.out.println("complete");
 //			return ("TorontoGraph Loaded");
 		}
 

@@ -13,6 +13,7 @@ public class MapEdge {
     public static Graph graph;
     public static DecimalFormat df = new DecimalFormat("#.###");
     public double normalized_length; //normalized length of each edge
+    public boolean isIndoor = (sourceNode.isIndoor) && (destinationNode.isIndoor);
 
     // Get source node id of MapEdge
     public double getSourceNodeID(){return this.sourceNode.id;}
@@ -68,9 +69,9 @@ public class MapEdge {
             if (mapRoute.lanes < 3){
                 cost = cost + euclideanDistance;
             }
-            if (mapRoute.maxSpeed > 80){
-                cost = cost + euclideanDistance * 0.5;
-            }
+//            if (mapRoute.maxSpeed > 80){
+//                cost = cost + euclideanDistance * 0.5;
+//            }
             if (accidentsCount != null) {
                 cost = cost + euclideanDistance * 100;
             }
@@ -86,9 +87,9 @@ public class MapEdge {
             if (mapRoute.lanes < 3){
                 cost = cost + euclideanDistance;
             }
-            if (mapRoute.maxSpeed > 80){
-                cost = cost + euclideanDistance * 0.5;
-            }
+//            if (mapRoute.maxSpeed > 80){
+//                cost = cost + euclideanDistance * 0.5;
+//            }
             if (accidentsCount != null) {
                 cost = cost + euclideanDistance * 0.1 * accidentsCount;
             }
