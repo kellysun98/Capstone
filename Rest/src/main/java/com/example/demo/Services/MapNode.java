@@ -54,7 +54,8 @@ public class MapNode implements Comparable<MapNode>{
         longitude = -1;
         latitude = -1;
         edges = new ArrayList<>();
-        pedCount = getRandomNumber(0,20);
+        //pedCount = getRandomNumber(0,20);
+        pedCount = -1;
         isIndoor = false;
         isHospital = false;
         isShoppers = false;
