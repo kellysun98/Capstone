@@ -220,14 +220,17 @@ public class DemoApplication {
 		}
 
 		@GetMapping("/init")
-		public void initTorontoGraph(@RequestParam String init_num){
+		public HashMap<String, Double> initTorontoGraph(@RequestParam String init_num){
 			System.out.println("initializing graph");
 			//torontoGraph = new Graph();
 			torontoGraph = new Graph("./data/DT.osm", "./data/Cyclists.csv");
 			torontoGraph.getPedestrianCountDistribution("2020-09-11 00:00:00","2020-09-25 00:00:00", 3);
 			nodeMap = torontoGraph.routeNodes;
+			HashMap temp = new HashMap<String, Double>();
+			temp = MapNode.MapNodetoHash(nodeMap.values());
 			System.out.println("complete");
 //			return ("TorontoGraph Loaded");
+			return temp;
 		}
 
 	}

@@ -2,6 +2,7 @@ package com.example.demo.Services;
 
 import org.w3c.dom.Element;
 import java.util.List;
+import java.util.HashMap;
 
 public class MapRoute {
     public double routeId;
@@ -20,6 +21,7 @@ public class MapRoute {
         this.bikeLane = newMapRoute.bikeLane;
         steps = newMapRoute.steps;
     }
+
     public MapRoute(Element route, String routeName, String routeType, boolean bikeLane, int lanes){
         routeId = Double.parseDouble(route.getAttribute("id"));
         this.routeName = routeName;
@@ -36,4 +38,5 @@ public class MapRoute {
             steps = true;
         }
     }
+
 }
