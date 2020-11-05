@@ -75,6 +75,7 @@ public class KSP {
     /** Search K diverse routes */
     public static ArrayList<Path> Diverse_K(Graph graph, MapNode src, MapNode dest, String costFunction, int K){
         ArrayList<Path> result = new ArrayList<>();
+        ArrayList<Double> result_dist = new ArrayList<>();
         Planner planner = new Planner();
 //        double distWeight = 1;
 //        double riskWeight = 0;
@@ -85,10 +86,17 @@ public class KSP {
             //System.out.println("distWeight:"+String.valueOf(distWeight));
             //System.out.println("riskWeight:"+String.valueOf(riskWeight));
             Path temp = planner.AStar(graph, src, dest, costFunction, riskWeight, distWeight);
-            result.add(temp);
-        }
+            if(result.isEmpty()){
+                result.add(temp);
+                result_dist.add(temp.getTotalLength());
+            }else if(!result_dist.contains(temp.getTotalLength())){
+                result.add(temp);
+                result_dist.add(temp.getTotalLength());
+                }
+            }
         return result;
-    }
+        }
+
 
     public static String KSPtoJson(ArrayList<Path> ksp_sol) {
         ArrayList solution = new ArrayList<>();
@@ -124,7 +132,7 @@ public class KSP {
 //                risk_toString += (risk1.toString() + ',' + risk2.toString() + ',');
 //                mn_toString += ('[' + longitude.toString() + ',' + latitude.toString() + ']' + ',' + '[' + middle_lon.toString()  +','+middle_lat.toString() + ']'+',');
             }
-            Double cost = p.getTotalCost();
+            Double cost = p.getTotalLength();
             Double time = p.getTotalTime();
 //            path_map.put("cost", cost.toString());
 //            path_map.put("routeNode", mn_toString.substring(0, mn_toString.length() - 1));
@@ -162,7 +170,7 @@ public class KSP {
                 Double latitude = mn.latitude;
                 mn_toString += ('[' + longitude.toString() + ',' + latitude.toString() + ']' + ',');
             }
-            Double cost = p.getTotalCost();
+            Double cost = p.getTotalLength();
             Double time = p.getTotalTime();
             return_value.add(cost.toString());
             return_value.add(mn_toString.substring(0, mn_toString.length() - 1));
@@ -244,7 +252,7 @@ public class KSP {
             }
         }else{
         Path pure_distance_shortestpath = planner.plan(graph, src, dest, "distance");
-        if (shortestpath.getTotalCost()>=(pure_distance_shortestpath.getTotalCost()+detour_distance))
+        if (shortestpath.getTotalLength()>=(pure_distance_shortestpath.getTotalLength()+detour_distance))
             System.out.println("Can't find any lower risk routes within detour time limit, here are lower risk routes with possible minimal detour time:");
 
         for (int k = 1; k < K; k++) {
@@ -276,7 +284,7 @@ public class KSP {
                     Path totalPath = Path.concatenate(rootPath, spurPath);
 
                     // Add potential k-shortest path to the heap
-                    if ((!B.contains(totalPath))&&(totalPath.getTotalCost()<=pure_distance_shortestpath.getTotalCost()+detour_distance))
+                    if ((!B.contains(totalPath))&&(totalPath.getTotalLength()<=pure_distance_shortestpath.getTotalLength()+detour_distance))
                         B.add(totalPath);
                 }
             }
