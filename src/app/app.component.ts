@@ -230,25 +230,12 @@ export class AppComponent {
 
   initBackEnd(){
     console.log('init started')
-    var indicator = 1;
     let params = new HttpParams().set('init_num', 'loading request'); 
     var test = new ol.source.Vector({});   
     this.http.get("http://localhost:8080/init", {params:params}).subscribe(
       (res)=>{
         for (var x =0; x < Object.keys(res).length; x+=1){
-          // var coord = Object.keys(res)[x];
-          // console.log(res[coord]);
-          // console.log(res[coord]/9);
-          // try {var tempkey = JSON.parse(coord);
-          //   console.log(tempkey);
-          //     }
-          //  catch {console.log("error in " + tempkey);
-          //    continue;}
-          // break;
-          
-          if (indicator % 2 == 0 || indicator % 3 == 0){
-            break;
-          }
+    
           var coord = Object.keys(res)[x];
           try {var tempkey = JSON.parse(coord);
           }
@@ -259,9 +246,6 @@ export class AppComponent {
             weight: res[coord]/9,
         });
         test.addFeature(pointFeature);
-        indicator = indicator ++;
-        console.log(x)
-        console.log(res[coord]/9);
       }
      
       var Heat = new ol.layer.Heatmap({
