@@ -93,7 +93,7 @@ export class AppComponent {
   }
   ngOnInit() {
     this.openWelcome();
-    this.Heatmap2();
+    //this.Heatmap2();
     //this.initBackEnd();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
@@ -230,10 +230,51 @@ export class AppComponent {
 
   initBackEnd(){
     console.log('init started')
-    let params = new HttpParams().set('init_num', 'loading request');    
+    var indicator = 1;
+    let params = new HttpParams().set('init_num', 'loading request'); 
+    var test = new ol.source.Vector({});   
     this.http.get("http://localhost:8080/init", {params:params}).subscribe(
-      res=>{console.log('Process Complete'), alert("Backend Initialization Complete!")}
-    );
+      (res)=>{
+        for (var x =0; x < Object.keys(res).length; x+=1){
+          // var coord = Object.keys(res)[x];
+          // console.log(res[coord]);
+          // console.log(res[coord]/9);
+          // try {var tempkey = JSON.parse(coord);
+          //   console.log(tempkey);
+          //     }
+          //  catch {console.log("error in " + tempkey);
+          //    continue;}
+          // break;
+          
+          if (indicator % 2 == 0 || indicator % 3 == 0){
+            break;
+          }
+          var coord = Object.keys(res)[x];
+          try {var tempkey = JSON.parse(coord);
+          }
+        catch {console.log(coord);
+        continue;}
+        var pointFeature = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.transform(tempkey, 'EPSG:4326', 'EPSG:3857')),
+            weight: res[coord]/9,
+        });
+        test.addFeature(pointFeature);
+        indicator = indicator ++;
+        console.log(x)
+        console.log(res[coord]/9);
+      }
+     
+      var Heat = new ol.layer.Heatmap({
+        source: test,
+        blur: 15,
+        radius: 10,
+        opacity : 0.5,
+        name:'heatmap',
+      });
+      
+      this.map.addLayer(Heat); 
+      console.log('Process Complete'), alert("Backend Initialization Complete!")
+    });
     console.log('loading')
   }
   
@@ -620,10 +661,11 @@ Heatmap2(){
     for (let key of Object.keys(data)){
 
       var coord  = '[ ' + key + ' ]';
-      try { coord = JSON.parse(coord); 
+      try {coord = JSON.parse(coord); 
         }
       catch {console.log(coord);
       continue;}
+      console.log(coord)
 
       var pointFeature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform(coord, 'EPSG:4326', 'EPSG:3857')),
@@ -632,18 +674,6 @@ Heatmap2(){
     //  points.push(new ol.Feature(new ol.geom.Point(ol.proj.transform(coord, 'EPSG:4326', 'EPSG:3857'))));
   }
  
-  
-  // var source = new ol.source.Vector({
-  //   features: points
-  // });
-  
-  // var vector = new ol.layer.Heatmap({
-  //   source: points,
-  //   weight: function(feature) { return feature.get('points').length/1000; },
-  //   blur: 10,
-  //   radius: 10,
-  // });
-
   var vector = new ol.layer.Heatmap({
     source: test,
     blur: 20,

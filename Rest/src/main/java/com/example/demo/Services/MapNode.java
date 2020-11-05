@@ -4,9 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.example.demo.Services.Graph.getDistance;
 import static com.example.demo.Services.Graph.normalize;
@@ -111,6 +109,15 @@ public class MapNode implements Comparable<MapNode>{
                 edges.remove(i);
             }
         }
+    }
+
+    public static HashMap<String, Double> MapNodetoHash (Collection<MapNode> k){
+        HashMap resultmap = new HashMap<String, Double>();
+        for (MapNode x: k){
+            String coord= "[" + x.longitude + "," + x.latitude + "]";
+            resultmap.put(coord, x.pedCount);
+        }
+        return resultmap;
     }
 
 //    @Override
