@@ -15,6 +15,7 @@ public class Path implements Comparable<Path>{
     public Path(){
         nodes = new ArrayList<MapNode>();
         totalLength =0;
+        totalRisk = 0;
     }
 
     /** Path constructor
@@ -26,25 +27,28 @@ public class Path implements Comparable<Path>{
         totalLength = 0;
         for (int i=0; i< input_nodes.size()-1;i++){
             totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
+            totalRisk+= input_nodes.get(i).normalized_pedCount;
         }
         setTime(); // set total time of the path in mins
+
     }
 
-    public Path(ArrayList<MapNode> input_nodes, double total_cost){
-        nodes = input_nodes;
-        totalLength = total_cost;
-    }
+//    public Path(ArrayList<MapNode> input_nodes, double total_cost){
+//        nodes = input_nodes;
+//        totalLength = total_cost;
+//    }
 
     public void setTime(){
         totalTime = (totalLength/5000.0)*60.0;
     }
 
     public List<MapNode> getNodes(){return nodes;}
-    public double getTotalCost(){return totalLength;}
+    public double getTotalLength(){return totalLength;}
 
     public double getTotalTime() {
         this.totalTime = (this.totalLength/5000.0)*60.0;
-        return Math.floor(this.totalTime * 1e2)/ 1e2;  //rounded time
+        return this.totalTime;
+//        return Math.floor(this.totalTime * 1e2)/ 1e2;  //rounded time
     }
 
     public String getDescription(){
