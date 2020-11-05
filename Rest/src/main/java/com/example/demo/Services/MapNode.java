@@ -26,6 +26,7 @@ public class MapNode implements Comparable<MapNode>{
     public boolean isIndoor; // whether node is indoor
     public boolean isHospital; // whether node is hospital
     public boolean isShoppers; // whether node is shoppers
+    public boolean isMall; //whether node is mall
 
     public double getPedCount(){
         return this.pedCount;
@@ -48,6 +49,7 @@ public class MapNode implements Comparable<MapNode>{
         isIndoor = false;
         isHospital = false;
         isShoppers = false;
+        isMall = false;
     }
     public MapNode (){
         id = -1;
@@ -59,6 +61,7 @@ public class MapNode implements Comparable<MapNode>{
         isIndoor = false;
         isHospital = false;
         isShoppers = false;
+        isMall = false;
     }
     /** Set Function for isIndoor, isHospital, isShoppers
      * */
@@ -81,6 +84,7 @@ public class MapNode implements Comparable<MapNode>{
         isIndoor = false;
         isHospital = false;
         isShoppers = false;
+        isMall = false;
 //        euclid = getDistance()
 //        normalized_pedCount = normalize(this.pedCount, graph.min_pedCount, graph.max_pedCont);
     }
@@ -96,7 +100,7 @@ public class MapNode implements Comparable<MapNode>{
         copy.isIndoor = this.isIndoor;
         copy.isHospital = this.isHospital;
         copy.isShoppers = this.isShoppers;
-
+        copy.isMall = this.isMall;
         return copy;
 
     }
