@@ -50,8 +50,8 @@ export class AppComponent {
   active: boolean;
   open: boolean;
   heatmap: Object;
-  start_add: String = 'massey hall, toronto';
-  end_add: String = 'city hall, toronto';
+  start_add: String = '7 grenville, toronto';
+  end_add: String = '68 shuter street, toronto';
   latitude: number;
   longitude: number;
   // end_lat: number;
@@ -454,10 +454,11 @@ export class AppComponent {
               });   //remove routes once the drawline function is called 
   
           this.response = res; 
+          var res_length = Object.keys(this.response).length;
           var myroutes = [];
           
           // console.log('From backend: ' + JSON.parse(res.toString()));
-          for(var index = 0; index < 2; index++){
+          for(var index = 0; index < res_length; index++){
             console.log('first loop: ' + this.response[index])
             // for (let key of Object.keys(this.response[index])){
             var route = JSON.parse(this.response[index][1]);
@@ -472,7 +473,7 @@ export class AppComponent {
             var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
             var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
             var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-            var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5)';  //random opacity for same cost function
+            var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.8)';  //random opacity for same cost function
 
             //colors adjusted for different risk levels
             var safe = 'rgba(0, 204, 0, 0.8)';
@@ -492,10 +493,10 @@ export class AppComponent {
             
             var linestyle = new ol.style.Style({
               fill: new ol.style.Fill({
-                  color: safe, weight: 5,
+                  color: color, weight: 5,
               }),
               stroke: new ol.style.Stroke({
-                color: safe, width: 5
+                color: color, width: 5
               }),
             });
             
