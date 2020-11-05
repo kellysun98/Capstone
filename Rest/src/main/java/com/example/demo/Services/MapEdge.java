@@ -13,9 +13,10 @@ public class MapEdge {
     public static Graph graph;
     public static DecimalFormat df = new DecimalFormat("#.###");
     public double normalized_length; //normalized length of each edge
-    public boolean isIndoor; // whether node is indoor
-    public boolean isHospital; // whether node is hospital
-    public boolean isShoppers; // whether node is shoppers
+    public boolean isIndoor; // whether edge is indoor
+    public boolean isHospital; // whether edge is hospital
+    public boolean isShoppers; // whether edge is shoppers
+    public boolean isMall; //whether edge is mall
 
     // Get source node id of MapEdge
     public double getSourceNodeID(){return this.sourceNode.id;}
@@ -32,6 +33,7 @@ public class MapEdge {
         this.isIndoor = (sourceNode.isIndoor) && (destinationNode.isIndoor);
         this.isHospital = (sourceNode.isHospital) && (destinationNode.isHospital);
         this.isShoppers = (sourceNode.isShoppers) && (destinationNode.isShoppers);
+        this.isMall = (sourceNode.isMall) && (destinationNode.isMall);
     }
 
     public MapEdge(MapRoute mapRoute, MapNode sourceNode, MapNode destinationNode) {
@@ -46,6 +48,7 @@ public class MapEdge {
         this.isIndoor = (sourceNode.isIndoor) && (destinationNode.isIndoor);
         this.isHospital = (sourceNode.isHospital) && (destinationNode.isHospital);
         this.isShoppers = (sourceNode.isShoppers) && (destinationNode.isShoppers);
+        this.isMall = (sourceNode.isMall) && (destinationNode.isMall);
 //            accidentsCount = graph.accidents.get(lon).get(lat);
 //        } catch (NullPointerException e){
 //            accidentsCount = null;

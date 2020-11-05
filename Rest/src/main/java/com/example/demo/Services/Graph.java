@@ -281,6 +281,7 @@ public class Graph {
             boolean isHighway = false;
             boolean isIndoor = false;
             boolean isHospital = false;
+            boolean isMall = false;
             boolean oneWay = false;
             boolean bikeLane = false;
             boolean isBuilding = false;
@@ -294,14 +295,16 @@ public class Graph {
             for (int j = 0; j < tagsForRoute.getLength(); j++) {
                 Element tag = (Element) tagsForRoute.item(j);
                 if (tag.getAttribute("k").equals("highway")) {
-                    if(tag.getAttribute("v").equals(("footway"))){
+                    if (tag.getAttribute("v").equals(("footway"))) {
                         isHighway = true;
                         routeType = tag.getAttribute("v");
                     }
-                } else if(tag.getAttribute("k").equals("level")){
+                } else if (tag.getAttribute("k").equals("level")) {
                     isIndoor = true;
-                } else if(tag.getAttribute("v").contains("hospital")||tag.getAttribute("v").contains("Hospital")){
+                } else if (tag.getAttribute("v").contains("hospital") || tag.getAttribute("v").contains("Hospital")) {
                     isHospital = true;
+                } else if (tag.getAttribute("v").contains("mall")){
+                    isMall = true;
                 } else if (tag.getAttribute("k").equals("building")){
                     isBuilding = true;
                 } else if (tag.getAttribute("k").equals("name")) {
@@ -362,7 +365,13 @@ public class Graph {
                     nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
                 }
             }
-
+            if (isMall){
+                NodeList nodesInRoute = route.getElementsByTagName("nd");
+                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+                    Element nd = (Element) nodesInRoute.item(j);
+                    nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
+                }
+            }
             if (isBuilding){
                 ArrayList<MapNode> nodeContainer = new ArrayList<>();
                 NodeList nodesInRoute = route.getElementsByTagName("nd");

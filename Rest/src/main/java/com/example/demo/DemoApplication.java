@@ -87,6 +87,7 @@ public class DemoApplication {
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
+
 //				int temp = 0;
 				/**
 				if (userPref != null) { // Case 1: user填写了questionnaire
