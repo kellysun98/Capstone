@@ -232,10 +232,9 @@ export class AppComponent {
     console.log('init started')
     let params = new HttpParams().set('init_num', 'loading request'); 
     var test = new ol.source.Vector({});   
-    this.http.get("http://localhost:8080/init", {params:params}).subscribe(
+    this.http.get("http://localhost:8080/init", {params:params}).pipe(take(1)).subscribe(
       (res)=>{
         for (var x =0; x < Object.keys(res).length; x+=1){
-    
           var coord = Object.keys(res)[x];
           try {var tempkey = JSON.parse(coord);
           }
