@@ -97,11 +97,32 @@ public class KSP {
             HashMap<String, String> path_map = new HashMap<>();
             ArrayList<String> return_value = new ArrayList<>();
             List<MapNode> node_list = p.getNodes();
-            String mn_toString = new String();
-            for (MapNode mn : node_list) {
-                Double longitude = mn.longitude;
-                Double latitude = mn.latitude;
-                mn_toString += ('[' + longitude.toString() + ',' + latitude.toString() + ']' + ',');
+            //String mn_toString = new String();
+            ArrayList<ArrayList<Double>> mn = new ArrayList<>();
+            ArrayList<Double> risk = new ArrayList<>();
+//            String risk_toString = new String();
+            for (int i = 1; i<node_list.size(); i++) {
+                ArrayList<Double> al1 = new ArrayList<>();
+                ArrayList<Double> al2 = new ArrayList<>();
+                MapNode first = node_list.get(i-1);
+                MapNode second = node_list.get(i);
+                Double middle_lon = (first.longitude+second.longitude)/2;
+                Double middle_lat = (first.latitude+second.latitude)/2;
+                Double longitude = node_list.get(i-1).longitude;
+                Double latitude = node_list.get(i-1).latitude;
+                Double risk1 = node_list.get(i-1).pedCount;
+                Double risk2 = node_list.get(i).pedCount;
+
+                al1.add(longitude);
+                al1.add(latitude);
+                al2.add(middle_lon);
+                al2.add(middle_lat);
+                mn.add(al1);
+                mn.add(al2);
+                risk.add(risk1);
+                risk.add(risk2);
+//                risk_toString += (risk1.toString() + ',' + risk2.toString() + ',');
+//                mn_toString += ('[' + longitude.toString() + ',' + latitude.toString() + ']' + ',' + '[' + middle_lon.toString()  +','+middle_lat.toString() + ']'+',');
             }
             Double cost = p.getTotalCost();
             Double time = p.getTotalTime();
@@ -110,7 +131,10 @@ public class KSP {
 //            path_map.put("time", time.toString());
 //            path_map.put("description", p.getDescription());
             return_value.add(cost.toString());
-            return_value.add(mn_toString.substring(0, mn_toString.length() - 1));
+            return_value.add(new Gson().toJson(mn));
+            return_value.add(new Gson().toJson(risk));
+//            return_value.add(mn_toString.substring(0, mn_toString.length() - 1));
+//            return_value.add(risk_toString.substring(0, risk_toString.length() - 1));
             return_value.add(time.toString());
             return_value.add(p.getDescription());
 //            path_map.put(count, return_value);

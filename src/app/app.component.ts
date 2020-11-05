@@ -175,15 +175,15 @@ export class AppComponent {
 
     this.map.on('pointermove', function(evt) {    //change pointer when on a feature 
       this.getTargetElement().style.cursor = this.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
-      if (selected !== null) {
+      // if (selected !== null) {
         //selected.setStyle(undefined);
-        selected = null;
-      }
-      this.forEachFeatureAtPixel(evt.pixel, function (f) {
-        selected = f;
-        f.setStyle(highlightStyle);
-        return true;
-      });
+      //   selected = null;
+      // }
+      // this.forEachFeatureAtPixel(evt.pixel, function (f) {
+      //   selected = f;
+      //   f.setStyle(highlightStyle);
+      //   return true;
+      // });
     //   this.forEachFeatureAtPixel(evt.pixel, function(feature,layer) {
     //     console.log(feature.get('name'));
     //     if ( feature.get('name') === "markericon" ) {
@@ -430,38 +430,115 @@ export class AppComponent {
               });   //remove routes once the drawline function is called 
   
           this.response = res; 
-          var myroutes = []
+          var myroutes = [];
+          
           // console.log('From backend: ' + JSON.parse(res.toString()));
           for(var index = 0; index < 2; index++){
             console.log('first loop: ' + this.response[index])
             // for (let key of Object.keys(this.response[index])){
-            var route = JSON.parse('[' + this.response[index][1] + ']');
-              //console.log('second loop: ' + route)     
+            var route = JSON.parse(this.response[index][1]);
+            // var route = this.response[index][1].split(",");
+            var risk = JSON.parse(this.response[index][2]); 
+
+            // var risk = JSON.parse(this.response[index][2]);
+            console.log('print route: ' + route[1]);
+            console.log('print risk: ' + risk[0]);
+            console.log('route length: '+ route.length);
+
             var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
             var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
             var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
             var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.5)';  //random opacity for same cost function
 
+            //colors adjusted for different risk levels
+            var safe = 'rgba(0, 204, 0, 0.8)';
+            var medium = 'rgba(255, 152, 51, 0.8)';
+            var dangerous = 'rgba(255, 0, 0, 0.8)';
+
             for (var i = 0; i < route.length; i++) {
-              console.log('length enumeration '+i);
+              // console.log('length enumeration '+i);
               route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
             }
+
             var featureLine = new ol.Feature({
               geometry: new ol.geom.LineString(route),
               name: 'nav_line',
-              description: 'total time:' + this.response[index][2] + ', \n route description: ' + this.response[index][3],
+              description: 'total time:' + this.response[index][3] + ', \n route description: ' + this.response[index][4],
             });
-  
+            
             var linestyle = new ol.style.Style({
               fill: new ol.style.Fill({
-                color: color, weight: 5,
+                  color: safe, weight: 5,
               }),
               stroke: new ol.style.Stroke({
-                color: color, width: 5
+                color: safe, width: 5
               }),
             });
+            
             featureLine.setStyle(linestyle);
             myroutes.push(featureLine)
+
+            // if(risk[i-1]<0 && risk[i-1]>=3){
+            //   console.log('enumerate times: '+ i);
+            //   var featureLine = new ol.Feature({
+            //     geometry: new ol.geom.LineString([route[i-1], route[i]]),
+            //     name: 'nav_line',
+            //     description: 'total time:' + this.response[index][3] + ', \n route description: ' + this.response[index][4],
+            //   });
+              
+            //   var linestyle = new ol.style.Style({
+            //     fill: new ol.style.Fill({
+            //         color: safe, weight: 5,
+            //     }),
+            //     stroke: new ol.style.Stroke({
+            //       color: safe, width: 5
+            //     }),
+            //   });
+              
+            //   featureLine.setStyle(linestyle);
+            //   myroutes.push(featureLine)
+    
+            // }else if(risk[i-1]>3 && risk[i-1]<=6){
+            //   console.log('enumerate times: '+ i);
+            //   var featureLine = new ol.Feature({
+            //     geometry: new ol.geom.LineString([route[i-1], route[i]]),
+            //     name: 'nav_line',
+            //     description: 'total time:' + this.response[index][3] + ', \n route description: ' + this.response[index][4],
+            //   });
+
+            //   var linestyle = new ol.style.Style({
+            //     fill: new ol.style.Fill({
+            //         color: medium, weight: 5,
+            //     }),
+            //     stroke: new ol.style.Stroke({
+            //       color: medium, width: 5
+            //     }),
+            //   });
+              
+            //   featureLine.setStyle(linestyle);
+            //   myroutes.push(featureLine)
+
+            // }else{
+            //   console.log('enumerate times: '+ i);
+            //   var featureLine = new ol.Feature({
+            //     geometry: new ol.geom.LineString([route[i-1], route[i]]),
+            //     name: 'nav_line',
+            //     description: 'total time:' + this.response[index][3] + ', \n route description: ' + this.response[index][4],
+            //   });
+
+            //   var linestyle = new ol.style.Style({
+            //     fill: new ol.style.Fill({
+            //         color: dangerous, weight: 5,
+            //     }),
+            //     stroke: new ol.style.Stroke({
+            //       color: dangerous, width: 5
+            //     }),
+            //   });
+              
+            //   featureLine.setStyle(linestyle);
+            //   myroutes.push(featureLine)
+            // }
+
           }   //one route generated for this navigation
 
           var vectorSource = new ol.source.Vector({
