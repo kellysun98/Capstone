@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
 import com.google.gson.Gson;
+import org.apache.commons.math3.util.Precision;
 
 
 public class KSP {
@@ -105,10 +106,10 @@ public class KSP {
             HashMap<String, String> path_map = new HashMap<>();
             ArrayList<String> return_value = new ArrayList<>();
             List<MapNode> node_list = p.getNodes();
-            //String mn_toString = new String();
+            String mn_toString = new String();
             ArrayList<ArrayList<Double>> mn = new ArrayList<>();
             ArrayList<Double> risk = new ArrayList<>();
-//            String risk_toString = new String();
+            String risk_toString = new String();
             for (int i = 1; i<node_list.size(); i++) {
                 ArrayList<Double> al1 = new ArrayList<>();
                 ArrayList<Double> al2 = new ArrayList<>();
@@ -129,25 +130,28 @@ public class KSP {
                 mn.add(al2);
                 risk.add(risk1);
                 risk.add(risk2);
-//                risk_toString += (risk1.toString() + ',' + risk2.toString() + ',');
-//                mn_toString += ('[' + longitude.toString() + ',' + latitude.toString() + ']' + ',' + '[' + middle_lon.toString()  +','+middle_lat.toString() + ']'+',');
+                risk_toString += (risk1.toString() + ',' + risk2.toString() + ',');
+                mn_toString += ('[' + longitude.toString() + ',' + latitude.toString() + ']' + ',' + '[' + middle_lon.toString()  +','+middle_lat.toString() + ']'+',');
             }
             Double cost = p.getTotalLength();
-            Double time = p.getTotalTime();
-//            path_map.put("cost", cost.toString());
-//            path_map.put("routeNode", mn_toString.substring(0, mn_toString.length() - 1));
-//            path_map.put("time", time.toString());
-//            path_map.put("description", p.getDescription());
-            return_value.add(cost.toString());
-            return_value.add(new Gson().toJson(mn));
-            return_value.add(new Gson().toJson(risk));
+            Double time = Precision.round(p.getTotalTime(),0);
+            Double distance = Precision.round(p.getTotalLength()/1000,2);
+            path_map.put("cost", new Gson().toJson(cost));
+            path_map.put("routeNode", new Gson().toJson(mn));
+            path_map.put("risk", new Gson().toJson(risk));
+            path_map.put("time", new Gson().toJson(time));
+            path_map.put("description", p.getDescription());
+            path_map.put("distance", new Gson().toJson(distance));
+//            return_value.add(cost.toString());
+//            return_value.add(new Gson().toJson(mn));
+//            return_value.add(new Gson().toJson(risk));
 //            return_value.add(mn_toString.substring(0, mn_toString.length() - 1));
 //            return_value.add(risk_toString.substring(0, risk_toString.length() - 1));
-            return_value.add(time.toString());
-            return_value.add(p.getDescription());
+//            return_value.add(time.toString());
+//            return_value.add(p.getDescription());
 //            path_map.put(count, return_value);
 
-            solution.add(return_value); //[cost, nodelist, totaltime, description]
+            solution.add(path_map); //[cost, nodelist, totaltime, description]
         }
         String solution_to_string = new Gson().toJson(solution);
         return solution_to_string;

@@ -456,24 +456,24 @@ export class AppComponent {
           this.response = res; 
           var res_length = Object.keys(this.response).length;
           var myroutes = [];
-          
+          for(var amen = 0; amen<res_length; amen++){  
           // console.log('From backend: ' + JSON.parse(res.toString()));
-          for(var index = 0; index < res_length; index++){
-            console.log('first loop: ' + this.response[index])
+          // for(let index in this.response[amen]['routeNode']){
+            console.log('first loop: ' + this.response[amen]['routeNode'])
             // for (let key of Object.keys(this.response[index])){
-            var route = JSON.parse(this.response[index][1]);
+            var route = JSON.parse(this.response[amen]['routeNode']);
             // var route = this.response[index][1].split(",");
-            var risk = JSON.parse(this.response[index][2]); 
+            var risk = JSON.parse(this.response[amen]['risk']); 
 
             // var risk = JSON.parse(this.response[index][2]);
             console.log('print route: ' + route[1]);
             console.log('print risk: ' + risk[0]);
             console.log('route length: '+ route.length);
 
-            var r_color =  Math.floor(Math.random() * (255 - 0 + 1) + 0);
+            
             var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
             var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-            var color = 'rgba('+r_color+','+g_color+','+b_color+', 0.8)';  //random opacity for same cost function
+            var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';  //random opacity for same cost function
 
             //colors adjusted for different risk levels
             var safe = 'rgba(0, 204, 0, 0.8)';
@@ -488,7 +488,7 @@ export class AppComponent {
             var featureLine = new ol.Feature({
               geometry: new ol.geom.LineString(route),
               name: 'nav_line',
-              description: 'total time:' + this.response[index][3] + ', \n route description: ' + this.response[index][4],
+              description: 'total time:' + this.response[amen]['time'] + ', \n route description: ' + this.response[amen]['description'],
             });
             
             var linestyle = new ol.style.Style({
@@ -564,8 +564,8 @@ export class AppComponent {
             //   myroutes.push(featureLine)
             // }
 
-          }   //one route generated for this navigation
-
+          // }   //one route generated for this navigation
+        }
           var vectorSource = new ol.source.Vector({
             features: myroutes,
           }); //multiple routes added 
