@@ -1,27 +1,30 @@
+
 <mat-tab-group dynamicHeight>
     <mat-tab label="Walking">
         <mat-list>
             <mat-list-item>
-                <mat-label>20 mins</mat-label>
-                Fatest Route
+                <mat-label>{{route[0].time}} mins</mat-label>
+                {{route[0].description}}
+                <p style = "float:right">{{route[0].distance}} meters</p>
                 <mat-icon>keyboard_arrow_right</mat-icon>
 
             </mat-list-item>
 
             <mat-divider></mat-divider>
             <mat-list-item>
-                <mat-label>30 mins</mat-label>
-                2nd fatest route, no patios
+                <mat-label>{{route[1].time}} mins</mat-label>
+                {{route[1].description}}
+                <mat-label style = "float:right">{{route[1].distance}} meters</mat-label>
                 <mat-icon>keyboard_arrow_right</mat-icon>
 
             </mat-list-item>
 
             <mat-divider></mat-divider>
             <mat-list-item>
-                <mat-label>30 mins</mat-label>
-                slowest but safest
+                <mat-label>{{route[1].time}} mins</mat-label>
+                {{route[3].description}}
+                <mat-label style = "float:right">{{route[2].distance}} meters</mat-label>
                 <mat-icon>keyboard_arrow_right</mat-icon>
-
             </mat-list-item>
 
             <mat-divider></mat-divider>
