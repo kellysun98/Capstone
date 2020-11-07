@@ -107,6 +107,7 @@ public class Planner {
         HashMap<MapNode, MapNode> parents = new HashMap<>();
         HashMap<MapNode, Double> costs = new HashMap<>();
         PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>();
+
 //        System.out.println("startNode: "+startNode.id);
 //        System.out.format("startNode lat long: %f,%f ",startNode.latitude,startNode.longitude);
 
@@ -125,8 +126,15 @@ public class Planner {
                 return fastestRoute;
             }
             for (MapEdge edge : node.edges) {
+                boolean useMe = false;
                 if (edge.destinationNode.isHospital==false) { // nextNode不是hospital
-//                    System.out.println("下一个Node不是hospital");
+                    useMe = true;
+                }else if ((node.id == startNode.id)||(getDistance(edge.destinationNode, startNode)<=30.0)) {
+                    useMe = true;
+                }else if ((edge.destinationNode.id== goalNode.id)||(getDistance(edge.destinationNode,goalNode)<=30.0)) { //nextNode is goalNode OR nextNode is 30 meters within goalNode
+                    useMe = true;
+                }
+                if(useMe){
                     edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
                     MapNode nextNode = edge.destinationNode;
                     double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, dist_W, risk_W); //newCost = g(n)
@@ -138,7 +146,6 @@ public class Planner {
                         priorityQueue.add(nextNode);
                     }
                 }else{
-////                    System.out.println("NextNode is hospital");
                     continue;
                 }
             }
@@ -246,6 +253,8 @@ public class Planner {
                 }
             }
         }
+//        System.out.println("goalNode: "+goalNode.id);
+//        System.out.format("goalNode lat long: %f,%f ",goalNode.latitude,goalNode.longitude);
         return null;
     }
 
