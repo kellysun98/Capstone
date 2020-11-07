@@ -83,11 +83,6 @@ public class DemoApplication {
 				// Prepare for normalization for "covid" heuristic
 				torontoGraph.prepareNormalization(endNode);
 
-				// Set up for avoid hospital or not
-				if ((userPref != null)&&(userPref.getQ3().get(0).contains("hospital"))){
-					torontoGraph.avoidHospital=true;
-				}
-
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
@@ -206,6 +201,8 @@ public class DemoApplication {
 //			userPref.setQ1(pref.getQ1());
 //			userPref.setQ2(pref.getQ2());
 //			userPref.setQ3(pref.getQ3());
+
+
 			System.out.println("finished fetching user questionnaire answers");
 			return userPref;
 		}
@@ -231,6 +228,10 @@ public class DemoApplication {
 			torontoGraph = new Graph("./data/DT2.osm", "./data/Cyclists.csv");
 			torontoGraph.getPedestrianCountDistribution("2020-09-11 00:00:00","2020-09-25 00:00:00", 3);
 
+			// set questionnaire answer(avoid hospital or not)
+			if ((userPref != null)&&(userPref.getQ3().get(0).contains("hospital"))){
+				torontoGraph.avoidHospital=true;
+			}
 
 			nodeMap = torontoGraph.routeNodes;
 			HashMap temp = new HashMap<String, Double>();
