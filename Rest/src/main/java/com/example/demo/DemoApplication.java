@@ -33,7 +33,6 @@ public class DemoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
-
 	}
 
 	public MapNode getElement(HashMap<Double, MapNode> nodeMap, String bound) {
@@ -84,10 +83,15 @@ public class DemoApplication {
 				// Prepare for normalization for "covid" heuristic
 				torontoGraph.prepareNormalization(endNode);
 
+				// Set up for avoid hospital or not
+				if ((userPref != null)&&(userPref.getQ3().get(0).contains("hospital"))){
+					torontoGraph.avoidHospital=true;
+				}
+
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
-
+				System.out.println("resultList length="+resultList.size());
 //				int temp = 0;
 				/**
 				if (userPref != null) { // Case 1: user填写了questionnaire
@@ -198,6 +202,7 @@ public class DemoApplication {
 		@PostMapping("/questionnaire")
 		public userPreference postPref(@RequestBody userPreference pref){
 			userPref = new userPreference(pref.getQ1(), pref.getQ2(), pref.getQ3());
+
 //			userPref.setQ1(pref.getQ1());
 //			userPref.setQ2(pref.getQ2());
 //			userPref.setQ3(pref.getQ3());
@@ -221,10 +226,12 @@ public class DemoApplication {
 
 		@GetMapping("/init")
 		public HashMap<String, Double> initTorontoGraph(@RequestParam String init_num){
+
 			System.out.println("initializing graph");
-			//torontoGraph = new Graph();
-			torontoGraph = new Graph("./data/DT.osm", "./data/Cyclists.csv");
+			torontoGraph = new Graph("./data/DT2.osm", "./data/Cyclists.csv");
 			torontoGraph.getPedestrianCountDistribution("2020-09-11 00:00:00","2020-09-25 00:00:00", 3);
+
+
 			nodeMap = torontoGraph.routeNodes;
 			HashMap temp = new HashMap<String, Double>();
 			temp = MapNode.MapNodetoHash(nodeMap.values());
