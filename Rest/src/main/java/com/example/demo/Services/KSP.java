@@ -85,7 +85,12 @@ public class KSP {
             double distWeight = 1 - riskWeight;
             //System.out.println("distWeight:"+String.valueOf(distWeight));
             //System.out.println("riskWeight:"+String.valueOf(riskWeight));
-            Path temp = planner.AStar(graph, src, dest, costFunction, riskWeight, distWeight);
+            Path temp = new Path();
+            if (graph.avoidHospital==true) { // Case 1: 躲避医院
+                temp = planner.AStar_avoidHospital(graph, src, dest, costFunction, riskWeight, distWeight);
+            }else if (graph.avoidHospital==false){ // Case 2: 不躲避医院
+                temp = planner.AStar(graph, src, dest, costFunction, riskWeight, distWeight);
+            }
             if(result.isEmpty()){
                 result.add(temp);
                 result_dist.add(temp.getTotalLength());
