@@ -96,6 +96,7 @@ public class Graph {
         max_length = Collections.max(edgeLength_list);
         min_length = Collections.min(edgeLength_list);
         max_euclid = Collections.max(euclid_list);
+        System.out.println("max euclid: "+ max_euclid);
         min_euclid = Collections.min(euclid_list);
         max_pedCont = Collections.max(pedCount_list);
         min_pedCount = Collections.min(pedCount_list);
@@ -438,7 +439,7 @@ public class Graph {
             for (int j = 0; j < tagsForRoute.getLength(); j++) {
                 Element tag = (Element) tagsForRoute.item(j);
                 if (tag.getAttribute("k").equals("highway")) {
-                    if (tag.getAttribute("v").equals(("footway"))) {
+                    if (tag.getAttribute("v").equals(("footway")) || tag.getAttribute("v").equals(("pedestrian"))) {
                         isHighway = true;
                         routeType = tag.getAttribute("v");
                     }

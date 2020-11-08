@@ -80,17 +80,21 @@ public class KSP {
         Planner planner = new Planner();
 //        double distWeight = 1;
 //        double riskWeight = 0;
-
-        for (int i=0;i<K;i++){
-            double riskWeight = i/(double)K;
-            double distWeight = 1 - riskWeight;
+        ArrayList<Integer> weight = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 100, 200, 300, 400, 500,1000,2000,3000,4000));
+        //for (int i=0;i<K;i++){
+        for (int i : weight){
+            //double riskWeight = i/(double)K;
+            double riskWeight = i;
+            double distWeight = 1;
             //System.out.println("distWeight:"+String.valueOf(distWeight));
             //System.out.println("riskWeight:"+String.valueOf(riskWeight));
             Path temp = new Path();
             if (graph.avoidHospital==true) { // Case 1: 躲避医院
                 temp = planner.AStar_avoidHospital(graph, src, dest, costFunction, riskWeight, distWeight);
+                temp.weight = i;
             }else if (graph.avoidHospital==false){ // Case 2: 不躲避医院
                 temp = planner.AStar(graph, src, dest, costFunction, riskWeight, distWeight);
+                temp.weight = i;
             }
             if(result.isEmpty()){
                 result.add(temp);
@@ -100,6 +104,8 @@ public class KSP {
                 result_dist.add(temp.getTotalLength());
                 }
             }
+        Path testp = planner.AStar_avoidHospital(graph, src, dest, costFunction, 1, 0);
+        result.add(testp);
         return result;
         }
 

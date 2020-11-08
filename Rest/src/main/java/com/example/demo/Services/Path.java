@@ -10,6 +10,7 @@ public class Path implements Comparable<Path>{
     private double totalLength;
     private double totalTime; // in minutes
     private double totalRisk;
+    public int weight = -1;
 
 
     public Path(){

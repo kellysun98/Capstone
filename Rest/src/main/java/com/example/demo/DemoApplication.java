@@ -86,6 +86,9 @@ public class DemoApplication {
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
+				for (Path p : resultList){
+					System.out.println("covid risk="+p.weight);
+				}
 				System.out.println("resultList length="+resultList.size());
 //				int temp = 0;
 				/**
@@ -225,7 +228,7 @@ public class DemoApplication {
 		public HashMap<String, Double> initTorontoGraph(@RequestParam String init_num){
 
 			System.out.println("initializing graph");
-			torontoGraph = new Graph("./data/DT2.osm", "./data/Cyclists.csv");
+			torontoGraph = new Graph("./data/DT3.osm", "./data/Cyclists.csv");
 			torontoGraph.getPedestrianCountDistribution("2020-09-11 00:00:00","2020-09-25 00:00:00", 3);
 
 			// set questionnaire answer(avoid hospital or not)
