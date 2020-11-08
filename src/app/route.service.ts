@@ -10,7 +10,7 @@ export class RouteService {
 
   constructor(private http:HttpClient) { }
 
-  getRouteInfo(){
-    return this.http.get('http://localhost:8080/api')
+  getRouteInfo(): Observable<Route[]>{
+    return this.http.get<Route[]>('http://localhost:8080/api')
   }
 }
