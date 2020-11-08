@@ -1,33 +1,37 @@
+
 <mat-tab-group dynamicHeight>
     <mat-tab label="Walking">
-        <mat-list>
-            <mat-list-item>
-                <mat-label>20 mins</mat-label>
-                Fatest Route
-                <mat-icon>keyboard_arrow_right</mat-icon>
+        <ul>
+            <li>
+                <mat-label>{{route[0].time}} mins</mat-label>
+                {{route[0].description}}
+                <mat-icon style="margin-left:120px;">keyboard_arrow_right</mat-icon>
+                <br>
+                <p style = "float:right; font-size:small; margin-right: 60px;color:blue; line-height:0.5">{{route[0].distance}} km</p>
+        </li>
+        
+            <hr>
+            <li>
+                <mat-label>{{route[1].time}} mins</mat-label>
+                {{route[1].description}}
+                <mat-icon style="margin-left:120px;">keyboard_arrow_right</mat-icon>
+                <br>
+                <p style = "float:right; font-size:small; margin-right: 60px;color:blue; line-height:0.5">{{route[1].distance}} km</p>
+              
+            </li>
+            <hr>
+            <li>
+                <mat-label>{{route[2].time}} mins</mat-label>
+                {{route[2].description}}
+                <mat-icon style="margin-left:120px;">keyboard_arrow_right</mat-icon>
+                <br>
+                <p style = "float:right; font-size:small; margin-right: 60px;color:blue; line-height:0.5">{{route[2].distance}} km</p>
+            </li>
 
-            </mat-list-item>
-
-            <mat-divider></mat-divider>
-            <mat-list-item>
-                <mat-label>30 mins</mat-label>
-                2nd fatest route, no patios
-                <mat-icon>keyboard_arrow_right</mat-icon>
-
-            </mat-list-item>
-
-            <mat-divider></mat-divider>
-            <mat-list-item>
-                <mat-label>30 mins</mat-label>
-                slowest but safest
-                <mat-icon>keyboard_arrow_right</mat-icon>
-
-            </mat-list-item>
-
-            <mat-divider></mat-divider>
+            <hr>
 
 
-        </mat-list>
+        </ul>
     </mat-tab>
     <mat-tab label="Transit"> TODO </mat-tab>
     <mat-tab label="Sharebike"> TODO </mat-tab>

@@ -22,6 +22,10 @@ public class Graph {
     public HashMap<Double, Building> buildings; // HashMap of building boundaries; key= way id; value =
     public HashMap<Double, MapRoute> routes;
     public HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
+//    public ArrayList<AmenityAdPairs> possibleHspNodes = new ArrayList<>();
+    public ArrayList<MapNode> hospitalNodes;
+    public boolean avoidHospital;
+
 //    public static List<MapPolygon> polygons;
 
     public static double MPERLAT = 111320;
@@ -111,7 +115,7 @@ public class Graph {
     }
 
     public Graph() {
-        this("./data/DT.osm","./data/Cyclists.csv");
+        this("./data/DT2.osm","./data/Cyclists.csv");
     }
 
     public Graph(String osmFilePath, String accidentsFilePath) {
@@ -121,13 +125,14 @@ public class Graph {
         routeNodes = new HashMap<>();
         routes = new HashMap<>();
         buildings = new HashMap<>();
-//        polygons = new ArrayList<>();
+        hospitalNodes = new ArrayList<>();
+        avoidHospital = false;
 
         loadFiles(osmFilePath, accidentsFilePath);
         getFocus();
         MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
         MapEdge.graph = this;
-        buildGraph();
+        buildGraph_avoidHospital();
     }
 
 
@@ -267,20 +272,158 @@ public class Graph {
 //        }
 //        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
 //    }
-    public void buildGraph() {
+
+//    public void buildGraph() {
+//        System.out.println("buildGraph");
+//        NodeList nodeList = osmDoc.getElementsByTagName("node");
+//        NodeList routeList = osmDoc.getElementsByTagName("way");
+//        for (int i = 0; i < nodeList.getLength(); i++) {
+//            boolean isShoppers = false; // set Shoppers node
+//            Element node = (Element) nodeList.item(i);
+//            MapNode newNode = new MapNode(node);
+//            nodes.put(newNode.id, newNode);
+//        }
+//        for (int i = 0; i < routeList.getLength(); i++) {
+//            Element route = (Element) routeList.item(i);
+//            boolean isHighway = false;
+//            boolean isIndoor = false;
+//            boolean isHospital = false;
+//            boolean isMall = false;
+//            boolean oneWay = false;
+//            boolean bikeLane = false;
+//            boolean isBuilding = false;
+//            String routeName = "unnamed route";
+//            String routeType = "";
+//            int lanes = -1;
+//            List<Double> nodeIdList = new ArrayList<>();
+//
+//            // this for loop is not inside the MapRoute init function because not every way is a route
+//            NodeList tagsForRoute = route.getElementsByTagName("tag");
+//            for (int j = 0; j < tagsForRoute.getLength(); j++) {
+//                Element tag = (Element) tagsForRoute.item(j);
+//                if (tag.getAttribute("k").equals("highway")) {
+//                    if (tag.getAttribute("v").equals(("footway"))) {
+//                        isHighway = true;
+//                        routeType = tag.getAttribute("v");
+//                    }
+//                } else if (tag.getAttribute("k").equals("level")) {
+//                    isIndoor = true;
+//                } else if (tag.getAttribute("v").contains("hospital") || tag.getAttribute("v").contains("Hospital")) {
+//                    isHospital = true;
+//                } else if (tag.getAttribute("v").contains("mall")){
+//                    isMall = true;
+//                } else if (tag.getAttribute("k").equals("building")){
+//                    isBuilding = true;
+//                } else if (tag.getAttribute("k").equals("name")) {
+//                    routeName = tag.getAttribute("v");
+//                } else if (tag.getAttribute("k").equals("oneway") && tag.getAttribute("v").equals("yes")) {
+//                    oneWay = true;
+//                } else if (tag.getAttribute("k").equals("cycleway") || (tag.getAttribute("k").equals("bicycle") && (tag.getAttribute("v").equals("yes") || tag.getAttribute("v").equals("designated")))) {
+//                    bikeLane = true;
+//                } else if (tag.getAttribute("k").equals("lanes")){
+//                    lanes = Character.getNumericValue(tag.getAttribute("v").charAt(0));
+//                }
+//            }
+//            if (isHighway) {
+//                MapRoute newRoute = new MapRoute(route, routeName, routeType, bikeLane, lanes);
+//                NodeList nodesInRoute = route.getElementsByTagName("nd");
+//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+//                    Element nd = (Element) nodesInRoute.item(j);
+//                    nodeIdList.add(Double.parseDouble(nd.getAttribute("ref")));
+//                }
+//                // set indoor
+//                if (isIndoor){
+//                    for (int j = 0; j<nodeIdList.size();j++){
+//                        nodes.get(nodeIdList.get(j)).setisIndoor(true);
+//                    }
+//                }
+//
+//                double thisNode = nodeIdList.get(0);
+//                double nextNode;
+//                for (int j = 1; j < nodeIdList.size(); j++) {
+//                    nextNode = nodeIdList.get(j);
+//                    nodes.get(thisNode).edges.add(new MapEdge(newRoute, nodes.get(thisNode), nodes.get(nextNode)));
+//                    thisNode = nextNode;
+//                }
+//                if (!oneWay) {
+//                    thisNode = nodeIdList.get(nodeIdList.size() - 1);
+//                    for (int j = nodeIdList.size() - 2; j > -1; j--) {
+//                        nextNode = nodeIdList.get(j);
+//                        nodes.get(thisNode).edges.add(new MapEdge(newRoute, nodes.get(thisNode), nodes.get(nextNode)));
+//                        thisNode = nextNode;
+//                    }
+//                }
+//                newRoute.nodeIds = nodeIdList;
+//                routes.put(newRoute.routeId, newRoute);
+//                for (double nodeId : nodeIdList) {
+//                    routeNodes.put(nodeId, nodes.get(nodeId));
+//                }
+//            }
+//
+//            if (isMall){
+//                NodeList nodesInRoute = route.getElementsByTagName("nd");
+//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+//                    Element nd = (Element) nodesInRoute.item(j);
+//                    nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
+//                }
+//            }
+//        }
+//        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
+//    }
+
+    //最新的buildGraph function; allow avoid hospital
+    public void buildGraph_avoidHospital() {
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             boolean isShoppers = false; // set Shoppers node
             Element node = (Element) nodeList.item(i);
             MapNode newNode = new MapNode(node);
             nodes.put(newNode.id, newNode);
         }
+        // Find all hospitals
+        for (int i = 0; i < routeList.getLength(); i++) {
+            Element route = (Element) routeList.item(i);
+            boolean isHospital = false;
+            boolean oneWay = false;
+            boolean bikeLane = false;
+            String routeName = "unnamed route";
+            String routeType = "";
+            int lanes = -1;
+            List<Double> nodeIdList = new ArrayList<>();
+
+            // this for loop is not inside the MapRoute init function because not every way is a route
+            NodeList tagsForRoute = route.getElementsByTagName("tag");
+            for (int j = 0; j < tagsForRoute.getLength(); j++) {
+                Element tag = (Element) tagsForRoute.item(j);
+                if (tag.getAttribute("v").contains("hospital") || tag.getAttribute("v").contains("Hospital")) {
+                    isHospital = true;
+                } else if (tag.getAttribute("k").equals("name")) {
+                    routeName = tag.getAttribute("v");
+                } else if (tag.getAttribute("k").equals("oneway") && tag.getAttribute("v").equals("yes")) {
+                    oneWay = true;
+                } else if (tag.getAttribute("k").equals("cycleway") || (tag.getAttribute("k").equals("bicycle") && (tag.getAttribute("v").equals("yes") || tag.getAttribute("v").equals("designated")))) {
+                    bikeLane = true;
+                } else if (tag.getAttribute("k").equals("lanes")){
+                    lanes = Character.getNumericValue(tag.getAttribute("v").charAt(0));
+                }
+            }
+            if (isHospital){
+                NodeList nodesInRoute = route.getElementsByTagName("nd");
+                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+                    Element nd = (Element) nodesInRoute.item(j);
+                    nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
+                    hospitalNodes.add(nodes.get(Double.parseDouble(nd.getAttribute("ref"))));
+                }
+            }
+        }
+        ArrayList<MapNode> debug_list = hospitalNodes;
+        // Build ways
         for (int i = 0; i < routeList.getLength(); i++) {
             Element route = (Element) routeList.item(i);
             boolean isHighway = false;
             boolean isIndoor = false;
-            boolean isHospital = false;
             boolean isMall = false;
             boolean oneWay = false;
             boolean bikeLane = false;
@@ -301,8 +444,6 @@ public class Graph {
                     }
                 } else if (tag.getAttribute("k").equals("level")) {
                     isIndoor = true;
-                } else if (tag.getAttribute("v").contains("hospital") || tag.getAttribute("v").contains("Hospital")) {
-                    isHospital = true;
                 } else if (tag.getAttribute("v").contains("mall")){
                     isMall = true;
                 } else if (tag.getAttribute("k").equals("building")){
@@ -331,11 +472,15 @@ public class Graph {
                     }
                 }
                 // set hospital
-                if (isHospital){
-                    for (int j = 0; j<nodeIdList.size();j++){
-                        nodes.get(nodeIdList.get(j)).setisHospital(true);
+                for (int j = 0; j<nodeIdList.size();j++){
+                    for(int k=0;k<hospitalNodes.size();k++){
+                        if (getDistance(nodes.get(nodeIdList.get(j)),hospitalNodes.get(k))<=30.0){
+                            nodes.get(nodeIdList.get(j)).setisHospital(true);
+//                            System.out.println("isHospital id: "+ nodes.get(nodeIdList.get(j)).id);
+                        }
                     }
                 }
+
                 double thisNode = nodeIdList.get(0);
                 double nextNode;
                 for (int j = 1; j < nodeIdList.size(); j++) {
@@ -357,31 +502,25 @@ public class Graph {
                     routeNodes.put(nodeId, nodes.get(nodeId));
                 }
             }
-            // set hospital
-            if (isHospital){
-                NodeList nodesInRoute = route.getElementsByTagName("nd");
-                for (int j = 0; j < nodesInRoute.getLength(); j++) {
-                    Element nd = (Element) nodesInRoute.item(j);
-                    nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
-                }
-            }
-            if (isMall){
-                NodeList nodesInRoute = route.getElementsByTagName("nd");
-                for (int j = 0; j < nodesInRoute.getLength(); j++) {
-                    Element nd = (Element) nodesInRoute.item(j);
-                    nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
-                }
-            }
-            if (isBuilding){
-                ArrayList<MapNode> nodeContainer = new ArrayList<>();
-                NodeList nodesInRoute = route.getElementsByTagName("nd");
-                for (int j = 0; j < nodesInRoute.getLength(); j++) {
-                    Element nd = (Element) nodesInRoute.item(j);
-                    nodeContainer.add(nodes.get(Double.parseDouble(nd.getAttribute("ref"))));
-                }
-                Building newBuilding = new Building(route, routeName, routeType,nodeContainer);
-                buildings.put(newBuilding.getbuildingID(), newBuilding);
-            }
+
+//            if (isMall){
+//                NodeList nodesInRoute = route.getElementsByTagName("nd");
+//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+//                    Element nd = (Element) nodesInRoute.item(j);
+//                    nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
+//                }
+//            }
+//            if (isBuilding){
+//                ArrayList<MapNode> nodeContainer = new ArrayList<>();
+//                NodeList nodesInRoute = route.getElementsByTagName("nd");
+//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
+//                    Element nd = (Element) nodesInRoute.item(j);
+//                    nodeContainer.add(nodes.get(Double.parseDouble(nd.getAttribute("ref"))));
+//                }
+//                Building newBuilding = new Building(route, routeName, routeType,nodeContainer);
+//                buildings.put(newBuilding.getbuildingID(), newBuilding);
+//            }
+
         }
         System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
     }
