@@ -74,6 +74,7 @@ public class Planner {
         costs.put(startNode, 0.0);
         priorityQueue.add(startNode);
 
+
         while (!priorityQueue.isEmpty()) {
     //            System.out.println("PQ size: "+priorityQueue.size());
             MapNode node = priorityQueue.remove();
@@ -84,16 +85,17 @@ public class Planner {
                 return fastestRoute;
             }
             for (MapEdge edge : node.edges) {
+
     //                    System.out.println("下一个Node不是hospital");
-                    edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
-                    MapNode nextNode = edge.destinationNode;
-                    double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, dist_W, risk_W); //newCost = g(n)
+                edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
+                MapNode nextNode = edge.destinationNode;
+                double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, dist_W, risk_W); //newCost = g(n)
                     //System.out.println("newCost: "+newCost);
-                    if ((!parents.containsKey(nextNode) || newCost < costs.get(nextNode))) {
-                        parents.put(nextNode, node);
-                        costs.put(nextNode, newCost);
-                        nextNode.estimatedCost = dynamic_heuristic(nextNode, dist_W, risk_W) + newCost; // estimatedCost=f(n)=h(n)+g(n);
-                        priorityQueue.add(nextNode);
+                if ((!parents.containsKey(nextNode) || newCost < costs.get(nextNode))) {
+                    parents.put(nextNode, node);
+                    costs.put(nextNode, newCost);
+                    nextNode.estimatedCost = dynamic_heuristic(nextNode, dist_W, risk_W) + newCost; // estimatedCost=f(n)=h(n)+g(n);
+                    priorityQueue.add(nextNode);
                     }
             }
         }
@@ -297,8 +299,8 @@ public class Planner {
 
     /** calculate heuristic cost based on different weights */
     public double dynamic_heuristic(MapNode node, double dist_W, double risk_W){
-        return risk_W * node.normalized_pedCount + dist_W * node.normalized_euclid;
-
+        //return risk_W * node.normalized_pedCount + dist_W * node.normalized_euclid;
+        return risk_W * node.pedCount + dist_W * node.euclid;
     }
     public double get_Cost_notSure(MapEdge edge, double dist_W, double risk_W){
         return risk_W * edge.destinationNode.normalized_pedCount + dist_W * edge.normalized_length;
