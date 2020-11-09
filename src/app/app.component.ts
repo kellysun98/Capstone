@@ -434,17 +434,48 @@ export class AppComponent {
 
   }
 
+  //helper function to draw line according to risk level
+  getFeature(route, time, risk, description, myroutes){
+    // var myroutes = new Array();
+    var featureLine = new ol.Feature({
+      geometry: new ol.geom.LineString(route),
+      name: 'nav_line',
+      description: 'total time:' + time + ', \n route description: ' + description,
+    });
+    
+    if(risk>0 && risk <=3){
+      var color = 'rgba(0, 204, 0, 0.8)'; //safe
+    } else if(risk > 3 && risk <=6){
+      var color = 'rgba(255, 152, 51, 0.8)'; //medium
+    }else{
+      var color = 'rgba(255, 0, 0, 0.8)'; //dangerous
+    }
+    var linestyle = new ol.style.Style({
+      fill: new ol.style.Fill({
+          color: color, weight: 5,
+      }),
+      stroke: new ol.style.Stroke({
+        color: color, width: 5
+      }),
+    });
+    
+    featureLine.setStyle(linestyle);
+    myroutes.push(featureLine)
+    //return myroutes
+  }
+
   drawLine2(){
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
-    forkJoin([start_obs, end_obs]).pipe(take(1)).subscribe(
+    forkJoin([start_obs, end_obs]).pipe(take(1)).pipe(take(1)).subscribe(
       result => {
         var bound_list = {'start_bound': (result[0][0]['boundingbox']).toString(), 'end_bound': (result[1][0]['boundingbox']).toString()}
     // console.log(bound_list);
         let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         this.http.post('http://localhost:8080/address', bound_list, { headers:headers }).pipe(
+          take(1),
           concatMap(
-            async (val) => this.http.get('http://localhost:8080/api').subscribe(
+            async (val) => this.http.get('http://localhost:8080/api').pipe(take(1)).subscribe(
               (res)=>{
               this.map.getLayers().forEach(function(layer) {
                 if (layer.get('name') != undefined && layer.get('name') === 'lines') {
@@ -457,114 +488,33 @@ export class AppComponent {
           var res_length = Object.keys(this.response).length;
           var myroutes = [];
           for(var amen = 0; amen<res_length; amen++){  
-          // console.log('From backend: ' + JSON.parse(res.toString()));
           // for(let index in this.response[amen]['routeNode']){
-            console.log('first loop: ' + this.response[amen]['routeNode'])
+            // console.log('first loop: ' + this.response[amen]['routeNode'])
             // for (let key of Object.keys(this.response[index])){
             var route = JSON.parse(this.response[amen]['routeNode']);
-            // var route = this.response[index][1].split(",");
             var risk = JSON.parse(this.response[amen]['risk']); 
+            route[0] = ol.proj.transform(route[0], 'EPSG:4326', 'EPSG:3857');
+            var time = this.response[amen]['time'];
+            var description = this.response[amen]['description'];
+            // console.log('print route: ' + route[1]);
+            // console.log('print risk: ' + risk[0]);
+            // console.log('route length: '+ route.length);
 
-            // var risk = JSON.parse(this.response[index][2]);
-            console.log('print route: ' + route[1]);
-            console.log('print risk: ' + risk[0]);
-            console.log('route length: '+ route.length);
-
-            
             var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
             var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-            var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';  //random opacity for same cost function
+            var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';
 
             //colors adjusted for different risk levels
             var safe = 'rgba(0, 204, 0, 0.8)';
             var medium = 'rgba(255, 152, 51, 0.8)';
             var dangerous = 'rgba(255, 0, 0, 0.8)';
-
-            for (var i = 0; i < route.length; i++) {
+          
+            for (var i = 1; i < route.length; i++) {
               // console.log('length enumeration '+i);
+              // route[i-1] = ol.proj.transform(route[i-1], 'EPSG:4326', 'EPSG:3857');
               route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+              this.getFeature([route[i-1],route[i]],time,risk[i-1],description,myroutes)
             }
-
-            var featureLine = new ol.Feature({
-              geometry: new ol.geom.LineString(route),
-              name: 'nav_line',
-              description: 'total time:' + this.response[amen]['time'] + ', \n route description: ' + this.response[amen]['description'],
-            });
-            
-            var linestyle = new ol.style.Style({
-              fill: new ol.style.Fill({
-                  color: color, weight: 5,
-              }),
-              stroke: new ol.style.Stroke({
-                color: color, width: 5
-              }),
-            });
-            
-            featureLine.setStyle(linestyle);
-            myroutes.push(featureLine)
-
-            // if(risk[i-1]<0 && risk[i-1]>=3){
-            //   console.log('enumerate times: '+ i);
-            //   var featureLine = new ol.Feature({
-            //     geometry: new ol.geom.LineString([route[i-1], route[i]]),
-            //     name: 'nav_line',
-            //     description: 'total time:' + this.response[index][3] + ', \n route description: ' + this.response[index][4],
-            //   });
-              
-            //   var linestyle = new ol.style.Style({
-            //     fill: new ol.style.Fill({
-            //         color: safe, weight: 5,
-            //     }),
-            //     stroke: new ol.style.Stroke({
-            //       color: safe, width: 5
-            //     }),
-            //   });
-              
-            //   featureLine.setStyle(linestyle);
-            //   myroutes.push(featureLine)
-    
-            // }else if(risk[i-1]>3 && risk[i-1]<=6){
-            //   console.log('enumerate times: '+ i);
-            //   var featureLine = new ol.Feature({
-            //     geometry: new ol.geom.LineString([route[i-1], route[i]]),
-            //     name: 'nav_line',
-            //     description: 'total time:' + this.response[index][3] + ', \n route description: ' + this.response[index][4],
-            //   });
-
-            //   var linestyle = new ol.style.Style({
-            //     fill: new ol.style.Fill({
-            //         color: medium, weight: 5,
-            //     }),
-            //     stroke: new ol.style.Stroke({
-            //       color: medium, width: 5
-            //     }),
-            //   });
-              
-            //   featureLine.setStyle(linestyle);
-            //   myroutes.push(featureLine)
-
-            // }else{
-            //   console.log('enumerate times: '+ i);
-            //   var featureLine = new ol.Feature({
-            //     geometry: new ol.geom.LineString([route[i-1], route[i]]),
-            //     name: 'nav_line',
-            //     description: 'total time:' + this.response[index][3] + ', \n route description: ' + this.response[index][4],
-            //   });
-
-            //   var linestyle = new ol.style.Style({
-            //     fill: new ol.style.Fill({
-            //         color: dangerous, weight: 5,
-            //     }),
-            //     stroke: new ol.style.Stroke({
-            //       color: dangerous, width: 5
-            //     }),
-            //   });
-              
-            //   featureLine.setStyle(linestyle);
-            //   myroutes.push(featureLine)
-            // }
-
-          // }   //one route generated for this navigation
         }
           var vectorSource = new ol.source.Vector({
             features: myroutes,
