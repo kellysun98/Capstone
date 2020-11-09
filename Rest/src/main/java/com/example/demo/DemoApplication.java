@@ -237,6 +237,7 @@ public class DemoApplication {
 			}
 
 			nodeMap = torontoGraph.routeNodes;
+
 			HashMap temp = new HashMap<String, Double>();
 			temp = MapNode.MapNodetoHash(nodeMap.values());
 			System.out.println("complete");
