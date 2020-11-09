@@ -30,6 +30,7 @@ public class DemoApplication {
 	public String result = new String();
 	public String startCheck = new String();
 	public String endCheck = new String();
+	public userPreference old_userPref;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -73,10 +74,20 @@ public class DemoApplication {
 
 		@GetMapping("/api")
 		public String getList() {
-			if (result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))) {
+
+
+			if (result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))||(!(old_userPref.equals(userPref)))) {
 				// Get start and end node of this tour (Address)
 //			System.out.println("start bound: "+ add.getStart_bound());
 //			System.out.println("end bound: "+add.getEnd_bound());
+				old_userPref = new userPreference(userPref);
+
+				// set questionnaire answer(avoid hospital or not)
+				if ((userPref != null)&&(userPref.getQ3().get(0).contains("hospital"))){
+					torontoGraph.avoidHospital=true;
+				}else{
+					torontoGraph.avoidHospital=false;
+				}
 
 				MapNode startNode = getElement(nodeMap, add.getStart_bound());
 				MapNode endNode = getElement(nodeMap, add.getEnd_bound());

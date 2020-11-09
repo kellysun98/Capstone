@@ -79,10 +79,10 @@ public class Graph {
                 denominator += sum / Math.abs(list.get(0));
             }
             this.routeNodes.get(n.id).pedCount = numerator / denominator;
-            System.out.println("________ped count: " + this.routeNodes.get(n.id).pedCount);
+//            System.out.println("________ped count: " + this.routeNodes.get(n.id).pedCount);
             if(this.routeNodes.get(n.id).isIndoor){
                 this.routeNodes.get(n.id).pedCount = this.routeNodes.get(n.id).pedCount*10 + 50000;
-                System.out.println("_____________________indoor count: " + this.routeNodes.get(n.id).pedCount);
+//                System.out.println("_____________________indoor count: " + this.routeNodes.get(n.id).pedCount);
 
             }
         }
