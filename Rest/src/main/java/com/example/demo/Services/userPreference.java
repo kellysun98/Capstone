@@ -13,6 +13,11 @@ public class userPreference {
         this.q2 = q2;
         this.q3 = q3;
     };
+    public userPreference(userPreference input_userPreference){
+        this.q1 = input_userPreference.q1;
+        this.q2 = input_userPreference.q2;
+        this.q3 = input_userPreference.q3;
+    }
 
     public void setQ1(List<String> q1) {
         this.q1 = q1;
@@ -44,5 +49,17 @@ public class userPreference {
             res = Double.parseDouble(m.group());
         }
         return res;
+    }
+
+
+    public boolean equals(userPreference pref) {
+        if(this.q1.equals(pref.q1)&&this.q2.equals(pref.q2)&&this.q3.equals(pref.q3))
+            return true;
+        else if(pref==null)
+            return false;
+        else if((pref.q1==null)||(pref.q2==null) || (pref.q3==null))
+            return false;
+        return false;
+//        return super.equals(obj);
     }
 }
