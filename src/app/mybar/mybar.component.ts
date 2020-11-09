@@ -14,13 +14,15 @@ import {Route} from '../route'
 export class MybarComponent implements OnInit {
   route:Route[]=[];
   ngOnInit(): void {
-    this.routeService.getRouteInfo().subscribe( data => {this.route = data; console.log(this.route)} )
+    this.routeService.getRouteInfo().subscribe( data => {this.route = data; 
+      //console.log(this.route)
+    } )
     // this.newMessage();
     // this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
     // this.sliderService.currentActive.subscribe(active => console.log(active));
   }
   
-  amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
+  // amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   gridsize: number;
   active:boolean;
 
