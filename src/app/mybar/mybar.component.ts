@@ -5,6 +5,7 @@ import {MatSliderModule} from '@angular/material/slider';
 import { DataService } from '../data.service';
 import { RouteService } from '../route.service';
 import {Route} from '../route'
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mybar',
@@ -14,7 +15,7 @@ import {Route} from '../route'
 export class MybarComponent implements OnInit {
   route:Route[]=[];
   ngOnInit(): void {
-    this.routeService.getRouteInfo().subscribe( data => {this.route = data; 
+    this.routeService.getRouteInfo().pipe(take(1)).subscribe( data => {this.route = data; 
       //console.log(this.route)
     } )
     // this.newMessage();

@@ -94,7 +94,7 @@ export class AppComponent {
   ngOnInit() {
     this.openWelcome();
     //this.Heatmap2();
-    //this.initBackEnd();
+    this.initBackEnd();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -149,8 +149,16 @@ export class AppComponent {
     this.toggleAmenities([this.amenities_data[1]['Pharmacies Offering COVID-19 Testing'], 2, './assets/data/drug.png']);
     this.toggleAmenities([this.amenities_data[2]['Shopping Malls'], 3, './assets/data/shopping_bag.png']);
 
-    var selected = null; // ref to currently selected interaction
-    // var selectPointerMove = new Select({
+    var selected = new ol.interaction.Select({
+      condition: click,
+      // layer: function(layer, resolution){
+      //   if(layer.get('name').includes('lines')){
+      //     return layer
+      //   }
+      // }
+    }); // ref to currently selected interaction
+    this.map.addInteraction(selected);
+      // var selectPointerMove = new Select({
     //   condition: pointerMove,
     // });
     // var changeInteraction = function () {
@@ -373,6 +381,8 @@ export class AppComponent {
 
         this.response = res; 
         var myroutes = []
+        var res_length = Object.keys(this.response).length;
+
         // console.log('From backend: ' + JSON.parse(res.toString()));
         for(var index = this.gridsize * 2 ; index < this.gridsize * 2 + 2; index++){   
           console.log(index);
@@ -437,19 +447,24 @@ export class AppComponent {
   //helper function to draw line according to risk level
   getFeature(route, time, risk, description, myroutes){
     // var myroutes = new Array();
+  
+    if(risk>0 && risk <=3){
+      var color = 'rgba(0, 204, 0, 1)'; //safe
+      var risk_description = 'low'
+    } else if(risk > 3 && risk <=6){
+      var color = 'rgba(255, 152, 51, 1)'; //medium
+      var risk_description = 'medium'
+    }else{
+      var color = 'rgba(255, 0, 0, 1)'; //dangerous
+      var risk_description = 'high'
+    }
+
     var featureLine = new ol.Feature({
       geometry: new ol.geom.LineString(route),
       name: 'nav_line',
-      description: 'total time:' + time + ', \n route description: ' + description,
+      description: 'total time:' + time + ', \n route risk: ' + risk_description,
     });
-    
-    if(risk>0 && risk <=3){
-      var color = 'rgba(0, 204, 0, 0.8)'; //safe
-    } else if(risk > 3 && risk <=6){
-      var color = 'rgba(255, 152, 51, 0.8)'; //medium
-    }else{
-      var color = 'rgba(255, 0, 0, 0.8)'; //dangerous
-    }
+
     var linestyle = new ol.style.Style({
       fill: new ol.style.Fill({
           color: color, weight: 5,
@@ -505,9 +520,9 @@ export class AppComponent {
             var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';
 
             //colors adjusted for different risk levels
-            var safe = 'rgba(0, 204, 0, 0.8)';
-            var medium = 'rgba(255, 152, 51, 0.8)';
-            var dangerous = 'rgba(255, 0, 0, 0.8)';
+            var safe = 'rgba(0, 204, 0, 1)';
+            var medium = 'rgba(255, 152, 51, 1)';
+            var dangerous = 'rgba(255, 0, 0, 1)';
           
             for (var i = 1; i < route.length; i++) {
               // console.log('length enumeration '+i);
