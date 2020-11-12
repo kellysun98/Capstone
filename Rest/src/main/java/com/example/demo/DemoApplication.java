@@ -104,7 +104,7 @@ public class DemoApplication {
 				MapNode startNode = getElement(nodeMap, add.getStart_bound());
 				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
 				// Prepare for normalization for "covid" heuristic
-				torontoGraph.prepareNormalization(endNode);
+				//torontoGraph.prepareNormalization(endNode);
 
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
