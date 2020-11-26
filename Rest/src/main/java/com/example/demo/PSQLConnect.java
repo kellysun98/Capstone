@@ -17,13 +17,13 @@ import java.sql.*;
 //joyce database connection
 public class PSQLConnect {
 //kelly's db conn
-    public static String url = "jdbc:postgresql://localhost:5432/osm";
-    public static String user = "yixinsun";
-    public static String password = "smile01981124";
+//    public static String url = "jdbc:postgresql://localhost:5432/osm";
+//    public static String user = "yixinsun";
+//    public static String password = "smile01981124";
 
-//    public static String url = "jdbc:postgresql://localhost:5432/toronto";
-//    public static String user = "postgres";
-//    public static String password = "postgres";
+    public static String url = "jdbc:postgresql://localhost:5432/toronto";
+    public static String user = "postgres";
+    public static String password = "postgres";
 
     //public static String url = "jdbc:postgresql://localhost:5432/Toronto";
     //public static String user = "postgres";
