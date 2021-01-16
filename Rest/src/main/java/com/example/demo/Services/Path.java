@@ -53,7 +53,7 @@ public class Path implements Comparable<Path>{
     }
 
     public String getDescription(){
-        String str = "Current best route ";//changed from 要速度还是要命
+        String str = "Suggestive route ";//changed from 要速度还是要命
         return str;
     }
 
