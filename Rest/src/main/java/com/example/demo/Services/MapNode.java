@@ -117,8 +117,8 @@ public class MapNode implements Comparable<MapNode>{
         double minlon=-79.3938000;
         double maxlat=43.6629000;
         double maxlon=-79.3731000;
-        double dlon = (maxlon- minlon)/20;
-        double dlat = (maxlat -minlat)/20;
+        double dlon = (maxlon- minlon)/30;
+        double dlat = (maxlat -minlat)/30;
         double lon, lat= 0.0;
         double cutoff = 0.5*(Math.sqrt(Math.pow(dlon, 2) + Math.pow(dlat, 2)));
 

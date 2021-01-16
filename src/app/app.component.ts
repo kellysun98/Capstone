@@ -270,7 +270,7 @@ export class AppComponent {
      
       var Heat = new ol.layer.Heatmap({
         source: test,
-        blur: 5,
+        blur: 13,
         radius: 14,
         opacity : 0.6,
         name:'heatmap',
