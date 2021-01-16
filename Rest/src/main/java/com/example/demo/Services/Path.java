@@ -5,7 +5,7 @@ import java.util.List;
 
 import static com.example.demo.Services.Graph.getDistance;
 
-public class Path implements Comparable<Path>{
+public class Path implements Comparable<Path>{ //hi
     protected ArrayList<MapNode> nodes;
     protected double totalLength;
     protected double totalTime; // in minutes

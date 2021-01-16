@@ -21,7 +21,7 @@ import java.util.List;
 import static com.example.demo.Services.Graph.getDistance;
 import static com.example.demo.Services.Graph.normalize;
 
-public class Planner {
+public class Planner { //hi
     public JXMapViewer mapViewer;
     public JFrame frame;
     public Graph graph;

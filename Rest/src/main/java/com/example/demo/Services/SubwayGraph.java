@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SubwayGraph extends Graph {
+public class SubwayGraph extends Graph { //hi
 
     public HashMap<Double, SubwayNode> nodes;
     public HashMap<Double, SubwayNode> routeNodes;
+
+    // Test
+    public ArrayList<ArrayList<Double>> visual_routes = new ArrayList<>();
 
     public SubwayGraph() {
         this("./data/DT2.osm");
@@ -67,6 +70,16 @@ public class SubwayGraph extends Graph {
                     Element nd = (Element) nodesInRoute.item(j);
                     nodeIdList.add(Double.parseDouble(nd.getAttribute("ref")));
                 }
+                /***/
+                for (int k = 0; k < nodeIdList.size(); k++){
+                    ArrayList lonlat = new ArrayList();
+                    SubwayNode sn = nodes.get(nodeIdList.get(k));
+
+                    lonlat.add(sn.longitude);
+                    lonlat.add(sn.latitude);
+                    visual_routes.add(lonlat);
+                }
+                /***/
                 double thisNode = nodeIdList.get(0);
                 double nextNode;
                 for (int j = 1; j < nodeIdList.size(); j++) {
@@ -91,4 +104,5 @@ public class SubwayGraph extends Graph {
         }
         System.out.println(String.format("number of subway nodes: %d", routeNodes.size()));
     }
+
 }
