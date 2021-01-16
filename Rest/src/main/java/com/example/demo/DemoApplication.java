@@ -32,10 +32,14 @@ public class DemoApplication {
 	public String endCheck = new String();
 	public userPreference old_userPref;
 
+	public SubwayGraph torontoSubwayGraph;
+	public HashMap<Double, SubwayNode> subwaynodeMap;
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
-
+	/** getElement for walking
+	 * */
 	public MapNode getElement(HashMap<Double, MapNode> nodeMap, String bound) {
 		MapNode res = new MapNode();
 		double[] focus = new double[]{(-79.4054900 + -79.3886400) / 2, (43.6613600 + 43.6687500) / 2};
@@ -67,6 +71,39 @@ public class DemoApplication {
 		}
 		return res;
 	}
+	/** getElement for subway
+	 * */
+	public SubwayNode getElement_subway(HashMap<Double, SubwayNode> subwaynodeMap, String bound) {
+		SubwayNode res = new SubwayNode();
+		double[] focus = new double[]{(-79.4054900 + -79.3886400) / 2, (43.6613600 + 43.6687500) / 2};
+		double MPERLAT = 111320;
+		double MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
+		double dist = 100000;
+		// 43.668459,43.6698816,-79.3891804,-79.3876308
+		ArrayList<String> l = new ArrayList<>(Arrays.asList(bound.split(",")));
+
+		for (Double key : subwaynodeMap.keySet()) {
+			if((subwaynodeMap.get(key).latitude >= Double.parseDouble(l.get(0))) &
+					(subwaynodeMap.get(key).latitude <= Double.parseDouble(l.get(1))) &
+					(subwaynodeMap.get(key).longitude >= Double.parseDouble(l.get(2))) &
+					(subwaynodeMap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
+				res = subwaynodeMap.get(key);
+				break;
+			}
+		}
+		if(res.id == -1){
+			for (Double key : subwaynodeMap.keySet()) {
+				double dx = (subwaynodeMap.get(key).longitude - (Double.parseDouble(l.get(2)) + Double.parseDouble(l.get(3)))/2) * MPERLON;
+				double dy = (subwaynodeMap.get(key).latitude - (Double.parseDouble(l.get(0)) + Double.parseDouble(l.get(1)))/2) * MPERLAT;
+				double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+				if (tempdist < dist) {
+					dist = tempdist;
+					res = subwaynodeMap.get(key);
+				}
+			}
+		}
+		return res;
+	}
 
 	@RestController
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -89,9 +126,6 @@ public class DemoApplication {
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
 			}else if ((userPref != null)|| result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))||(!(old_userPref.equals(userPref)))) {
-				// Get start and end node of this tour (Address)
-//			System.out.println("start bound: "+ add.getStart_bound());
-//			System.out.println("end bound: "+add.getEnd_bound());
 				old_userPref = new userPreference(userPref);
 
 				// set questionnaire answer(avoid hospital or not)
@@ -101,20 +135,29 @@ public class DemoApplication {
 					torontoGraph.avoidHospital=false;
 				}
 
+				/**
 				MapNode startNode = getElement(nodeMap, add.getStart_bound());
 				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
-				// Prepare for normalization for "covid" heuristic
-				//torontoGraph.prepareNormalization(endNode);
 
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
-//				for (Path p : resultList){
-//					System.out.println("covid risk="+p.weight);
-//				}
-//				System.out.println("resultList length="+resultList.size());
-//				int temp = 0;
+//
 				result = KSP.KSPtoJson(resultList);
+				startCheck = add.getStart_bound();
+				endCheck = add.getEnd_bound();
+				*/
+
+				/** Subway A* test case
+				 * */
+				SubwayNode startNode = getElement_subway(subwaynodeMap, add.getStart_bound());
+				SubwayNode endNode = getElement_subway(subwaynodeMap, add.getEnd_bound());
+
+				Planner planner = new Planner();
+				ArrayList<SubwayPath>resultList = new ArrayList<SubwayPath>();
+				resultList.add(planner.plan(startNode,endNode,"distance"));
+//
+				result = KSP.KSPtoJson_subway(resultList);
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
 			}
@@ -241,6 +284,12 @@ public class DemoApplication {
 
 			HashMap temp = new HashMap<String, Double>();
 			temp = MapNode.MapNodetoHash(nodeMap.values());
+
+			/** Test case for subway */
+			System.out.println("Test subway init");
+			torontoSubwayGraph = new SubwayGraph("./data/DT3.osm");
+			subwaynodeMap = torontoSubwayGraph.routeNodes;
+
 			System.out.println("complete");
 //			return ("TorontoGraph Loaded");
 			return temp;

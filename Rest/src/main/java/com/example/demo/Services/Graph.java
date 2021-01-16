@@ -42,6 +42,9 @@ public class Graph {
     public double max_pedCont = -1;
     public double min_pedCount = -1;
 
+    // members for subway
+//    public SubwayGraph subwayGraph;
+
     public void getPedestrianCountDistribution(String startTime, String endTime, int k){
         ArrayList<ArrayList<Double>> pedCountMap = PSQLConnect.getPedestrianCount(startTime, endTime);
 
@@ -123,6 +126,7 @@ public class Graph {
 
     public Graph() {
         this("./data/DT2.osm","./data/Cyclists.csv");
+//        subwayGraph = new SubwayGraph();
     }
 
     public Graph(String osmFilePath, String accidentsFilePath) {
@@ -134,6 +138,7 @@ public class Graph {
         buildings = new HashMap<>();
         hospitalNodes = new ArrayList<>();
         avoidHospital = false;
+//        subwayGraph = new SubwayGraph(osmFilePath); // 在Graph里面建subwayGraph
 
         loadFiles(osmFilePath, accidentsFilePath);
         getFocus();
@@ -378,7 +383,8 @@ public class Graph {
 //        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
 //    }
 
-    //最新的buildGraph function; allow avoid hospital
+    /** 最新的buildGraph function; allow avoid hospital
+     * */
     public void buildGraph_avoidHospital() {
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
@@ -426,10 +432,11 @@ public class Graph {
             }
         }
         ArrayList<MapNode> debug_list = hospitalNodes;
-        // Build ways
+        // Build ways (including subway route)
         for (int i = 0; i < routeList.getLength(); i++) {
             Element route = (Element) routeList.item(i);
             boolean isHighway = false;
+            boolean isSubway = false;
             boolean isIndoor = false;
             boolean isMall = false;
             boolean oneWay = false;
@@ -509,25 +516,6 @@ public class Graph {
                     routeNodes.put(nodeId, nodes.get(nodeId));
                 }
             }
-
-//            if (isMall){
-//                NodeList nodesInRoute = route.getElementsByTagName("nd");
-//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
-//                    Element nd = (Element) nodesInRoute.item(j);
-//                    nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
-//                }
-//            }
-//            if (isBuilding){
-//                ArrayList<MapNode> nodeContainer = new ArrayList<>();
-//                NodeList nodesInRoute = route.getElementsByTagName("nd");
-//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
-//                    Element nd = (Element) nodesInRoute.item(j);
-//                    nodeContainer.add(nodes.get(Double.parseDouble(nd.getAttribute("ref"))));
-//                }
-//                Building newBuilding = new Building(route, routeName, routeType,nodeContainer);
-//                buildings.put(newBuilding.getbuildingID(), newBuilding);
-//            }
-
         }
         System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
     }
@@ -602,8 +590,7 @@ public class Graph {
 //        }
 //        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
 //    }
-
-    private void getFocus() {
+    protected void getFocus() {
         NodeList boundsList = osmDoc.getElementsByTagName("bounds");
         Element bounds = (Element) boundsList.item(0);
         double minLat = Double.parseDouble(bounds.getAttribute("minlat"));

@@ -39,4 +39,6 @@ public class MapRoute {
         }
     }
 
+    public MapRoute(Element route, String routeName, String routeType, boolean bikeLane, int maxSpeed, int lanes) {
+    }
 }

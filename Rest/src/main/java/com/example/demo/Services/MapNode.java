@@ -26,6 +26,13 @@ public class MapNode implements Comparable<MapNode>{
     public boolean isShoppers; // whether node is shoppers
     public boolean isMall; //whether node is mall
 
+    /** Subway Node properties (May delete later)
+     * */
+    public boolean isSubway;
+    public String time;
+    public int lineNumber;
+
+
     public double getPedCount(){
         return this.pedCount;
     }
