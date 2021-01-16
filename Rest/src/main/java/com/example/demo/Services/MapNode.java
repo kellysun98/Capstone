@@ -9,7 +9,7 @@ import java.util.*;
 import static com.example.demo.Services.Graph.getDistance;
 import static com.example.demo.Services.Graph.normalize;
 
-public class MapNode implements Comparable<MapNode>{
+public class MapNode implements Comparable<MapNode>{ //hi
     public Graph graph;
     public Element element;
     public double id;
