@@ -2,11 +2,10 @@ package com.example.demo.Services;
 
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
-import com.google.gson.Gson;
+
 import org.apache.commons.math3.util.Precision;
 
 
@@ -112,6 +111,7 @@ public class KSP {
         }
 
 
+    /** Walking */
     public static String KSPtoJson(ArrayList<Path> ksp_sol) {
         ArrayList solution = new ArrayList<>();
         double count = 0;
@@ -159,6 +159,55 @@ public class KSP {
         String solution_to_string = new Gson().toJson(solution);
         return solution_to_string;
     }
+    /** Subway */
+    public static String KSPtoJson_subway(ArrayList<SubwayPath> ksp_sol) {
+        ArrayList solution = new ArrayList<>();
+        double count = 0;
+        for (SubwayPath p : ksp_sol) {
+            HashMap<String, String> path_map = new HashMap<>();
+            ArrayList<String> return_value = new ArrayList<>();
+            List<SubwayNode> node_list = p.nodes;
+            String mn_toString = new String();
+            ArrayList<ArrayList<Double>> mn = new ArrayList<>();
+            ArrayList<Double> risk = new ArrayList<>();
+            String risk_toString = new String();
+            for (int i = 1; i<node_list.size(); i++) {
+                ArrayList<Double> al1 = new ArrayList<>();
+                ArrayList<Double> al2 = new ArrayList<>();
+                SubwayNode first = node_list.get(i-1);
+                SubwayNode second = node_list.get(i);
+                Double middle_lon = (first.longitude+second.longitude)/2+count/80000;
+                Double middle_lat = (first.latitude+second.latitude)/2+count/80000;
+                Double longitude = node_list.get(i-1).longitude+count/80000;
+                Double latitude = node_list.get(i-1).latitude+count/80000;
+                Double risk1 = node_list.get(i-1).pedCount;
+                Double risk2 = node_list.get(i).pedCount;
+
+                al1.add(longitude);
+                al1.add(latitude);
+                al2.add(middle_lon);
+                al2.add(middle_lat);
+                mn.add(al1);
+                mn.add(al2);
+                risk.add(risk1);
+                risk.add(risk2);
+            }
+            Double cost = p.getTotalLength();
+            Double time = Precision.round(p.getTotalTime(),0);
+            Double distance = Precision.round(p.getTotalLength()/1000,2);
+            path_map.put("cost", new Gson().toJson(cost));
+            path_map.put("routeNode", new Gson().toJson(mn));
+            path_map.put("risk", new Gson().toJson(risk));
+            path_map.put("time", new Gson().toJson(time));
+            path_map.put("description", p.getDescription());
+            path_map.put("distance", new Gson().toJson(distance));
+            count++;
+            solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
+        }
+        String solution_to_string = new Gson().toJson(solution);
+        return solution_to_string;
+    }
+
 
     public static ArrayList KSPToStrings(ArrayList <Path> temp,String cost_function){
         ArrayList solution = new ArrayList<>();

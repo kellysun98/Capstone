@@ -18,6 +18,9 @@ public class MapEdge {
     public boolean isShoppers; // whether edge is shoppers
     public boolean isMall; //whether edge is mall
 
+    public MapEdge() {
+    }
+
     // Get source node id of MapEdge
     public double getSourceNodeID(){return this.sourceNode.id;}
     // Get destination node id of MapEdge
