@@ -157,6 +157,46 @@ public class Planner {
         return null;
     }
 
+    /** A* Search Algorithm for Subway
+     * */
+    public SubwayPath plan(SubwayNode startNode, SubwayNode goalNode, String costFunction){
+        if (costFunction.equals("distance")){
+            HashMap<SubwayNode, SubwayNode> parents = new HashMap<>();
+            HashMap<SubwayNode, Double> costs = new HashMap<>();
+            PriorityQueue<SubwayNode> priorityQueue = new PriorityQueue<>();
+
+            startNode.estimatedCost = heuristics(startNode,goalNode,costFunction);
+            parents.put(startNode,null);
+            costs.put(startNode,0.0);
+            priorityQueue.add(startNode);
+
+            while (!priorityQueue.isEmpty()){
+                SubwayNode node = priorityQueue.remove();
+                if(node.id == goalNode.id){
+                    //                double total_cost = 0;
+                    //                for(double c:costs.values()){total_cost+=c;};
+                    //                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
+                    SubwayPath fastestRoute = new SubwayPath(getNodeList(parents,goalNode));
+                    return fastestRoute;
+                }
+                for (SubwayEdge edge:node.edges){
+                    SubwayNode nextNode = edge.destinationNode;
+                    double newCost = costs.get(node) + edge.getLength("distance"); //newCost = g(n)
+                    if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
+                        parents.put(nextNode,node);
+                        costs.put(nextNode,newCost);
+                        nextNode.estimatedCost = heuristics(nextNode,goalNode,costFunction) + newCost; // estimatedCost=f(n)=h(n)+g(n)
+                        priorityQueue.add(nextNode);
+                    }
+                }
+            }
+            return null;
+        }
+        return null;
+    }
+
+
+
     public Path plan(Graph graph, MapNode startNode, MapNode goalNode, String costFunction){
         if (costFunction.equals("distance")){
             this.graph = graph;
@@ -306,11 +346,26 @@ public class Planner {
         return risk_W * edge.destinationNode.normalized_pedCount + dist_W * edge.normalized_length;
 
     }
-
+    /** For walking option
+     * */
     public ArrayList<MapNode> getNodeList(HashMap<MapNode, MapNode> parents, MapNode goalNode){
         ArrayList<MapNode> geoList = new ArrayList<>();
         geoList.add(goalNode);
         MapNode thisNode = goalNode;
+        while(thisNode != null){
+            geoList.add(thisNode);
+            thisNode = parents.get(thisNode);
+        }
+        Collections.reverse(geoList);
+        return geoList;
+    }
+
+    /** For subway
+     * */
+    public ArrayList<SubwayNode> getNodeList(HashMap<SubwayNode, SubwayNode> parents, SubwayNode goalNode){
+        ArrayList<SubwayNode> geoList = new ArrayList<>();
+        geoList.add(goalNode);
+        SubwayNode thisNode = goalNode;
         while(thisNode != null){
             geoList.add(thisNode);
             thisNode = parents.get(thisNode);

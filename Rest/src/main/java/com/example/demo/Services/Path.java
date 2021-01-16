@@ -6,10 +6,10 @@ import java.util.List;
 import static com.example.demo.Services.Graph.getDistance;
 
 public class Path implements Comparable<Path>{
-    private ArrayList<MapNode> nodes;
-    private double totalLength;
-    private double totalTime; // in minutes
-    private double totalRisk;
+    protected ArrayList<MapNode> nodes;
+    protected double totalLength;
+    protected double totalTime; // in minutes
+    protected double totalRisk;
     public int weight = -1;
 
 
