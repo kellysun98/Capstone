@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 
 import static com.example.demo.Services.Graph.normalize;
 
-public class MapEdge {
+public class MapEdge { //hi
     public MapRoute mapRoute;
     public MapNode destinationNode;
     public MapNode sourceNode;

@@ -14,7 +14,7 @@ import java.util.*;
 import java.lang.*;
 
 
-public class Graph {
+public class Graph { //hi
     public Document osmDoc;
     public double[] focus;
     public HashMap<Double, MapNode> nodes;

@@ -20,7 +20,7 @@ import static com.example.demo.Services.Graph.getDistance;
 
 
 @SpringBootApplication
-public class DemoApplication {
+public class DemoApplication { //hi
 	public Graph torontoGraph;
 	public HashMap<Double, MapNode> nodeMap;
 	public MapNode mapNode;
@@ -291,6 +291,7 @@ public class DemoApplication {
 			subwaynodeMap = torontoSubwayGraph.routeNodes;
 
 			System.out.println("complete");
+
 //			return ("TorontoGraph Loaded");
 			return temp;
 		}
