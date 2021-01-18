@@ -263,11 +263,11 @@ export class AppComponent {
             geometry: new ol.geom.Point(ol.proj.transform(tempkey, 'EPSG:4326', 'EPSG:3857')),
             weight: res[coord] == "NaN"? 0 : res[coord]/9,
         });
-        console.log("coord is " + coord);
+        //console.log("coord is " + coord);
         //console.log("weight is " + pointFeature.getWeight());
         test.addFeature(pointFeature);
       }
-     
+    
       var Heat = new ol.layer.Heatmap({
         source: test,
         blur: 13,
@@ -524,6 +524,46 @@ export class AppComponent {
     myroutes.push(featureLine)
   }
 
+  initSubwayStop(){
+    let params = new HttpParams().set('ver', 'loading request'); 
+    this.http.get("http://localhost:8080/subway", {params:params}).pipe(take(1)).subscribe(
+      (res)=>{
+        this.response = res;
+
+        //console.log(this.response);
+        
+        var features = [];
+        for (let amen of Object.values(this.response)){
+          console.log(amen);
+          //var coor = JSON.parse(amen);
+          //console.log("subway coordinate is: ", coor)
+          // coor[0] = ol.proj.transform(coor[0], 'EPSG:4326', 'EPSG:3857');
+          // coor[1] = ol.proj.transform(coor[1], 'EPSG:4326', 'EPSG:3857');
+          var iconFeature = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.transform(amen, 'EPSG:4326', 'EPSG:3857')),
+            name: 'markericon'
+          });    
+        
+          // var iconStyle = new ol.style.Style({
+          //   image: new ol.style.Icon(({
+          //       anchor: [0.5, 1],
+          //       src: "https://openlayers.org/en/latest/examples/data/icon.png"
+          //   }))          
+          // })
+          // iconFeature.setStyle(iconStyle);
+          features.push(iconFeature);
+        }
+        var vectorSource = new ol.source.Vector({
+          features: features,
+        });
+        var vectorLayer = new ol.layer.Vector({
+          source: vectorSource        });
+
+        this.map.addLayer(vectorLayer);
+    }
+    )
+  }
+
   drawLine2(){
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
@@ -547,7 +587,7 @@ export class AppComponent {
           this.response = res; 
           var res_length = Object.keys(this.response).length;
           var myroutes = [];
-          console.log("res_lenght is " + res_length) 
+          //console.log("res_lenght is " + res_length) 
           for(var amen = 0; amen<res_length; amen++){ 
           // for(let index in this.response[amen]['routeNode']){
             // console.log('first loop: ' + this.response[amen]['routeNode'])
