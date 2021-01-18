@@ -296,5 +296,10 @@ public class DemoApplication { //hi
 			return temp;
 		}
 
+		@GetMapping("/subway")
+		public String GetSubwayStops(@RequestParam String ver){
+			return new Gson().toJson(torontoSubwayGraph.visual_routes);
+		}
+
 	}
 }
