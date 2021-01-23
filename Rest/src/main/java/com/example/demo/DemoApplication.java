@@ -272,23 +272,25 @@ public class DemoApplication { //hi
 		public HashMap<String, Double> initTorontoGraph(@RequestParam String init_num){
 
 			System.out.println("initializing graph");
-			torontoGraph = new Graph("./data/DT3.osm", "./data/Cyclists.csv");
-			torontoGraph.getPedestrianCountDistribution("2020-09-11 00:00:00","2020-09-25 00:00:00", 3);
+//			torontoGraph = new Graph("./data/DT3.osm", "./data/Cyclists.csv");
+//			torontoGraph.getPedestrianCountDistribution("2020-09-11 00:00:00","2020-09-25 00:00:00", 3);
 
 			// set questionnaire answer(avoid hospital or not)
 			if ((userPref != null)&&(userPref.getQ3().get(0).contains("hospital"))){
 				torontoGraph.avoidHospital=true;
 			}
 
-			nodeMap = torontoGraph.routeNodes;
+//			nodeMap = torontoGraph.routeNodes;
 
-			HashMap temp = new HashMap<String, Double>();
-			temp = MapNode.MapNodetoHash(nodeMap.values());
+//			HashMap temp = new HashMap<String, Double>();
+//			temp = MapNode.MapNodetoHash(nodeMap.values());
 
 			/** Test case for subway */
 			System.out.println("Test subway init");
 			torontoSubwayGraph = new SubwayGraph("./data/DT3.osm");
 			subwaynodeMap = torontoSubwayGraph.routeNodes;
+
+			HashMap temp = new HashMap<String, Double>();
 
 			System.out.println("complete");
 
