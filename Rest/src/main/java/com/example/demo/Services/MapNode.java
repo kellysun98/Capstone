@@ -26,7 +26,8 @@ public class MapNode implements Comparable<MapNode>{ //hi
     public boolean isShoppers; // whether node is shoppers
     public boolean isMall; //whether node is mall
     public int nodetype;// 5 = walk way, 0 = street car, 3 = bus, 1 = subway
-
+    public ArrayList<Date> arrivalTime;
+    public String ttcName;
 
     /** Subway Node properties (May delete later)
      * */
@@ -58,6 +59,7 @@ public class MapNode implements Comparable<MapNode>{ //hi
         isShoppers = false;
         isMall = false;
         nodetype = -1;
+
     }
     public MapNode (){
         id = -1;
@@ -71,6 +73,8 @@ public class MapNode implements Comparable<MapNode>{ //hi
         isShoppers = false;
         isMall = false;
         nodetype =-1;
+        arrivalTime = new ArrayList<>();
+        ttcName = "";
     }
     /** Set Function for isIndoor, isHospital, isShoppers
      * */

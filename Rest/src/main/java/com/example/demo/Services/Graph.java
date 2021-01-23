@@ -23,6 +23,8 @@ public class Graph { //hi
     public double[] focus;
     public HashMap<Double, MapNode> nodes;
     public HashMap<Double, MapNode> routeNodes;
+    public HashMap<Double, MapNode> temprouteNodes;
+
     public HashMap<Double, SubwayNode> subwaynodes;
     public HashMap<Double, SubwayNode> subwayrouteNodes;
     public HashMap<Double, Building> buildings; // HashMap of building boundaries; key= way id; value =
@@ -139,6 +141,7 @@ public class Graph { //hi
         accidents = new HashMap<>();
         nodes = new HashMap<>();
         routeNodes = new HashMap<>();
+        temprouteNodes = new HashMap<>();
         subwaynodes = new HashMap<>();
         subwayrouteNodes = new HashMap<>();
         routes = new HashMap<>();
@@ -525,34 +528,6 @@ public class Graph { //hi
                 newRoute.nodeIds = nodeIdList;
                 routes.put(newRoute.routeId, newRoute);
 
-                //excel file ttc data
-                // load toronto police csv file
-                BufferedReader br = null;
-                String line = "";
-                DecimalFormat df = new DecimalFormat("#.###");
-                df.setRoundingMode(RoundingMode.FLOOR);
-                try {
-                    br = new BufferedReader(new FileReader("./data/ttc data.csv"));
-                    br.readLine();
-                    while ((line = br.readLine()) != null) {
-                        String[] entry = line.split(",");
-                        String trip_id = entry[0];
-                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
-                        Date arrival_time = sdf.parse(entry[1]);
-                        System.out.println(arrival_time);
-                        int stop_sequence = Integer.parseInt(entry[4]);
-                        int route_type = Integer.parseInt(entry[10]);
-                        double lat = Double.parseDouble(entry[11]);
-                        double lon = Double.parseDouble(entry[12]);
-
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
 
 
                 for (double nodeId : nodeIdList) {
@@ -561,6 +536,107 @@ public class Graph { //hi
             }
         }
         System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
+
+        //excel file ttc data
+        // load toronto police csv file
+        BufferedReader br = null;
+        String line = "";
+        DecimalFormat df = new DecimalFormat("#.###");
+        df.setRoundingMode(RoundingMode.FLOOR);
+        int prev_route_id = -1;
+        int prev_seq = -1;
+        Date prev_time = new Date();
+        Double prev_id = -1.0;
+        try {
+            br = new BufferedReader(new FileReader("./data/ttc data.csv"));
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] entry = line.split(",");
+                String trip_id = entry[0];
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+                Date arrival_time = sdf.parse(entry[1]);
+                String stop_id = entry[3];
+
+                int stop_sequence = Integer.parseInt(entry[4]);
+                int route_id = Integer.parseInt(entry[6]);
+                String trip_name = entry[8];
+                int route_type = Integer.parseInt(entry[10]);
+                double lon = Double.parseDouble(entry[11]);
+                double lat = Double.parseDouble(entry[12]);
+
+                if(prev_route_id == route_id){
+                    if(stop_sequence == prev_seq + 1){
+                        if(nodes.containsKey(stop_id)){
+                            nodes.get(Double.parseDouble(stop_id)).arrivalTime.add(arrival_time);
+                        }
+                        else{
+                            MapNode newnode = new MapNode();
+                            newnode.id = Double.parseDouble(stop_id);
+                            newnode.longitude = lon;
+                            newnode.latitude = lat;
+                            newnode.isIndoor = true;
+                            newnode.nodetype = route_type;
+                            newnode.arrivalTime.add(arrival_time);
+                            newnode.ttcName = trip_name;
+                            nodes.get(prev_id).edges.add(new MapEdge(nodes.get(prev_id), newnode, (arrival_time.getTime() - prev_time.getTime())/(60 * 1000) % 60));
+                            nodes.put(newnode.id, newnode);
+                            temprouteNodes.put(prev_id, nodes.get(prev_id));
+                        }
+
+                    }
+                    else{
+                        if(nodes.containsKey(Double.parseDouble(stop_id))){
+                            nodes.get(Double.parseDouble(stop_id)).arrivalTime.add(arrival_time);
+                        }
+                        else{
+                            MapNode newnode = new MapNode();
+                            newnode.id = Double.parseDouble(stop_id);
+                            newnode.longitude = lon;
+                            newnode.latitude = lat;
+                            newnode.isIndoor = true;
+                            newnode.nodetype = route_type;
+                            newnode.arrivalTime.add(arrival_time);
+                            newnode.ttcName = trip_name;
+
+                            nodes.put(newnode.id, newnode);
+                        }
+
+                    }
+                }
+                else{
+                    if(nodes.containsKey(stop_id)){
+                        //nodes.get(prev_id).arrivalTime.add(arrival_time);
+                        System.out.println("error 610");
+                    }
+                    else{
+                        MapNode newnode = new MapNode();
+                        newnode.id = Double.parseDouble(stop_id);
+                        newnode.longitude = lon;
+                        newnode.latitude = lat;
+                        newnode.isIndoor = true;
+                        newnode.nodetype = route_type;
+                        newnode.arrivalTime.add(arrival_time);
+                        newnode.ttcName = trip_name;
+
+                        nodes.put(newnode.id, newnode);
+
+                    }
+                }
+
+                prev_seq = stop_sequence;
+                prev_route_id = route_id;
+                prev_id = Double.parseDouble(stop_id);
+                prev_time =arrival_time;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
