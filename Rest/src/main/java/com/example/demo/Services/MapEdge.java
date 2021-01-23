@@ -57,6 +57,22 @@ public class MapEdge { //hi
 //            accidentsCount = null;
 //        }
     }
+    public MapEdge(MapNode sourceNode, MapNode destinationNode, long time) {
+        this.sourceNode = sourceNode;
+        this.destinationNode = destinationNode;
+        this.length = (double) time;
+        double lon = Double.parseDouble(df.format(destinationNode.longitude));
+        double lat = Double.parseDouble(df.format(destinationNode.latitude));
+        this.isIndoor = (sourceNode.isIndoor) && (destinationNode.isIndoor);
+        this.isHospital = (sourceNode.isHospital) && (destinationNode.isHospital);
+        this.isShoppers = (sourceNode.isShoppers) && (destinationNode.isShoppers);
+        this.isMall = (sourceNode.isMall) && (destinationNode.isMall);
+//            accidentsCount = graph.accidents.get(lon).get(lat);
+//        } catch (NullPointerException e){
+//            accidentsCount = null;
+//        }
+    }
+
     public double getNormalized_length(){
         return this.normalized_length;
     }
