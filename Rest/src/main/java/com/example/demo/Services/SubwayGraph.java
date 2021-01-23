@@ -22,7 +22,7 @@ public class SubwayGraph extends Graph { //hi
     public ArrayList<ArrayList<Double>> visual_routes = new ArrayList<>();
 
     public SubwayGraph() {
-        this("./data/DT2.osm");
+        this("./data/DT3.osm");
     }
 
     public SubwayGraph(String osmFilePath) {
