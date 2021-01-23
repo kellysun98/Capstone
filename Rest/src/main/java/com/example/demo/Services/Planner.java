@@ -69,7 +69,7 @@ public class Planner { //hi
     //        System.out.println("startNode: "+startNode.id);
     //        System.out.format("startNode lat long: %f,%f ",startNode.latitude,startNode.longitude);
 
-        startNode.estimatedCost = dynamic_heuristic(startNode, dist_W, risk_W, 0);//dynamic_heuristic(startNode,dist_W, risk_W);
+        startNode.estimatedCost = dynamic_heuristic(startNode, goalNode, dist_W, risk_W, graph.getDistance(startNode, goalNode), 0);//dynamic_heuristic(startNode,dist_W, risk_W);
         parents.put(startNode, null);
         costs.put(startNode, 0.0);
         priorityQueue.add(startNode);
@@ -89,12 +89,12 @@ public class Planner { //hi
     //                    System.out.println("下一个Node不是hospital");
                 //edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
                 MapNode nextNode = edge.destinationNode;
-                double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, dist_W, risk_W, edge.length); //newCost = g(n)
+                double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, goalNode, dist_W, risk_W, graph.getDistance(edge.destinationNode, goalNode), edge.length); //newCost = g(n)
                     //System.out.println("newCost: "+newCost);
                 if ((!parents.containsKey(nextNode) || newCost < costs.get(nextNode))) {
                     parents.put(nextNode, node);
                     costs.put(nextNode, newCost);
-                    nextNode.estimatedCost = dynamic_heuristic(nextNode, dist_W, risk_W, edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
+                    nextNode.estimatedCost = dynamic_heuristic(nextNode, goalNode, dist_W, risk_W, graph.getDistance(nextNode, goalNode), edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
                     priorityQueue.add(nextNode);
                     }
             }
@@ -113,7 +113,7 @@ public class Planner { //hi
 //        System.out.println("startNode: "+startNode.id);
 //        System.out.format("startNode lat long: %f,%f ",startNode.latitude,startNode.longitude);
 
-        startNode.estimatedCost = dynamic_heuristic(startNode, dist_W, risk_W, 0);//dynamic_heuristic(startNode,dist_W, risk_W);
+        startNode.estimatedCost = dynamic_heuristic(startNode, goalNode, dist_W, risk_W,graph.getDistance(startNode, goalNode),  0);//dynamic_heuristic(startNode,dist_W, risk_W);
         parents.put(startNode, null);
         costs.put(startNode, 0.0);
         priorityQueue.add(startNode);
@@ -139,12 +139,12 @@ public class Planner { //hi
                 if(useMe){
                     //edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
                     MapNode nextNode = edge.destinationNode;
-                    double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, dist_W, risk_W, edge.length); //newCost = g(n)
+                    double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, goalNode, dist_W, risk_W, graph.getDistance(edge.destinationNode, goalNode), edge.length); //newCost = g(n)
                     //System.out.println("newCost: "+newCost);
                     if ((!parents.containsKey(nextNode) || newCost < costs.get(nextNode))) {
                         parents.put(nextNode, node);
                         costs.put(nextNode, newCost);
-                        nextNode.estimatedCost = dynamic_heuristic(nextNode, dist_W, risk_W, edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
+                        nextNode.estimatedCost = dynamic_heuristic(nextNode, goalNode, dist_W, risk_W, graph.getDistance(nextNode, goalNode), edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
                         priorityQueue.add(nextNode);
                     }
                 }else{
@@ -338,7 +338,7 @@ public class Planner { //hi
     }
 
     /** calculate heuristic cost based on different weights */
-    public double dynamic_heuristic(MapNode node, double dist_W, double risk_W, double edgelength){
+    public double dynamic_heuristic(MapNode node, MapNode gnode, double dist_W, double risk_W, double dis, double edgelength){
         //return risk_W * node.normalized_pedCount + dist_W * node.normalized_euclid;
 
         //if mapnode: return travel time
@@ -346,10 +346,30 @@ public class Planner { //hi
         //if subwaynode:
         // if euclid is shorter: return wait time + travel time
         // if longer: return large number
-        if(node.nodetype!= 5){
+        //return risk_W * node.pedCount + dist_W * (((node.euclid)/5000.0)*60.0 + edgelength);
+
+        if(node.nodetype != 5){
+            if(node.edges.isEmpty()){
+                return 100000000;
+            }
+            MapNode tempnode = null;
+            for(MapEdge e : node.edges){
+                if(e.destinationNode.nodetype != 5){
+                    tempnode = e.destinationNode;
+                    break;
+                }
+            }
+            if(tempnode != null){
+                if(graph.getDistance(tempnode, gnode) > dis){
+                    return 100000000;
+                }
+            }
+
+            return dist_W * (((dis)/5000.0)*60.0 + edgelength);
 
         }
-        return risk_W * node.pedCount + dist_W * (((node.euclid)/5000.0)*60.0 + edgelength);
+        return risk_W * node.pedCount + dist_W * (((dis)/5000.0)*60.0 + edgelength);
+
     }
     public double get_Cost_notSure(MapEdge edge, double dist_W, double risk_W){
         return risk_W * edge.destinationNode.normalized_pedCount + dist_W * edge.normalized_length;
