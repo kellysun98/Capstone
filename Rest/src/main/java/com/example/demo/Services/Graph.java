@@ -529,7 +529,6 @@ public class Graph { //hi
                 routes.put(newRoute.routeId, newRoute);
 
 
-
                 for (double nodeId : nodeIdList) {
                     routeNodes.put(nodeId, nodes.get(nodeId));
                     TTCrouteNodes.put(nodeId,nodes.get(nodeId));
@@ -579,7 +578,8 @@ public class Graph { //hi
                             newnode.nodetype = route_type;
                             newnode.arrivalTime.add(arrival_time);
                             newnode.ttcName = trip_name;
-                            nodes.get(prev_id).edges.add(new MapEdge(nodes.get(prev_id), newnode, (arrival_time.getTime() - prev_time.getTime())/(60 * 1000) % 60));
+                            long temptime = arrival_time.getTime() - prev_time.getTime();
+                            nodes.get(prev_id).edges.add(new MapEdge(nodes.get(prev_id), newnode, (arrival_time.getTime() - prev_time.getTime())/(60000)));
                             nodes.put(newnode.id, newnode);
                             TTCrouteNodes.put(prev_id, nodes.get(prev_id));
 
