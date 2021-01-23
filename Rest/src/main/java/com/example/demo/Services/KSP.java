@@ -105,10 +105,10 @@ public class KSP { //hi
                 result_dist.add(temp.getTotalLength());
                 }
             }
-        Path safestp = planner.AStar_avoidHospital(graph, src, dest, costFunction, 1, 0);
-        if(!result_dist.contains(safestp.getTotalLength())){
-            result.add(safestp);
-        }
+        //Path safestp = planner.AStar_avoidHospital(graph, src, dest, costFunction, 1, 0);
+        //if(!result_dist.contains(safestp.getTotalLength())){
+        //    result.add(safestp);
+        //}
         return result;
         }
 
