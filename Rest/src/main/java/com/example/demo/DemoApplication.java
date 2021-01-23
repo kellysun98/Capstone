@@ -38,7 +38,38 @@ public class DemoApplication { //hi
 	}
 	/** getElement for walking
 	 * */
-	public MapNode getElement(HashMap<Double, MapNode> ttcnodeMap, String bound) {
+//	public MapNode getElement(HashMap<Double, MapNode> ttcnodeMap, String bound) {
+//		MapNode res = new MapNode();
+//		double[] focus = new double[]{(-79.4054900 + -79.3886400) / 2, (43.6613600 + 43.6687500) / 2};
+//		double MPERLAT = 111320;
+//		double MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
+//		double dist = 100000;
+//		// 43.668459,43.6698816,-79.3891804,-79.3876308
+//		ArrayList<String> l = new ArrayList<>(Arrays.asList(bound.split(",")));
+//
+//		for (Double key : ttcnodeMap.keySet()) {
+//			if((ttcnodeMap.get(key).latitude >= Double.parseDouble(l.get(0))) &
+//					(ttcnodeMap.get(key).latitude <= Double.parseDouble(l.get(1))) &
+//					(ttcnodeMap.get(key).longitude >= Double.parseDouble(l.get(2))) &
+//					(ttcnodeMap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
+//				res = ttcnodeMap.get(key);
+//				break;
+//			}
+//		}
+//		if(res.id == -1){
+//			for (Double key : ttcnodeMap.keySet()) {
+//				double dx = (ttcnodeMap.get(key).longitude - (Double.parseDouble(l.get(2)) + Double.parseDouble(l.get(3)))/2) * MPERLON;
+//				double dy = (ttcnodeMap.get(key).latitude - (Double.parseDouble(l.get(0)) + Double.parseDouble(l.get(1)))/2) * MPERLAT;
+//				double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+//				if (tempdist < dist) {
+//					dist = tempdist;
+//					res = ttcnodeMap.get(key);
+//				}
+//			}
+//		}
+//		return res;
+//	}
+	public MapNode getElement(HashMap<Double, MapNode> nodeMap, String bound) {
 		MapNode res = new MapNode();
 		double[] focus = new double[]{(-79.4054900 + -79.3886400) / 2, (43.6613600 + 43.6687500) / 2};
 		double MPERLAT = 111320;
@@ -47,23 +78,23 @@ public class DemoApplication { //hi
 		// 43.668459,43.6698816,-79.3891804,-79.3876308
 		ArrayList<String> l = new ArrayList<>(Arrays.asList(bound.split(",")));
 
-		for (Double key : ttcnodeMap.keySet()) {
-			if((ttcnodeMap.get(key).latitude >= Double.parseDouble(l.get(0))) &
-					(ttcnodeMap.get(key).latitude <= Double.parseDouble(l.get(1))) &
-					(ttcnodeMap.get(key).longitude >= Double.parseDouble(l.get(2))) &
-					(ttcnodeMap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
-				res = ttcnodeMap.get(key);
+		for (Double key : nodeMap.keySet()) {
+			if((nodeMap.get(key).latitude >= Double.parseDouble(l.get(0))) &
+					(nodeMap.get(key).latitude <= Double.parseDouble(l.get(1))) &
+					(nodeMap.get(key).longitude >= Double.parseDouble(l.get(2))) &
+					(nodeMap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
+				res = nodeMap.get(key);
 				break;
 			}
 		}
 		if(res.id == -1){
-			for (Double key : ttcnodeMap.keySet()) {
-				double dx = (ttcnodeMap.get(key).longitude - (Double.parseDouble(l.get(2)) + Double.parseDouble(l.get(3)))/2) * MPERLON;
-				double dy = (ttcnodeMap.get(key).latitude - (Double.parseDouble(l.get(0)) + Double.parseDouble(l.get(1)))/2) * MPERLAT;
+			for (Double key : nodeMap.keySet()) {
+				double dx = (nodeMap.get(key).longitude - (Double.parseDouble(l.get(2)) + Double.parseDouble(l.get(3)))/2) * MPERLON;
+				double dy = (nodeMap.get(key).latitude - (Double.parseDouble(l.get(0)) + Double.parseDouble(l.get(1)))/2) * MPERLAT;
 				double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 				if (tempdist < dist) {
 					dist = tempdist;
-					res = ttcnodeMap.get(key);
+					res = nodeMap.get(key);
 				}
 			}
 		}
@@ -80,8 +111,8 @@ public class DemoApplication { //hi
 
 			if (userPref == null){
 				torontoGraph.avoidHospital=false;
-				MapNode startNode = getElement(ttcnodeMap, add.getStart_bound());
-				MapNode endNode = getElement(ttcnodeMap, add.getEnd_bound());
+				MapNode startNode = getElement(nodeMap, add.getStart_bound());
+				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
 				// Prepare for normalization for "covid" heuristic
 				torontoGraph.prepareNormalization(endNode);
 
@@ -102,8 +133,8 @@ public class DemoApplication { //hi
 				}
 
 
-				MapNode startNode = getElement(ttcnodeMap, add.getStart_bound());
-				MapNode endNode = getElement(ttcnodeMap, add.getEnd_bound());
+				MapNode startNode = getElement(nodeMap, add.getStart_bound());
+				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
 
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
@@ -116,20 +147,75 @@ public class DemoApplication { //hi
 
 				/** OLD STUFF USELESS KEEP FOR NOW
 				 *
-				SubwayNode startNode = getElement_subway(subwaynodeMap, add.getStart_bound());
-				SubwayNode endNode = getElement_subway(subwaynodeMap, add.getEnd_bound());
+				 SubwayNode startNode = getElement_subway(subwaynodeMap, add.getStart_bound());
+				 SubwayNode endNode = getElement_subway(subwaynodeMap, add.getEnd_bound());
 
-				Planner planner = new Planner();
-				ArrayList<SubwayPath>resultList = new ArrayList<SubwayPath>();
-				resultList.add(planner.plan(startNode,endNode,"distance"));
-//
-				result = KSP.KSPtoJson_subway(resultList);
-				startCheck = add.getStart_bound();
-				endCheck = add.getEnd_bound();
+				 Planner planner = new Planner();
+				 ArrayList<SubwayPath>resultList = new ArrayList<SubwayPath>();
+				 resultList.add(planner.plan(startNode,endNode,"distance"));
+				 //
+				 result = KSP.KSPtoJson_subway(resultList);
+				 startCheck = add.getStart_bound();
+				 endCheck = add.getEnd_bound();
 				 */
 			}
 			return result;
 		}
+//		@GetMapping("/api")
+//		public String getList() {
+//
+//			if (userPref == null){
+//				torontoGraph.avoidHospital=false;
+//				MapNode startNode = getElement(ttcnodeMap, add.getStart_bound());
+//				MapNode endNode = getElement(ttcnodeMap, add.getEnd_bound());
+//				// Prepare for normalization for "covid" heuristic
+//				torontoGraph.prepareNormalization(endNode);
+//
+//				Planner planner = new Planner();
+//				ArrayList<Path> resultList = new ArrayList<Path>();
+//				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
+//				result = KSP.KSPtoJson(resultList);
+//				startCheck = add.getStart_bound();
+//				endCheck = add.getEnd_bound();
+//			}else if ((userPref != null)|| result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))||(!(old_userPref.equals(userPref)))) {
+//				old_userPref = new userPreference(userPref);
+//
+//				// set questionnaire answer(avoid hospital or not)
+//				if (userPref.getQ3().get(0).contains("hospital")){
+//					torontoGraph.avoidHospital=true;
+//				}else{
+//					torontoGraph.avoidHospital=false;
+//				}
+//
+//
+//				MapNode startNode = getElement(ttcnodeMap, add.getStart_bound());
+//				MapNode endNode = getElement(ttcnodeMap, add.getEnd_bound());
+//
+//				Planner planner = new Planner();
+//				ArrayList<Path> resultList = new ArrayList<Path>();
+//				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
+////
+//				result = KSP.KSPtoJson(resultList);
+//				startCheck = add.getStart_bound();
+//				endCheck = add.getEnd_bound();
+//
+//
+//				/** OLD STUFF USELESS KEEP FOR NOW
+//				 *
+//				SubwayNode startNode = getElement_subway(subwaynodeMap, add.getStart_bound());
+//				SubwayNode endNode = getElement_subway(subwaynodeMap, add.getEnd_bound());
+//
+//				Planner planner = new Planner();
+//				ArrayList<SubwayPath>resultList = new ArrayList<SubwayPath>();
+//				resultList.add(planner.plan(startNode,endNode,"distance"));
+////
+//				result = KSP.KSPtoJson_subway(resultList);
+//				startCheck = add.getStart_bound();
+//				endCheck = add.getEnd_bound();
+//				 */
+//			}
+//			return result;
+//		}
 
 		@GetMapping("/api2")
 		public String gettwoList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end) {
