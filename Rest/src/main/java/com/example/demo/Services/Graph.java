@@ -579,7 +579,10 @@ public class Graph { //hi
                             newnode.arrivalTime.add(arrival_time);
                             newnode.ttcName = trip_name;
                             long temptime = arrival_time.getTime() - prev_time.getTime();
-                            nodes.get(prev_id).edges.add(new MapEdge(nodes.get(prev_id), newnode, (arrival_time.getTime() - prev_time.getTime())/(60000)));
+                            if( temptime < 0.0){
+                                temptime = new Double(0.0).longValue();
+                            }
+                            nodes.get(prev_id).edges.add(new MapEdge(nodes.get(prev_id), newnode, (temptime)/(60000)));
                             nodes.put(newnode.id, newnode);
                             TTCrouteNodes.put(prev_id, nodes.get(prev_id));
 
@@ -669,7 +672,7 @@ public class Graph { //hi
                 prev_seq = stop_sequence;
                 prev_route_id = route_id;
                 prev_id = Double.parseDouble(stop_id);
-                prev_time =arrival_time;
+                prev_time = arrival_time;
             }
 
         } catch (FileNotFoundException e) {
