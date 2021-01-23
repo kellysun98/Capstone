@@ -346,7 +346,10 @@ public class Planner { //hi
         //if subwaynode:
         // if euclid is shorter: return wait time + travel time
         // if longer: return large number
-        return risk_W * node.pedCount + dist_W * (node.euclid + edgelength);
+        if(node.nodetype!= 5){
+
+        }
+        return risk_W * node.pedCount + dist_W * (((node.euclid)/5000.0)*60.0 + edgelength);
     }
     public double get_Cost_notSure(MapEdge edge, double dist_W, double risk_W){
         return risk_W * edge.destinationNode.normalized_pedCount + dist_W * edge.normalized_length;
