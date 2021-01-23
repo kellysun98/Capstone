@@ -340,6 +340,12 @@ public class Planner { //hi
     /** calculate heuristic cost based on different weights */
     public double dynamic_heuristic(MapNode node, double dist_W, double risk_W, double edgelength){
         //return risk_W * node.normalized_pedCount + dist_W * node.normalized_euclid;
+
+        //if mapnode: return travel time
+
+        //if subwaynode:
+        // if euclid is shorter: return wait time + travel time
+        // if longer: return large number
         return risk_W * node.pedCount + dist_W * (node.euclid + edgelength);
     }
     public double get_Cost_notSure(MapEdge edge, double dist_W, double risk_W){
