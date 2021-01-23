@@ -4,6 +4,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.*;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +28,25 @@ public class SubwayGraph extends Graph { //hi
     public SubwayGraph(String osmFilePath) {
         nodes = new HashMap<>();
         routeNodes = new HashMap<>();
-        loadFiles(osmFilePath, "./data/Cyclists.csv");
+        loadFiles(osmFilePath);
         getFocus();
         MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
-        MapEdge.graph = this;
         buildSubwayGraph();
+    }
+
+    public void loadFiles(String osmFilePath) {
+        // load osm file
+        try {
+            File file = new File(osmFilePath);
+            //an instance of factory that gives a document builder
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            //an instance of builder to parse the specified xml file
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            osmDoc = db.parse(file);
+            osmDoc.getDocumentElement().normalize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

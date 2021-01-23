@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubwayNode extends MapNode{ //hi
-    public Graph subwayGraph;
+    public SubwayGraph graph;
     public Element element;
     public double id;
     public double longitude;
     public double latitude;
     public List<SubwayEdge> edges;
-    public String arrivalTime;
+    public ArrayList arrivalTime;
     public int lineNumber;
 
     public SubwayNode(SubwayNode newMapNode){
