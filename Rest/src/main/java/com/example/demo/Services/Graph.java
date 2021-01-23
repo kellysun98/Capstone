@@ -22,8 +22,8 @@ public class Graph { //hi
     public Document osmDoc;
     public double[] focus;
     public HashMap<Double, MapNode> nodes;
-    public HashMap<Double, MapNode> routeNodes;
-    public HashMap<Double, MapNode> temprouteNodes;
+    public HashMap<Double, MapNode> routeNodes; // HashMap of only walking network
+    public HashMap<Double, MapNode> TTCrouteNodes; // HashMap of connected walking&public transit networks
 
     public HashMap<Double, SubwayNode> subwaynodes;
     public HashMap<Double, SubwayNode> subwayrouteNodes;
@@ -141,7 +141,7 @@ public class Graph { //hi
         accidents = new HashMap<>();
         nodes = new HashMap<>();
         routeNodes = new HashMap<>();
-        temprouteNodes = new HashMap<>();
+        TTCrouteNodes = new HashMap<>();
         subwaynodes = new HashMap<>();
         subwayrouteNodes = new HashMap<>();
         routes = new HashMap<>();
@@ -532,6 +532,7 @@ public class Graph { //hi
 
                 for (double nodeId : nodeIdList) {
                     routeNodes.put(nodeId, nodes.get(nodeId));
+                    TTCrouteNodes.put(nodeId,nodes.get(nodeId));
                 }
             }
         }
@@ -580,7 +581,23 @@ public class Graph { //hi
                             newnode.ttcName = trip_name;
                             nodes.get(prev_id).edges.add(new MapEdge(nodes.get(prev_id), newnode, (arrival_time.getTime() - prev_time.getTime())/(60 * 1000) % 60));
                             nodes.put(newnode.id, newnode);
-                            temprouteNodes.put(prev_id, nodes.get(prev_id));
+                            TTCrouteNodes.put(prev_id, nodes.get(prev_id));
+
+                            // connect ttc network w/ walking network
+                            MapNode walknode;
+                            for (Double i : routeNodes.keySet()){//(Double i : routeNodes.keySet()){
+                                walknode = routeNodes.get(i);
+                                double dist = getDistance(walknode,newnode);
+                                if (dist <=10.0){
+                                    TTCrouteNodes.get(walknode.id).edges.add(new MapEdge(nodes.get(walknode.id), newnode, (new Double((dist/5000.0)*60.0)).longValue()));
+//                                    walknode.edges.add(new MapEdge(walknode,newnode,(new Double((dist/5000.0)*60.0)).longValue()));
+//                                    TTCrouteNodes.put(walknode.id,walknode);
+                                    nodes.get(newnode.id).edges.add(new MapEdge(nodes.get(newnode.id),nodes.get(walknode.id),(new Double((dist/5000.0)*60.0)).longValue()));
+                                    TTCrouteNodes.put(newnode.id,newnode);
+                                }
+
+                            }
+
                         }
 
                     }
@@ -599,6 +616,20 @@ public class Graph { //hi
                             newnode.ttcName = trip_name;
 
                             nodes.put(newnode.id, newnode);
+
+                            // connect walk net to ttc net
+                            MapNode walknode;
+                            for (Double i : routeNodes.keySet()){//(Double i : routeNodes.keySet()){
+                                walknode = routeNodes.get(i);
+                                double dist = getDistance(walknode,newnode);
+                                if (dist <=10.0){
+                                    TTCrouteNodes.get(walknode.id).edges.add(new MapEdge(nodes.get(walknode.id), newnode, (new Double((dist/5000.0)*60.0)).longValue()));
+//                                    walknode.edges.add(new MapEdge(walknode,newnode,(new Double((dist/5000.0)*60.0)).longValue()));
+//                                    TTCrouteNodes.put(walknode.id,walknode);
+                                    nodes.get(newnode.id).edges.add(new MapEdge(nodes.get(newnode.id),nodes.get(walknode.id),(new Double((dist/5000.0)*60.0)).longValue()));
+                                    TTCrouteNodes.put(newnode.id,newnode);
+                                }
+                            }
                         }
 
                     }
@@ -619,7 +650,19 @@ public class Graph { //hi
                         newnode.ttcName = trip_name;
 
                         nodes.put(newnode.id, newnode);
-
+                        // connect walk net to ttc net
+                        MapNode walknode;
+                        for (Double i : routeNodes.keySet()){//(Double i : routeNodes.keySet()){
+                            walknode = routeNodes.get(i);
+                            double dist = getDistance(walknode,newnode);
+                            if (dist <=10.0){
+                                TTCrouteNodes.get(walknode.id).edges.add(new MapEdge(nodes.get(walknode.id), newnode, (new Double((dist/5000.0)*60.0)).longValue()));
+//                                walknode.edges.add(new MapEdge(walknode,newnode,-1));
+//                                TTCrouteNodes.put(walknode.id,walknode);
+                                nodes.get(newnode.id).edges.add(new MapEdge(nodes.get(newnode.id),nodes.get(walknode.id),(new Double((dist/5000.0)*60.0)).longValue()));
+                                TTCrouteNodes.put(newnode.id,newnode);
+                            }
+                        }
                     }
                 }
 
@@ -628,6 +671,7 @@ public class Graph { //hi
                 prev_id = Double.parseDouble(stop_id);
                 prev_time =arrival_time;
             }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -636,7 +680,7 @@ public class Graph { //hi
             e.printStackTrace();
         }
 
-
+        System.out.println(String.format("number of connected temp route nodes: %d", TTCrouteNodes.size()));
     }
 
 
