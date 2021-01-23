@@ -43,7 +43,7 @@ public class MapEdge { //hi
         this.mapRoute = mapRoute;
         this.sourceNode = sourceNode;
         this.destinationNode = destinationNode;
-        this.length = graph.getDistance(this.sourceNode, this.destinationNode); // Set weight of the edge as distance from src to dest MapNode
+        this.length = graph.getDistance(this.sourceNode, this.destinationNode)/5000 * 60; // Set weight of the edge as distance from src to dest MapNode
 //        this.normalized_length = normalize(this.length, graph.min_length, graph.max_length);
 //        try {
         double lon = Double.parseDouble(df.format(destinationNode.longitude));
