@@ -523,40 +523,57 @@ public class Graph { //hi
                 newRoute.nodeIds = nodeIdList;
                 routes.put(newRoute.routeId, newRoute);
 
-                //excel file ttc data
-                // load toronto police csv file
-                BufferedReader br = null;
-                String line = "";
-                DecimalFormat df = new DecimalFormat("#.###");
-                df.setRoundingMode(RoundingMode.FLOOR);
-                try {
-                    br = new BufferedReader(new FileReader("./data/ttc data.csv"));
-                    br.readLine();
-                    while ((line = br.readLine()) != null) {
-                        String[] entry = line.split(",");
-                        String trip_id = entry[0];
-                        LocalTime arrival_time = LocalTime.parse(entry[1], DateTimeFormatter.ofPattern("HH:mm:ss aa"));
-                        int stop_sequence = Integer.parseInt(entry[4]);
-                        int route_type = Integer.parseInt(entry[10]);
-                        double lat = Double.parseDouble(entry[11]);
-                        double lon = Double.parseDouble(entry[12]);
-
-
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-
                 for (double nodeId : nodeIdList) {
                     routeNodes.put(nodeId, nodes.get(nodeId));
                 }
             }
         }
-        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
+
+
+        System.out.println(String.format("number of walkway nodes: %d", routeNodes.size()));
+
+        //excel file ttc data
+        // load toronto police csv file
+        BufferedReader br = null;
+        String line = "";
+        DecimalFormat df = new DecimalFormat("#.###");
+        int prev_seq = 0;
+        try {
+            br = new BufferedReader(new FileReader("./data/ttc data.csv"));
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] entry = line.split(",");
+                String trip_id = entry[0];
+                //LocalTime arrival_time = LocalTime.parse(entry[1], DateTimeFormatter.ofPattern("HH:mm:ss aa"));
+                String arrival_time = entry[1];
+                String stop_id = entry[3];
+                int stop_sequence = Integer.parseInt(entry[4]);
+                int route_type = Integer.parseInt(entry[10]);
+                double lon = Double.parseDouble(entry[11]);
+                double lat = Double.parseDouble(entry[12]);
+
+                if(nodes.containsKey(stop_id)){
+
+                }
+                else{
+                    MapNode newNode = new MapNode();
+                    newNode.id = Double.parseDouble(stop_id);
+                    newNode.longitude = lon;
+                    newNode.latitude = lat;
+                    newNode.isIndoor = true;
+                    newNode.nodetype = route_type;
+
+                    nodes.put(newNode.id, newNode);
+                }
+
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
