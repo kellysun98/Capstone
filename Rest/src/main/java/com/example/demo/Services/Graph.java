@@ -10,6 +10,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -535,20 +537,22 @@ public class Graph { //hi
                     while ((line = br.readLine()) != null) {
                         String[] entry = line.split(",");
                         String trip_id = entry[0];
-                        LocalTime arrival_time = LocalTime.parse(entry[1], DateTimeFormatter.ofPattern("HH:mm:ss aa"));
+                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+                        Date arrival_time = sdf.parse(entry[1]);
+                        System.out.println(arrival_time);
                         int stop_sequence = Integer.parseInt(entry[4]);
                         int route_type = Integer.parseInt(entry[10]);
                         double lat = Double.parseDouble(entry[11]);
                         double lon = Double.parseDouble(entry[12]);
-
 
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-
 
 
                 for (double nodeId : nodeIdList) {
