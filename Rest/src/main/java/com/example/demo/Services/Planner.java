@@ -364,6 +364,9 @@ public class Planner { //hi
                     return 100000000;
                 }
             }
+            if(tempnode == null){
+                return 100000000;
+            }
 
             return dist_W * (((dis)/5000.0)*60.0 + edgelength);
 
