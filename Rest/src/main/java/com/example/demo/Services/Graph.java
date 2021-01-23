@@ -19,6 +19,8 @@ public class Graph { //hi
     public double[] focus;
     public HashMap<Double, MapNode> nodes;
     public HashMap<Double, MapNode> routeNodes;
+    public HashMap<Double, SubwayNode> subwaynodes;
+    public HashMap<Double, SubwayNode> subwayrouteNodes;
     public HashMap<Double, Building> buildings; // HashMap of building boundaries; key= way id; value =
     public HashMap<Double, MapRoute> routes;
     public HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
@@ -126,7 +128,6 @@ public class Graph { //hi
 
     public Graph() {
         this("./data/DT2.osm","./data/Cyclists.csv");
-//        subwayGraph = new SubwayGraph();
     }
 
     public Graph(String osmFilePath, String accidentsFilePath) {
@@ -134,6 +135,8 @@ public class Graph { //hi
         accidents = new HashMap<>();
         nodes = new HashMap<>();
         routeNodes = new HashMap<>();
+        subwaynodes = new HashMap<>();
+        subwayrouteNodes = new HashMap<>();
         routes = new HashMap<>();
         buildings = new HashMap<>();
         hospitalNodes = new ArrayList<>();
@@ -190,6 +193,9 @@ public class Graph { //hi
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // load TTC and bus route csv file
+
 
 //        // load uber json file
 //        JSONParser parser = new JSONParser();
@@ -386,6 +392,7 @@ public class Graph { //hi
     /** 最新的buildGraph function; allow avoid hospital
      * */
     public void buildGraph_avoidHospital() {
+        System.out.println("why call me?");
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
 
