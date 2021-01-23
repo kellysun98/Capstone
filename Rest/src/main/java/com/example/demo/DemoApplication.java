@@ -23,6 +23,7 @@ import static com.example.demo.Services.Graph.getDistance;
 public class DemoApplication { //hi
 	public Graph torontoGraph;
 	public HashMap<Double, MapNode> nodeMap;
+	public HashMap<Double, MapNode> tempnodeMap;
 	public MapNode mapNode;
 	public Planner planner;
 	public userPreference userPref;
@@ -281,6 +282,7 @@ public class DemoApplication { //hi
 			}
 
 			nodeMap = torontoGraph.routeNodes;
+			tempnodeMap = torontoGraph.TTCrouteNodes;
 
 			HashMap temp = new HashMap<String, Double>();
 			temp = MapNode.MapNodetoHash(nodeMap.values());
