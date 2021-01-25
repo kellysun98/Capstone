@@ -212,6 +212,7 @@ public class KSP { //hi
             ArrayList<ArrayList<Double>> mn = new ArrayList<>();
             ArrayList<Integer> nodetypes = new ArrayList<>(); // node type of each MapNode
             String risk_toString = new String();
+            ArrayList<String> ttcnames = new ArrayList<>(); // stop name of each MapNode
             for (int i = 1; i<node_list.size(); i++) {
                 ArrayList<Double> al1 = new ArrayList<>();
                 ArrayList<Double> al2 = new ArrayList<>();
@@ -223,6 +224,8 @@ public class KSP { //hi
                 Double latitude = node_list.get(i-1).latitude+count/80000;
                 int nt1 = node_list.get(i-1).nodetype;
                 int nt2 = node_list.get(i).nodetype;
+                String sn1 = node_list.get(i-1).ttcName;
+                String sn2 = node_list.get(i).ttcName;
 
                 al1.add(longitude);
                 al1.add(latitude);
@@ -232,6 +235,8 @@ public class KSP { //hi
                 mn.add(al2);
                 nodetypes.add(nt1);
                 nodetypes.add(nt2);
+                ttcnames.add(sn1);
+                ttcnames.add(sn2);
             }
             Double cost = p.getTotalLength();
             Double time = Precision.round(p.getTotalTime(),0);
@@ -239,11 +244,12 @@ public class KSP { //hi
             path_map.put("cost", new Gson().toJson(cost));
             path_map.put("routeNode", new Gson().toJson(mn));
             path_map.put("nodetype", new Gson().toJson(nodetypes));
+            path_map.put("ttcname",new Gson().toJson(ttcnames));
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));
             count++;
-            solution.add(path_map); //[cost, routeNode, nodetype, time, description, distance]
+            solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
         }
         String solution_to_string = new Gson().toJson(solution);
         return solution_to_string;
@@ -308,6 +314,7 @@ public class KSP { //hi
             ArrayList<ArrayList<Double>> mn = new ArrayList<>();
             ArrayList<Integer> nodetypes = new ArrayList<>(); // node type of each MapNode
             String risk_toString = new String();
+            ArrayList<String> ttcnames = new ArrayList<>(); // stop name of each MapNode
             for (int i = 1; i<node_list.size(); i++) {
                 ArrayList<Double> al1 = new ArrayList<>();
                 ArrayList<Double> al2 = new ArrayList<>();
@@ -319,6 +326,8 @@ public class KSP { //hi
                 Double latitude = node_list.get(i-1).latitude+count/80000;
                 int nt1 = node_list.get(i-1).nodetype;
                 int nt2 = node_list.get(i).nodetype;
+                String sn1 = node_list.get(i-1).ttcName;
+                String sn2 = node_list.get(i).ttcName;
 
                 al1.add(longitude);
                 al1.add(latitude);
@@ -328,6 +337,8 @@ public class KSP { //hi
                 mn.add(al2);
                 nodetypes.add(nt1);
                 nodetypes.add(nt2);
+                ttcnames.add(sn1);
+                ttcnames.add(sn2);
             }
             Double cost = p.getTotalLength();
             Double time = Precision.round(p.getTotalTime(),0);
@@ -335,11 +346,12 @@ public class KSP { //hi
             path_map.put("cost", new Gson().toJson(cost));
             path_map.put("routeNode", new Gson().toJson(mn));
             path_map.put("nodetype", new Gson().toJson(nodetypes));
+            path_map.put("ttcname",new Gson().toJson(ttcnames));
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));
             count++;
-            solution.add(path_map); //[cost, routeNode, nodetype, time, description, distance]
+            solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
         }
         return solution;
     }
