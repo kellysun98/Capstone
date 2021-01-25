@@ -459,9 +459,9 @@ export class AppComponent {
   }
 
   //helper function to draw line according to risk level
-  getFeature(route, time, risk, description, myroutes){ //route - line with two coordintaes
+  getColor(risk){ //route - line with two coordintaes
     // var myroutes = new Array();
-  
+    var color: string;
     if(risk>0 && risk <=3){
       var color = 'rgba(0, 204, 0, 1)'; //safe
       var risk_description = 'low'
@@ -472,29 +472,75 @@ export class AppComponent {
       var color = 'rgba(255, 0, 0, 1)'; //dangerous
       var risk_description = 'high'
     }
-
-    var featureLine = new ol.Feature({
-      geometry: new ol.geom.LineString(route),
-      name: 'nav_line',
-      description: 'total time:' + time + ', \n route risk: ' + risk_description,
-    });
-
-    var linestyle = new ol.style.Style({
-      fill: new ol.style.Fill({
-          color: color, weight: 5,
-      }),
-      stroke: new ol.style.Stroke({
-        color: color, width: 5
-      }),
-
-    });
-    
-    featureLine.setStyle(linestyle);
-    myroutes.push(featureLine)
-    //return myroutes
+    return color;
   }
 
-  DynamicColoring(route, time, risk, des,myroutes){ //route - line with two coordintaes
+  getGeomPed(route, time, risk, description, mapnode, myroutes){
+    for (var i = 1; i < route.length; i++){
+      route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+      var featureLine = new ol.Feature({
+        geometry: new ol.geom.LineString([route[i-1],route[i]]),
+      });
+      console.log([route[i-1], route[i]])
+      var linestyle = new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: this.getColor(risk[i-1]), weight: 5
+        }),
+        stroke: new ol.style.Stroke({
+          color: this.getColor(risk[i-1]), width: 5
+        }),
+  
+      });
+      
+      featureLine.setStyle(linestyle);
+      myroutes.push(featureLine) 
+    }
+  }
+
+  getGeom(route, time, risk, description, mapnode, myroutes){
+    for (var i = 1; i < route.length; i++){
+      route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+      //console.log('initial: ', route[i]);
+      if(mapnode[i-1]==5){
+        var featurePoint = new ol.Feature({
+          geometry: new ol.geom.Point(route[i-1]),
+        })
+        var pointStyle = new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 5,
+            fill: new ol.style.Fill({color: this.getColor(risk[i-1])}),
+            // stroke: new ol.style.Stroke({
+            //   color: [255,0,0], width: 2
+            // })
+          })
+    
+        })
+        featurePoint.setStyle(pointStyle);
+        myroutes.push(featurePoint)
+        //console.log('transformed: ', route[i])
+      }else if(mapnode[i-1]!=5 && mapnode[i]!=5){
+        var featureLine = new ol.Feature({
+          geometry: new ol.geom.LineString([route[i-1],route[i]]),
+        });
+        console.log([route[i-1], route[i]])
+        var linestyle = new ol.style.Style({
+          fill: new ol.style.Fill({
+              color: this.getColor(risk[i-1]), weight: 8,
+          }),
+          stroke: new ol.style.Stroke({
+            color: this.getColor(risk[i-1]), width: 8
+          }),
+    
+        });
+        
+        featureLine.setStyle(linestyle);
+        myroutes.push(featureLine) 
+      }
+    }
+    console.log(myroutes);
+  }
+
+  DynamicColoring(route, time, risk, des, myroutes){ //route - line with two coordintaes
     // var myroutes = new Array();
   
     var featureLine = new ol.Feature({
@@ -507,7 +553,7 @@ export class AppComponent {
         color: 'transparent'
      }),
       text: new ol.style.Text({
-        font: this.map.getView().getZoom()  + '18px Calibri,sans-serif',
+        font: '20px Calibri,sans-serif',
         textBaseline: 'top',
         offsetY: 6,
         backgroundFill: new ol.style.Fill({
@@ -625,6 +671,8 @@ export class AppComponent {
                 route[0] = ol.proj.transform(route[0], 'EPSG:4326', 'EPSG:3857');
                 var time = this.response[0][amen]['time'];
                 var description = this.response[0][amen]['description'];
+                var mapnode = Array(route.length).fill(5)
+                console.log(mapnode)
                 // console.log('print route: ' + route[1]);
                 // console.log('print risk: ' + risk[0]);
                 // console.log('route length: '+ route.length);
@@ -638,28 +686,23 @@ export class AppComponent {
             // var medium = 'rgba(255, 152, 51, 1)';
             // var dangerous = 'rgba(255, 0, 0, 1)';
           
-                for (var i = 1; i < route.length; i++) {
-                  // console.log('length enumeration '+i);
-                  // route[i-1] = ol.proj.transform(route[i-1], 'EPSG:4326', 'EPSG:3857');
-                  route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
-                  this.getFeature([route[i-1],route[i]],time,risk[i-1],description,myroutes) //route[i] - coordinate
-                }
+                this.getGeomPed(route, time, risk, description, mapnode, myroutes);
                 this.DynamicColoring(route, time, risk, description,myroutes)  //display text
               }
               var vectorSource = new ol.source.Vector({
                 features: myroutes,
               }); //multiple routes added 
-              
+
               var indicator = 0;
-              this.map.getLayers().forEach(function(layer) {
-                if (layer.get('name') != undefined && layer.get('name') === 'ped-lines') {
-                  myroutes.forEach((feature) => {
-                    layer.getSource().addFeature(feature);            
-                  });    
-                    indicator = 1;   
-                    console.log("feature added to existing layer"); 
-                }
-              });
+               this.map.getLayers().forEach(function(layer) {
+                 if (layer.get('name') != undefined && layer.get('name') === 'ped-lines') {
+                   myroutes.forEach((feature) => {
+                     layer.getSource().addFeature(feature);            
+                   });    
+                     indicator = 1;   
+                     console.log("feature added to existing layer"); 
+                 }
+               });
   
               if(indicator === 0) {  
                 console.log("new layer created"); 
@@ -670,12 +713,14 @@ export class AppComponent {
                 this.map.addLayer(vectorLineLayer);
               }
       
+              //public transit start
+
               // this.map.getLayers().forEach(function(layer) {
               //   console.log(layer.get('name'));  
               // }); 
               var res_length_transit = Object.keys(this.response[1]).length;
               var myroutes_transit = [];
-          //console.log("res_lenght is " + res_length) 
+              var routes_walk = [];
               for(var amen = 0; amen<res_length_transit; amen++){ 
               // for(let index in this.response[amen]['routeNode']){
                 // console.log('first loop: ' + this.response[amen]['routeNode'])
@@ -699,13 +744,7 @@ export class AppComponent {
             // var safe = 'rgba(0, 204, 0, 1)';
             // var medium = 'rgba(255, 152, 51, 1)';
             // var dangerous = 'rgba(255, 0, 0, 1)';
-          
-                for (var i = 1; i < route_transit.length; i++) {
-                  // console.log('length enumeration '+i);
-                  // route[i-1] = ol.proj.transform(route[i-1], 'EPSG:4326', 'EPSG:3857');
-                  route_transit[i] = ol.proj.transform(route_transit[i], 'EPSG:4326', 'EPSG:3857');
-                  this.getFeature([route_transit[i-1],route_transit[i]],time_transit,risk_transit[i-1],description_transit,myroutes_transit) //route[i] - coordinate
-                }
+                this.getGeom(route_transit, time_transit, risk_transit, description_transit, nodetype, myroutes_transit);
                 this.DynamicColoring(route_transit, time_transit, risk_transit, description_transit,myroutes_transit)  //display text
               }
               var vectorSource_transit = new ol.source.Vector({
@@ -730,7 +769,8 @@ export class AppComponent {
                   name: 'transit-lines',
               });
                 this.map.addLayer(vectorLineLayer_transit);
-                vectorLineLayer_transit.setVisible(false);
+                // vectorLineLayer_transit.setVisible(false);
+                this.showLine(0);
               }
       
               // this.map.getLayers().forEach(function(layer) {
