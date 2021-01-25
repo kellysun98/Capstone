@@ -13,6 +13,8 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./mybar.component.css']
 })
 export class MybarComponent implements OnInit {
+  @Input() transitTypeChild: any;
+  @Output()
   route:Route[]=[];
   ngOnInit(): void {
     this.routeService.getRouteInfo().pipe(take(1)).subscribe( data => {this.route = data; 
