@@ -28,6 +28,8 @@ public class DemoApplication { //hi
 	public Planner planner;
 	public userPreference userPref;
 	public Address add = null;
+	public String walk_result = new String();
+	public String ttc_result = new String();
 	public String result = new String();
 	public String startCheck = new String();
 	public String endCheck = new String();
@@ -69,7 +71,7 @@ public class DemoApplication { //hi
 //		}
 //		return res;
 //	}
-	public MapNode getElement(HashMap<Double, MapNode> nodeMap, String bound) {
+	public MapNode getElement(HashMap<Double, MapNode> input_hashmap, String bound) {
 		MapNode res = new MapNode();
 		double[] focus = new double[]{(-79.4054900 + -79.3886400) / 2, (43.6613600 + 43.6687500) / 2};
 		double MPERLAT = 111320;
@@ -78,23 +80,23 @@ public class DemoApplication { //hi
 		// 43.668459,43.6698816,-79.3891804,-79.3876308
 		ArrayList<String> l = new ArrayList<>(Arrays.asList(bound.split(",")));
 
-		for (Double key : nodeMap.keySet()) {
-			if((nodeMap.get(key).latitude >= Double.parseDouble(l.get(0))) &
-					(nodeMap.get(key).latitude <= Double.parseDouble(l.get(1))) &
-					(nodeMap.get(key).longitude >= Double.parseDouble(l.get(2))) &
-					(nodeMap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
-				res = nodeMap.get(key);
+		for (Double key : input_hashmap.keySet()) {
+			if((input_hashmap.get(key).latitude >= Double.parseDouble(l.get(0))) &
+					(input_hashmap.get(key).latitude <= Double.parseDouble(l.get(1))) &
+					(input_hashmap.get(key).longitude >= Double.parseDouble(l.get(2))) &
+					(input_hashmap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
+				res = input_hashmap.get(key);
 				break;
 			}
 		}
 		if(res.id == -1){
-			for (Double key : nodeMap.keySet()) {
-				double dx = (nodeMap.get(key).longitude - (Double.parseDouble(l.get(2)) + Double.parseDouble(l.get(3)))/2) * MPERLON;
-				double dy = (nodeMap.get(key).latitude - (Double.parseDouble(l.get(0)) + Double.parseDouble(l.get(1)))/2) * MPERLAT;
+			for (Double key : input_hashmap.keySet()) {
+				double dx = (input_hashmap.get(key).longitude - (Double.parseDouble(l.get(2)) + Double.parseDouble(l.get(3)))/2) * MPERLON;
+				double dy = (input_hashmap.get(key).latitude - (Double.parseDouble(l.get(0)) + Double.parseDouble(l.get(1)))/2) * MPERLAT;
 				double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 				if (tempdist < dist) {
 					dist = tempdist;
-					res = nodeMap.get(key);
+					res = input_hashmap.get(key);
 				}
 			}
 		}
@@ -111,17 +113,31 @@ public class DemoApplication { //hi
 
 			if (userPref == null){
 				torontoGraph.avoidHospital=false;
+				// Walking mode start&end
 				MapNode startNode = getElement(nodeMap, add.getStart_bound());
 				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
+				// Public transit mode start & end
+				MapNode ttcstartNode = getElement(nodeMap, add.getStart_bound());
+				MapNode ttcendNode = getElement(nodeMap, add.getEnd_bound());
+
 				// Prepare for normalization for "covid" heuristic
 				torontoGraph.prepareNormalization(endNode);
 
 				Planner planner = new Planner();
+				// Walking mode find route
 				ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
-				result = KSP.KSPtoJson(resultList);
+				// Public transit mode find route
+				ArrayList<Path> ttc_resultList = new ArrayList<Path>();
+				ttc_resultList = KSP.Diverse_K_TTC(torontoGraph, ttcstartNode, ttcendNode, "distance", 10);
+
+				walk_result = KSP.KSPtoJson(resultList);
+				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+				result = KSP.Merge2ResultLists(resultList,ttc_resultList);
+
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
+
 			}else if ((userPref != null)|| result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))||(!(old_userPref.equals(userPref)))) {
 				old_userPref = new userPreference(userPref);
 
@@ -131,10 +147,12 @@ public class DemoApplication { //hi
 				}else{
 					torontoGraph.avoidHospital=false;
 				}
-
-
+				// Walking mode start&end
 				MapNode startNode = getElement(nodeMap, add.getStart_bound());
 				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
+				// Public transit mode start & end
+				MapNode ttcstartNode = getElement(nodeMap, add.getStart_bound());
+				MapNode ttcendNode = getElement(nodeMap, add.getEnd_bound());
 
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
@@ -143,21 +161,6 @@ public class DemoApplication { //hi
 				result = KSP.KSPtoJson(resultList);
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
-
-
-				/** OLD STUFF USELESS KEEP FOR NOW
-				 *
-				 SubwayNode startNode = getElement_subway(subwaynodeMap, add.getStart_bound());
-				 SubwayNode endNode = getElement_subway(subwaynodeMap, add.getEnd_bound());
-
-				 Planner planner = new Planner();
-				 ArrayList<SubwayPath>resultList = new ArrayList<SubwayPath>();
-				 resultList.add(planner.plan(startNode,endNode,"distance"));
-				 //
-				 result = KSP.KSPtoJson_subway(resultList);
-				 startCheck = add.getStart_bound();
-				 endCheck = add.getEnd_bound();
-				 */
 			}
 			return result;
 		}
@@ -339,16 +342,8 @@ public class DemoApplication { //hi
 			HashMap temp = new HashMap<String, Double>();
 			temp = MapNode.MapNodetoHash(nodeMap.values());
 
-			/** Test case for subway */
-			System.out.println("Test subway init");
-//			torontoSubwayGraph = new SubwayGraph("./data/DT3.osm");
-//			subwaynodeMap = torontoSubwayGraph.routeNodes;
-
-//			HashMap temp = new HashMap<String, Double>();
-
 			System.out.println("complete");
 
-//			return ("TorontoGraph Loaded");
 			return temp;
 		}
 
