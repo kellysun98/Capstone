@@ -28,8 +28,8 @@ public class DemoApplication { //hi
 	public Planner planner;
 	public userPreference userPref;
 	public Address add = null;
-	public String walk_result = new String();
-	public String ttc_result = new String();
+//	public String walk_result = new String();
+//	public String ttc_result = new String();
 	public String result = new String();
 	public String startCheck = new String();
 	public String endCheck = new String();
@@ -131,8 +131,8 @@ public class DemoApplication { //hi
 				ArrayList<Path> ttc_resultList = new ArrayList<Path>();
 				ttc_resultList = KSP.Diverse_K_TTC(torontoGraph, ttcstartNode, ttcendNode, "distance", 10);
 
-				walk_result = KSP.KSPtoJson(resultList);
-				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+//				walk_result = KSP.KSPtoJson(resultList);
+//				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
 				result = KSP.Merge2ResultLists(resultList,ttc_resultList);
 
 				startCheck = add.getStart_bound();
@@ -155,10 +155,17 @@ public class DemoApplication { //hi
 				MapNode ttcendNode = getElement(nodeMap, add.getEnd_bound());
 
 				Planner planner = new Planner();
+				// Walking mode find route
 				ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
-//
-				result = KSP.KSPtoJson(resultList);
+				// Public transit mode find route
+				ArrayList<Path> ttc_resultList = new ArrayList<Path>();
+				ttc_resultList = KSP.Diverse_K_TTC(torontoGraph, ttcstartNode, ttcendNode, "distance", 10);
+
+//				walk_result = KSP.KSPtoJson(resultList);
+//				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+				result = KSP.Merge2ResultLists(resultList,ttc_resultList);
+
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
 			}
