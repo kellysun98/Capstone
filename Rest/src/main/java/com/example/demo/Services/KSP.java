@@ -72,8 +72,47 @@ public class KSP { //hi
         }
         return A;
     }
-    /** Search K diverse routes */
+    /** Search K diverse routes --- Walking Mode */
     public static ArrayList<Path> Diverse_K(Graph graph, MapNode src, MapNode dest, String costFunction, int K){
+        ArrayList<Path> result = new ArrayList<>();
+        ArrayList<Double> result_dist = new ArrayList<>();
+        Planner planner = new Planner();
+//        double distWeight = 1;
+//        double riskWeight = 0;
+        //ArrayList<Integer> weight = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 100, 200, 300, 400, 500,1000,2000,3000,4000));
+        ArrayList<Integer> weight = new ArrayList<>(Arrays.asList(0));
+
+        //for (int i=0;i<K;i++){
+        for (int i : weight){
+            //double riskWeight = i/(double)K;
+            double riskWeight = i;
+            double distWeight = 1;
+            //System.out.println("distWeight:"+String.valueOf(distWeight));
+            //System.out.println("riskWeight:"+String.valueOf(riskWeight));
+            Path temp = new Path();
+            if (graph.avoidHospital==true) { // Case 1: 躲避医院
+                temp = planner.AStar_avoidHospital(graph, src, dest, costFunction, riskWeight, distWeight);
+                temp.weight = i;
+            }else if (graph.avoidHospital==false){ // Case 2: 不躲避医院
+                temp = planner.AStar(graph, src, dest, costFunction, riskWeight, distWeight);
+                temp.weight = i;
+            }
+            if(result.isEmpty()){
+                result.add(temp);
+                result_dist.add(temp.getTotalLength());
+            }else if(!result_dist.contains(temp.getTotalLength())){
+                result.add(temp);
+                result_dist.add(temp.getTotalLength());
+            }
+        }
+        //Path safestp = planner.AStar_avoidHospital(graph, src, dest, costFunction, 1, 0);
+        //if(!result_dist.contains(safestp.getTotalLength())){
+        //    result.add(safestp);
+        //}
+        return result;
+    }
+    /** Search K diverse routes --- Public Transit Mode*/
+    public static ArrayList<Path> Diverse_K_TTC(Graph graph, MapNode src, MapNode dest, String costFunction, int K){
         ArrayList<Path> result = new ArrayList<>();
         ArrayList<Double> result_dist = new ArrayList<>();
         Planner planner = new Planner();
@@ -161,29 +200,30 @@ public class KSP { //hi
         String solution_to_string = new Gson().toJson(solution);
         return solution_to_string;
     }
-    /** Subway */
-    public static String KSPtoJson_subway(ArrayList<SubwayPath> ksp_sol) {
+
+    /** Public Transit */
+    public static String KSPtoJsonTTC(ArrayList<Path> ksp_sol) {
         ArrayList solution = new ArrayList<>();
         double count = 0;
-        for (SubwayPath p : ksp_sol) {
+        for (Path p : ksp_sol) {
             HashMap<String, String> path_map = new HashMap<>();
             ArrayList<String> return_value = new ArrayList<>();
-            List<SubwayNode> node_list = p.nodes;
+            List<MapNode> node_list = p.getNodes();
             String mn_toString = new String();
             ArrayList<ArrayList<Double>> mn = new ArrayList<>();
-            ArrayList<Double> risk = new ArrayList<>();
+            ArrayList<Integer> nodetypes = new ArrayList<>(); // node type of each MapNode
             String risk_toString = new String();
             for (int i = 1; i<node_list.size(); i++) {
                 ArrayList<Double> al1 = new ArrayList<>();
                 ArrayList<Double> al2 = new ArrayList<>();
-                SubwayNode first = node_list.get(i-1);
-                SubwayNode second = node_list.get(i);
+                MapNode first = node_list.get(i-1);
+                MapNode second = node_list.get(i);
                 Double middle_lon = (first.longitude+second.longitude)/2+count/80000;
                 Double middle_lat = (first.latitude+second.latitude)/2+count/80000;
                 Double longitude = node_list.get(i-1).longitude+count/80000;
                 Double latitude = node_list.get(i-1).latitude+count/80000;
-                Double risk1 = node_list.get(i-1).pedCount;
-                Double risk2 = node_list.get(i).pedCount;
+                int nt1 = node_list.get(i-1).nodetype;
+                int nt2 = node_list.get(i).nodetype;
 
                 al1.add(longitude);
                 al1.add(latitude);
@@ -191,25 +231,35 @@ public class KSP { //hi
                 al2.add(middle_lat);
                 mn.add(al1);
                 mn.add(al2);
-                risk.add(risk1);
-                risk.add(risk2);
+                nodetypes.add(nt1);
+                nodetypes.add(nt2);
             }
             Double cost = p.getTotalLength();
             Double time = Precision.round(p.getTotalTime(),0);
             Double distance = Precision.round(p.getTotalLength()/1000,2);
             path_map.put("cost", new Gson().toJson(cost));
             path_map.put("routeNode", new Gson().toJson(mn));
-            path_map.put("risk", new Gson().toJson(risk));
+            path_map.put("nodetype", new Gson().toJson(nodetypes));
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));
             count++;
-            solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
+            solution.add(path_map); //[cost, routeNode, nodetype, time, description, distance]
         }
         String solution_to_string = new Gson().toJson(solution);
         return solution_to_string;
     }
-
+    /** Merge walking and public transit result lists
+     * */
+    public static String Merge2ResultLists(ArrayList<Path> walking_list, ArrayList<Path> ttc_list){
+        ArrayList<String> solution = new ArrayList<String>();
+        String walkingStr = KSPtoJson(walking_list);
+        String ttcStr = KSPtoJsonTTC(ttc_list);
+        solution.add(walkingStr);
+        solution.add(ttcStr);
+        String solution_to_string = new Gson().toJson(solution);
+        return solution_to_string;
+    }
 
     public static ArrayList KSPToStrings(ArrayList <Path> temp,String cost_function){
         ArrayList solution = new ArrayList<>();
