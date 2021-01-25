@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {MatTabsModule} from '@angular/material/tabs';
+import {MatTabChangeEvent, MatTabsModule} from '@angular/material/tabs';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import {MatSliderModule} from '@angular/material/slider';
 import { DataService } from '../data.service';
@@ -14,8 +14,8 @@ import { take } from 'rxjs/operators';
 })
 export class MybarComponent implements OnInit {
   @Input() transitTypeChild: any;
-  @Output()
-  route:Route[]=[];
+  @Output() selectedTab = new EventEmitter<number>();
+  route: Route[]=[];
   ngOnInit(): void {
     this.routeService.getRouteInfo().pipe(take(1)).subscribe( data => {this.route = data; 
       //console.log(this.route)
@@ -24,7 +24,13 @@ export class MybarComponent implements OnInit {
     // this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
     // this.sliderService.currentActive.subscribe(active => console.log(active));
   }
-  
+
+  tabChange(event:MatTabChangeEvent){
+    console.log(event);
+    this.selectedTab.emit(event.index);
+    console.log('tab change successful: ', event.index)
+  }
+
   // amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
   gridsize: number;
   active:boolean;
