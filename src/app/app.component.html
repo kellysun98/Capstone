@@ -42,7 +42,7 @@
             </div>
         </div>
         <ng-container *ngIf="show">
-            <app-mybar></app-mybar>
+            <app-mybar (selectedTab)="showLine($event)"></app-mybar>
             <mat-card class="result-card">
                 <mat-card-content>
                 <h2>COVID-19 Safety Level</h2>

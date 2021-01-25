@@ -68,6 +68,7 @@ export class AppComponent {
   featureOverlay:any;
   highlight:any;
   info: any;
+  valueEmittedFromChildComponent: any;
   amenities_data = [
     {"Covid-19 Assessment center": [
         [43.7230426, -79.601108], [43.7088966, -79.5072457], [43.689953200000005, -79.32493147310899], [43.657436849999996, -79.3903184208715],
@@ -564,6 +565,28 @@ export class AppComponent {
     )
   }
 
+  showLine(event){
+    this.valueEmittedFromChildComponent=event;
+    this.http.get("http://localhost:8080/heatmap").pipe(take(1))
+    .subscribe(() => {
+      if (this.valueEmittedFromChildComponent == 0){
+        var transit_status = false;
+        var ped_status = true} 
+      else{
+          var transit_status = true;
+          var ped_status = false
+      }
+      this.map.getLayers().forEach(function(layer){
+        if(layer.get('name') != undefined && layer.get('name') === 'ped-lines'){
+            layer.setVisible(ped_status);
+        } 
+        if(layer.get('name') != undefined && layer.get('name') === 'transit-lines'){
+            layer.setVisible(transit_status);
+          }
+        })
+      })
+    }
+
   drawLine2(){
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
@@ -578,73 +601,142 @@ export class AppComponent {
             async (val) => this.http.get('http://localhost:8080/api').pipe(take(1)).subscribe(
               (res)=>{
               this.map.getLayers().forEach(function(layer) {
-                if (layer.get('name') != undefined && layer.get('name') === 'lines') {
+                if (layer.get('name') != undefined && (layer.get('name') === 'ped-lines' || layer.get('name') === 'transit-lines')) {
                   layer.getSource().clear();
                   console.log("routes removed")   
                 }
               });   //remove routes once the drawline function is called 
-  
-          this.response = res; 
-          var res_length = Object.keys(this.response).length;
-          var myroutes = [];
-          //console.log("res_lenght is " + res_length) 
-          for(var amen = 0; amen<res_length; amen++){ 
-          // for(let index in this.response[amen]['routeNode']){
-            // console.log('first loop: ' + this.response[amen]['routeNode'])
-            // for (let key of Object.keys(this.response[index])){
-            var route = JSON.parse(this.response[amen]['routeNode']);
-            var risk = JSON.parse(this.response[amen]['risk']); 
-            route[0] = ol.proj.transform(route[0], 'EPSG:4326', 'EPSG:3857');
-            var time = this.response[amen]['time'];
-            var description = this.response[amen]['description'];
-            // console.log('print route: ' + route[1]);
-            // console.log('print risk: ' + risk[0]);
-            // console.log('route length: '+ route.length);
+          
+          //if(this.valueEmittedFromChildComponent==0)
 
-            var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-            var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
-            var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';
+          this.response = res; 
+          console.log(this.response[1]);
+          for (let result of Object.values(this.response)){
+              var res_length = Object.keys(this.response[0]).length;
+              var myroutes = [];
+          //console.log("res_lenght is " + res_length) 
+              for(var amen = 0; amen<res_length; amen++){ 
+              // for(let index in this.response[amen]['routeNode']){
+                // console.log('first loop: ' + this.response[amen]['routeNode'])
+                // for (let key of Object.keys(this.response[index])){
+                var route = JSON.parse(this.response[0][amen]['routeNode']);
+                var risk = JSON.parse(this.response[0][amen]['risk']);
+                console.log("risk: ",amen, risk) 
+                route[0] = ol.proj.transform(route[0], 'EPSG:4326', 'EPSG:3857');
+                var time = this.response[0][amen]['time'];
+                var description = this.response[0][amen]['description'];
+                // console.log('print route: ' + route[1]);
+                // console.log('print risk: ' + risk[0]);
+                // console.log('route length: '+ route.length);
+
+                var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';
 
             //colors adjusted for different risk levels
             // var safe = 'rgba(0, 204, 0, 1)';
             // var medium = 'rgba(255, 152, 51, 1)';
             // var dangerous = 'rgba(255, 0, 0, 1)';
           
-            for (var i = 1; i < route.length; i++) {
-              // console.log('length enumeration '+i);
-              // route[i-1] = ol.proj.transform(route[i-1], 'EPSG:4326', 'EPSG:3857');
-              route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
-              this.getFeature([route[i-1],route[i]],time,risk[i-1],description,myroutes) //route[i] - coordinate
-            }
-            this.DynamicColoring(route, time, risk, description,myroutes)  //display text
-        }
-          var vectorSource = new ol.source.Vector({
-            features: myroutes,
-          }); //multiple routes added 
+                for (var i = 1; i < route.length; i++) {
+                  // console.log('length enumeration '+i);
+                  // route[i-1] = ol.proj.transform(route[i-1], 'EPSG:4326', 'EPSG:3857');
+                  route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+                  this.getFeature([route[i-1],route[i]],time,risk[i-1],description,myroutes) //route[i] - coordinate
+                }
+                this.DynamicColoring(route, time, risk, description,myroutes)  //display text
+              }
+              var vectorSource = new ol.source.Vector({
+                features: myroutes,
+              }); //multiple routes added 
+              
+              var indicator = 0;
+              this.map.getLayers().forEach(function(layer) {
+                if (layer.get('name') != undefined && layer.get('name') === 'ped-lines') {
+                  myroutes.forEach((feature) => {
+                    layer.getSource().addFeature(feature);            
+                  });    
+                    indicator = 1;   
+                    console.log("feature added to existing layer"); 
+                }
+              });
+  
+              if(indicator === 0) {  
+                console.log("new layer created"); 
+                var vectorLineLayer = new ol.layer.Vector({
+                  source: vectorSource,
+                  name: 'ped-lines',
+              });
+                this.map.addLayer(vectorLineLayer);
+              }
+      
+              // this.map.getLayers().forEach(function(layer) {
+              //   console.log(layer.get('name'));  
+              // }); 
+              var res_length_transit = Object.keys(this.response[1]).length;
+              var myroutes_transit = [];
+          //console.log("res_lenght is " + res_length) 
+              for(var amen = 0; amen<res_length_transit; amen++){ 
+              // for(let index in this.response[amen]['routeNode']){
+                // console.log('first loop: ' + this.response[amen]['routeNode'])
+                // for (let key of Object.keys(this.response[index])){
+                var route_transit = JSON.parse(this.response[1][amen]['routeNode']);
+                var risk_transit = JSON.parse(this.response[0][amen]['risk']); 
+                route_transit[0] = ol.proj.transform(route_transit[0], 'EPSG:4326', 'EPSG:3857');
+                var time_transit = this.response[1][amen]['time'];
+                var description_transit = this.response[1][amen]['description'];
+                var nodetype = JSON.parse(this.response[1][amen]['nodetype']);
+                var ttcname = JSON.parse(this.response[1][amen]['ttcname']);
+                // console.log('print route: ' + route[1]);
+                // console.log('print risk: ' + risk[0]);
+                // console.log('route length: '+ route.length);
+
+                var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
+                var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';
+
+            //colors adjusted for different risk levels
+            // var safe = 'rgba(0, 204, 0, 1)';
+            // var medium = 'rgba(255, 152, 51, 1)';
+            // var dangerous = 'rgba(255, 0, 0, 1)';
           
-          var indicator = 0;
-          this.map.getLayers().forEach(function(layer) {
-            if (layer.get('name') != undefined && layer.get('name') === 'lines') {
-              myroutes.forEach((feature) => {
-                layer.getSource().addFeature(feature);            
-              });    
-                indicator = 1;   
-                console.log("feature added to existing layer"); 
+                for (var i = 1; i < route_transit.length; i++) {
+                  // console.log('length enumeration '+i);
+                  // route[i-1] = ol.proj.transform(route[i-1], 'EPSG:4326', 'EPSG:3857');
+                  route_transit[i] = ol.proj.transform(route_transit[i], 'EPSG:4326', 'EPSG:3857');
+                  this.getFeature([route_transit[i-1],route_transit[i]],time_transit,risk_transit[i-1],description_transit,myroutes_transit) //route[i] - coordinate
+                }
+                this.DynamicColoring(route_transit, time_transit, risk_transit, description_transit,myroutes_transit)  //display text
+              }
+              var vectorSource_transit = new ol.source.Vector({
+                features: myroutes_transit,
+              }); //multiple routes added 
+              
+              var indicator = 0;
+              this.map.getLayers().forEach(function(layer) {
+                if (layer.get('name') != undefined && layer.get('name') === 'transit-lines') {
+                  myroutes_transit.forEach((feature) => {
+                    layer.getSource().addFeature(feature);            
+                  });    
+                    indicator = 1;   
+                    console.log("feature added to existing layer"); 
+                }
+              });
+  
+              if(indicator === 0) {  
+                console.log("new layer created"); 
+                var vectorLineLayer_transit = new ol.layer.Vector({
+                  source: vectorSource_transit,
+                  name: 'transit-lines',
+              });
+                this.map.addLayer(vectorLineLayer_transit);
+                vectorLineLayer_transit.setVisible(false);
+              }
+      
+              // this.map.getLayers().forEach(function(layer) {
+              //   console.log(layer.get('name'));  
+              // });
             }
-          });
-  
-          if(indicator === 0) {  
-            console.log("new layer created"); 
-            var vectorLineLayer = new ol.layer.Vector({
-              source: vectorSource,
-              name: 'lines',
-          });
-            this.map.addLayer(vectorLineLayer);
-          }
-  
-          this.map.getLayers().forEach(function(layer) {
-            console.log(layer.get('name'));  
-          });    
       
           })
     )).subscribe(
