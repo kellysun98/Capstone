@@ -641,7 +641,7 @@ export class AppComponent {
     this.http.get("http://localhost:8080/getTrans").pipe(take(1))
     .subscribe((trans) => {
        this.userTrans = trans;
-       console.log(this.userTrans);
+       //console.log(this.userTrans);
     })
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
