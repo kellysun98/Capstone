@@ -69,6 +69,7 @@ export class AppComponent {
   highlight:any;
   info: any;
   valueEmittedFromChildComponent: any;
+  userTrans: any;
   amenities_data = [
     {"Covid-19 Assessment center": [
         [43.7230426, -79.601108], [43.7088966, -79.5072457], [43.689953200000005, -79.32493147310899], [43.657436849999996, -79.3903184208715],
@@ -481,7 +482,6 @@ export class AppComponent {
       var featureLine = new ol.Feature({
         geometry: new ol.geom.LineString([route[i-1],route[i]]),
       });
-      console.log([route[i-1], route[i]])
       var linestyle = new ol.style.Style({
         fill: new ol.style.Fill({
             color: this.getColor(risk[i-1]), weight: 5
@@ -522,7 +522,7 @@ export class AppComponent {
         var featureLine = new ol.Feature({
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
         });
-        console.log([route[i-1], route[i]])
+       //console.log([route[i-1], route[i]])
         var linestyle = new ol.style.Style({
           fill: new ol.style.Fill({
               color: this.getColor(risk[i-1]), weight: 8,
@@ -537,10 +537,10 @@ export class AppComponent {
         myroutes.push(featureLine) 
       }
     }
-    console.log(myroutes);
+    //console.log(myroutes);
   }
 
-  DynamicColoring(route, time, risk, des, myroutes){ //route - line with two coordintaes
+  DynamicColoring(route, time, risk, des, myroutes, ttcname = []){ //display text box info
     // var myroutes = new Array();
   
     var featureLine = new ol.Feature({
@@ -566,7 +566,10 @@ export class AppComponent {
         padding: [0,2,0,2]
       })
     });
-    nullstyle.getText().setText('total time:' + time + "min");
+    var filteredAry = ttcname.filter(function(e) { return e !== "null" }).filter((v, i, a) => a.indexOf(v) === i);
+    if (filteredAry != []){
+    nullstyle.getText().setText('total time:' + time + "min \n Transit:" + filteredAry);}
+    else {nullstyle.getText().setText('total time:' + time + "min ")}
     featureLine.setStyle(nullstyle);
     myroutes.push(featureLine)
   }
@@ -581,7 +584,7 @@ export class AppComponent {
         
         var features = [];
         for (let amen of Object.values(this.response)){
-          console.log(amen);
+          //console.log(amen);
           //var coor = JSON.parse(amen);
           //console.log("subway coordinate is: ", coor)
           // coor[0] = ol.proj.transform(coor[0], 'EPSG:4326', 'EPSG:3857');
@@ -634,6 +637,12 @@ export class AppComponent {
     }
 
   drawLine2(){
+
+    this.http.get("http://localhost:8080/getTrans").pipe(take(1))
+    .subscribe((trans) => {
+       this.userTrans = trans;
+       console.log(this.userTrans);
+    })
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
     forkJoin([start_obs, end_obs]).pipe(take(1)).pipe(take(1)).subscribe(
@@ -656,27 +665,19 @@ export class AppComponent {
           //if(this.valueEmittedFromChildComponent==0)
 
           this.response = res; 
-          console.log(this.response[1]);
           for (let result of Object.values(this.response)){
               var res_length = Object.keys(this.response[0]).length;
               var myroutes = [];
           //console.log("res_lenght is " + res_length) 
               for(var amen = 0; amen<res_length; amen++){ 
               // for(let index in this.response[amen]['routeNode']){
-                // console.log('first loop: ' + this.response[amen]['routeNode'])
                 // for (let key of Object.keys(this.response[index])){
                 var route = JSON.parse(this.response[0][amen]['routeNode']);
                 var risk = JSON.parse(this.response[0][amen]['risk']);
-                console.log("risk: ",amen, risk) 
                 route[0] = ol.proj.transform(route[0], 'EPSG:4326', 'EPSG:3857');
                 var time = this.response[0][amen]['time'];
                 var description = this.response[0][amen]['description'];
                 var mapnode = Array(route.length).fill(5)
-                console.log(mapnode)
-                // console.log('print route: ' + route[1]);
-                // console.log('print risk: ' + risk[0]);
-                // console.log('route length: '+ route.length);
-
                 var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
                 var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
                 var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';
@@ -745,7 +746,7 @@ export class AppComponent {
             // var medium = 'rgba(255, 152, 51, 1)';
             // var dangerous = 'rgba(255, 0, 0, 1)';
                 this.getGeom(route_transit, time_transit, risk_transit, description_transit, nodetype, myroutes_transit);
-                this.DynamicColoring(route_transit, time_transit, risk_transit, description_transit,myroutes_transit)  //display text
+                this.DynamicColoring(route_transit, time_transit, risk_transit, description_transit,myroutes_transit,ttcname)  //display text
               }
               var vectorSource_transit = new ol.source.Vector({
                 features: myroutes_transit,
@@ -761,6 +762,12 @@ export class AppComponent {
                     console.log("feature added to existing layer"); 
                 }
               });
+              if (this.userTrans.includes("Walking")){
+                console.log("both walking and public only");
+                this.showLine(0);
+              }else {
+               console.log("showing public first")
+               this.showLine(1)}
   
               if(indicator === 0) {  
                 console.log("new layer created"); 
@@ -769,18 +776,18 @@ export class AppComponent {
                   name: 'transit-lines',
               });
                 this.map.addLayer(vectorLineLayer_transit);
-                // vectorLineLayer_transit.setVisible(false);
-                this.showLine(0);
+               if (this.userTrans.includes("Walking")){
+                  console.log("both walking and public only");
+                  this.showLine(0);
+               }else {
+                 console.log("showing public first")
+                 this.showLine(1)}
+                //this.showLine(0);
               }
-      
-              // this.map.getLayers().forEach(function(layer) {
-              //   console.log(layer.get('name'));  
-              // });
             }
-      
           })
     )).subscribe(
-      response=>console.log(response)
+      //response=>console.log(response)
     )
     })
   }

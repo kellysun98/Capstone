@@ -9,10 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Collections;
+import java.util.*;
 
 import static com.example.demo.PSQLConnect.getNeighbourhoodCoordinate;
 import static com.example.demo.PSQLConnect.getPedCountHeatmap;
@@ -315,6 +312,11 @@ public class DemoApplication { //hi
 
 			System.out.println("finished fetching user questionnaire answers");
 			return userPref;
+		}
+
+		@GetMapping("/getTrans")
+		public List<String> outputTrans(){
+			return userPref.getQ1();
 		}
 
 		@PostMapping("/address")
