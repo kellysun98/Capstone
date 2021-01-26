@@ -43,7 +43,7 @@
         </div>
         <ng-container *ngIf="show">
             <app-mybar (selectedTab)="showLine($event)"></app-mybar>
-            <mat-card class="result-card">
+            <!-- <mat-card class="result-card">
                 <mat-card-content>
                 <h2>COVID-19 Safety Level</h2>
                 <div id = "{{'container-' + slider.value}}">
@@ -56,8 +56,10 @@
                     </mat-slider>
                 </div>    
                 </mat-card-content>
-              </mat-card>    
+              </mat-card>     -->
         </ng-container>
+        <!-- <ng-container *ngIf!="show"><app-questionaire (selectedTransport) = "initTransport($event)"></app-questionaire></ng-container> -->
+        
 
         <mat-card>
             <mat-card-content>

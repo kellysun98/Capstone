@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -51,7 +51,7 @@ export class QuestionaireComponent implements OnInit {
   // safeties = new FormControl('', Validators.required);
   safetyList: string[] = ['I want to avoid hospital/covid-19 assessment center', 'I want to avoid public gathering places (e.g.: shopping malls)','I want to avoid over-crowded streets','I don\'t have a specific concern'];
   answer: any
-  
+  @Output() selectedTransport = new EventEmitter<any>();
 
   constructor(
     public dialogRef: MatDialogRef<QuestionaireComponent>,
@@ -83,6 +83,11 @@ export class QuestionaireComponent implements OnInit {
     //   "q2": "",
     //   "q3": [""]
     // }
+  }
+
+  formSubmit(event){
+    console.log(Object.values(this.firstFormGroup.value)[0][0]);
+    this.selectedTransport.emit(Object.values(this.firstFormGroup.value)[0][0])
   }
 
   openNav(): void {

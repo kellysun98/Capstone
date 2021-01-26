@@ -26,9 +26,9 @@ export class MybarComponent implements OnInit {
   }
 
   tabChange(event:MatTabChangeEvent){
-    console.log(event);
+    //console.log(event);
     this.selectedTab.emit(event.index);
-    console.log('tab change successful: ', event.index)
+    //console.log('tab change successful: ', event.index)
   }
 
   // amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];

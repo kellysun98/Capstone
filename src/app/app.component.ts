@@ -69,6 +69,7 @@ export class AppComponent {
   highlight:any;
   info: any;
   valueEmittedFromChildComponent: any;
+  valueEmiittedFromQuestionnaire: any = 'Walking';
   amenities_data = [
     {"Covid-19 Assessment center": [
         [43.7230426, -79.601108], [43.7088966, -79.5072457], [43.689953200000005, -79.32493147310899], [43.657436849999996, -79.3903184208715],
@@ -633,6 +634,11 @@ export class AppComponent {
       })
     }
 
+  initTransport(event){
+    this.valueEmiittedFromQuestionnaire=event;
+    console.log(this.valueEmiittedFromQuestionnaire);
+  }  
+
   drawLine2(){
     let start_obs = this.http.get(this.getUrl(this.start_add));
     let end_obs = this.http.get(this.getUrl(this.end_add));
@@ -656,7 +662,7 @@ export class AppComponent {
           //if(this.valueEmittedFromChildComponent==0)
 
           this.response = res; 
-          console.log(this.response[1]);
+          //console.log(this.response[1]);
           for (let result of Object.values(this.response)){
               var res_length = Object.keys(this.response[0]).length;
               var myroutes = [];
@@ -667,12 +673,12 @@ export class AppComponent {
                 // for (let key of Object.keys(this.response[index])){
                 var route = JSON.parse(this.response[0][amen]['routeNode']);
                 var risk = JSON.parse(this.response[0][amen]['risk']);
-                console.log("risk: ",amen, risk) 
+                //console.log("risk: ",amen, risk) 
                 route[0] = ol.proj.transform(route[0], 'EPSG:4326', 'EPSG:3857');
                 var time = this.response[0][amen]['time'];
                 var description = this.response[0][amen]['description'];
                 var mapnode = Array(route.length).fill(5)
-                console.log(mapnode)
+                //console.log(mapnode)
                 // console.log('print route: ' + route[1]);
                 // console.log('print risk: ' + risk[0]);
                 // console.log('route length: '+ route.length);
@@ -770,14 +776,16 @@ export class AppComponent {
               });
                 this.map.addLayer(vectorLineLayer_transit);
                 // vectorLineLayer_transit.setVisible(false);
-                this.showLine(0);
+                // if(this.valueEmiittedFromQuestionnaire=='Walking'){
+                //   this.showLine(0);
+                // }else{this.showLine(1)};
               }
       
               // this.map.getLayers().forEach(function(layer) {
               //   console.log(layer.get('name'));  
               // });
             }
-      
+            this.showLine(0);
           })
     )).subscribe(
       response=>console.log(response)
