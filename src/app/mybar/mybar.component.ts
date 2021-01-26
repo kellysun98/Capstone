@@ -6,16 +6,21 @@ import { DataService } from '../data.service';
 import { RouteService } from '../route.service';
 import {Route} from '../route'
 import { take } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-mybar',
   templateUrl: './mybar.component.html',
   styleUrls: ['./mybar.component.css']
 })
+
 export class MybarComponent implements OnInit {
   @Input() transitTypeChild: any;
   @Output() selectedTab = new EventEmitter<number>();
   route: Route[]=[];
+  selectedIndex: number;
+  response: any;
+
   ngOnInit(): void {
     this.routeService.getRouteInfo().pipe(take(1)).subscribe( data => {this.route = data; 
       //console.log(this.route)
@@ -23,12 +28,27 @@ export class MybarComponent implements OnInit {
     // this.newMessage();
     // this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
     // this.sliderService.currentActive.subscribe(active => console.log(active));
+    this.getSelectedIndex();
+  }
+
+  getSelectedIndex(){
+    this.http.get('http://localhost:8080/getTrans').pipe(take(1)).subscribe(
+      (res)=>{
+        this.response = res;
+        console.log(this.response);
+        if(this.response.includes('Walking')){
+          this.selectedIndex = 0
+        }else{
+          this.selectedIndex = 1
+        }
+      }
+    )
   }
 
   tabChange(event:MatTabChangeEvent){
-    console.log(event);
+    //console.log(event);
     this.selectedTab.emit(event.index);
-    console.log('tab change successful: ', event.index)
+    //console.log('tab change successful: ', event.index)
   }
 
   // amentities: string[] = ['Covid-19 Assessment center', 'Hospital', 'Mall', 'Restaurants'];
@@ -40,7 +60,7 @@ export class MybarComponent implements OnInit {
     this.active = true;
   }
 
-  constructor(private sliderService:DataService, private routeService:RouteService) { }
+  constructor(private http: HttpClient, private sliderService:DataService, private routeService:RouteService) { }
 
   newMessage(){
     console.log(this.gridsize)
