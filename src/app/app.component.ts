@@ -35,8 +35,8 @@ import { Route } from './route';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import Select from 'ol/interaction/Select';
 import {altKeyOnly, click, pointerMove} from 'ol/events/condition';
-
-
+import {TwitterSocketService} from './twitter-socket.service'
+import * as io from 'socket.io-client'
 
 
 declare var ol: any;
@@ -70,6 +70,7 @@ export class AppComponent {
   info: any;
   valueEmittedFromChildComponent: any;
   userTrans: any;
+  socketio: SocketIOClient.Socket;
   amenities_data = [
     {"Covid-19 Assessment center": [
         [43.7230426, -79.601108], [43.7088966, -79.5072457], [43.689953200000005, -79.32493147310899], [43.657436849999996, -79.3903184208715],
@@ -92,9 +93,10 @@ export class AppComponent {
   
   // private slider:DataService
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private route:RouteService){
+  constructor(private http: HttpClient, public dialog: MatDialog, private route:RouteService, private socket: TwitterSocketService){
   }
   ngOnInit() {
+    this.socket.initSocket();
     this.openWelcome();
     //this.Heatmap2();
     this.initBackEnd();
@@ -920,7 +922,11 @@ showMall(){
   }else{return [false, 3]};
 }
 
-
+receiveTweet(){
+  this.socketio.on('data-tweet', (data)=>{
+    console.log(data);
+  })
+}
 
 
 toggleAmenities(amen){
