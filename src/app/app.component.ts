@@ -96,7 +96,7 @@ export class AppComponent {
   constructor(private http: HttpClient, public dialog: MatDialog, private route:RouteService, private socket: TwitterSocketService){
   }
   ngOnInit() {
-    this.socket.initSocket();
+    //this.socket.initSocket();
     this.openWelcome();
     //this.Heatmap2();
     this.initBackEnd();
