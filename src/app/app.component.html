@@ -18,10 +18,10 @@
                 <mat-icon matSuffix>keyboard_arrow_right</mat-icon>
             </mat-form-field>
 
-            
+
             <!-- <div> -->
-                <!-- <button mat-raised-button (click)="initBackEnd()">Initialize Navigation</button> -->
-                <!-- <button mat-raised-button (click)="initBackEnd()">init</button>
+            <!-- <button mat-raised-button (click)="initBackEnd()">Initialize Navigation</button> -->
+            <!-- <button mat-raised-button (click)="initBackEnd()">init</button>
             </div> -->
 
             <div>
@@ -29,7 +29,10 @@
                 <!-- <button mat-raised-button (click)="receiveTweet()">Click Me!</button> -->
                 <button mat-raised-button (click)="setMarker(); drawLine2(); toggle(); hideit()">Find My Routes</button>
             </div>
-<!-- 
+            <div>
+                <button mat-button (click)="getTweets()">Tweets</button>
+            </div>
+            <!-- 
            <div>
                <button (click) = "setMarker(); demoCovidLine(); demoDistanceLine()" style="text-decoration:underline; padding: 0; border: none; background: none; margin-left: 35px!important; margin-top:10px!important; color:blue">Demo Distance Cost Functions</button>
            </div>
@@ -64,26 +67,29 @@
                 <h2 class="amentities">Toggle Amentities</h2>
                 <section>
                     <ul style="list-style-type:none">
-                        <li style = 'margin-bottom: 5px;'>
-                            <mat-checkbox  class="each"  (change) = "toggleAmenities(showAssess())" [(ngModel)] = "checked1">
-                                Covid-19 Assessment center <mat-icon style='position: absolute; margin-left: 5px;'>device_thermostat</mat-icon>
+                        <li style='margin-bottom: 5px;'>
+                            <mat-checkbox class="each" (change)="toggleAmenities(showAssess())" [(ngModel)]="checked1">
+                                Covid-19 Assessment center
+                                <mat-icon style='position: absolute; margin-left: 5px;'>device_thermostat</mat-icon>
                             </mat-checkbox>
                         </li>
-                        <li style = 'margin-bottom: 5px;'>
-                            <mat-checkbox  class="each"  (change) = "toggleAmenities(showPharm())" [(ngModel)] = "checked2">
-                                Pharmacies Offering COVID-19 Testing <mat-icon style='position: absolute; margin-left: 5px;'>local_pharmacy</mat-icon>
+                        <li style='margin-bottom: 5px;'>
+                            <mat-checkbox class="each" (change)="toggleAmenities(showPharm())" [(ngModel)]="checked2">
+                                Pharmacies Offering COVID-19 Testing
+                                <mat-icon style='position: absolute; margin-left: 5px;'>local_pharmacy</mat-icon>
                             </mat-checkbox>
                         </li>
                         <li>
-                            <mat-checkbox  class="each"  (change) = "toggleAmenities(showMall())" [(ngModel)] = "checked3">
-                                Shopping Malls <mat-icon style='position: absolute; margin-left: 5px;'>shopping_bag</mat-icon>
+                            <mat-checkbox class="each" (change)="toggleAmenities(showMall())" [(ngModel)]="checked3">
+                                Shopping Malls
+                                <mat-icon style='position: absolute; margin-left: 5px;'>shopping_bag</mat-icon>
                             </mat-checkbox>
                         </li>
                     </ul>
                 </section>
             </mat-card-content>
         </mat-card>
-        
+
         <div>
             <mat-slide-toggle [checked]="useDefault" (change)="heatmapControl($event)"> Show COVID-19 Map</mat-slide-toggle>
         </div>
@@ -99,7 +105,7 @@
         <div id="popup" class="ol-popup">
             <a href="#" id="popup-closer" class="ol-popup-closer"></a>
             <div id="popup-content"></div>
-          </div>
+        </div>
 
     </mat-sidenav-content>
 </mat-sidenav-container>
