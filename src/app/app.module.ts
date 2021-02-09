@@ -22,6 +22,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
 import { MatSliderModule } from '@angular/material/slider';
+import { TweetsComponent } from './tweets/tweets.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MatSliderModule } from '@angular/material/slider';
     QuestionaireComponent,
     WelcomepageComponent,
     StartlocationComponent,
-    MybarComponent
+    MybarComponent,
+    TweetsComponent
   ],
   imports: [
     FormsModule,

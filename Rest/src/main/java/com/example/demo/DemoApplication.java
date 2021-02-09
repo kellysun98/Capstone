@@ -31,7 +31,6 @@ public class DemoApplication { //hi
 	public String startCheck = new String();
 	public String endCheck = new String();
 	public userPreference old_userPref;
-
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -104,6 +103,22 @@ public class DemoApplication { //hi
 	@RestController
 	@CrossOrigin(origins = "http://localhost:4200")
 	class nodeController{
+
+		//get tweets
+		@GetMapping("/tweets")
+		public String getTweets() {
+			twitter twitter = new twitter();
+			HashMap<String, String> tweets = new HashMap<String, String>();
+			try {
+				tweets = twitter.streamFeed();
+			} catch (InterruptedException e) {
+//				System.out.println("error: ");
+//				System.out.println(e);
+				e.printStackTrace();
+			}
+			System.out.println("Tweets complete");
+			return new Gson().toJson(tweets);
+		}
 
 		@GetMapping("/api")
 		public String getList() {
@@ -360,6 +375,9 @@ public class DemoApplication { //hi
 //		public String GetSubwayStops(@RequestParam String ver){
 //			return new Gson().toJson(torontoSubwayGraph.visual_routes);
 //		}
+
+
+
 
 	}
 }

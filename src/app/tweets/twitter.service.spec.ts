@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TwitterSocketService } from './twitter-socket.service';
+import { TwitterService } from './twitter.service';
 
-describe('TwitterSocketService', () => {
-  let service: TwitterSocketService;
+describe('TwitterService', () => {
+  let service: TwitterService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TwitterSocketService);
+    service = TestBed.inject(TwitterService);
   });
 
   it('should be created', () => {

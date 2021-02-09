@@ -65,6 +65,8 @@ public class twitter4j {
                 Collectors.toList());
     }
 
+
+
     public static void streamFeed() throws InterruptedException {
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
