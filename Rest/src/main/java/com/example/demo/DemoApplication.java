@@ -8,8 +8,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.example.demo.PSQLConnect.getNeighbourhoodCoordinate;
 import static com.example.demo.PSQLConnect.getPedCountHeatmap;
@@ -31,6 +35,7 @@ public class DemoApplication { //hi
 	public String startCheck = new String();
 	public String endCheck = new String();
 	public userPreference old_userPref;
+	public boolean streamshutdown = false;
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -106,19 +111,35 @@ public class DemoApplication { //hi
 
 		//get tweets
 		@GetMapping("/tweets")
-		public String getTweets() {
+		public SseEmitter getTweets(){
 			twitter twitter = new twitter();
 			HashMap<String, String> tweets = new HashMap<String, String>();
+			SseEmitter emitter = new SseEmitter();
+			ExecutorService executor = Executors.newSingleThreadExecutor();
 			try {
 				tweets = twitter.streamFeed();
-			} catch (InterruptedException e) {
-//				System.out.println("error: ");
-//				System.out.println(e);
+				//Thread.sleep(5000);
+				emitter.send(new Gson().toJson(tweets));
+			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Tweets complete");
-			return new Gson().toJson(tweets);
+			executor.shutdown();
+			streamshutdown = true;
+
+			return emitter;
 		}
+
+//		public String getTweets() {
+//			twitter twitter = new twitter();
+//			HashMap<String, String> tweets = new HashMap<String, String>();
+//			try {
+//				tweets = twitter.streamFeed();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//			System.out.println("Tweets complete");
+//			return new Gson().toJson(tweets);
+//		}
 
 		@GetMapping("/api")
 		public String getList() {
