@@ -1,5 +1,6 @@
 package com.example.demo.Services;
 
+import com.example.demo.DemoApplication;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
@@ -46,11 +47,15 @@ public class twitter {
         TwitterStream twitterStream = new TwitterStreamFactory(newcb).getInstance();
 
         twitterStream.addListener(listener);
-        //add keywords
-        twitterStream.filter("traffic");
 
-        TimeUnit.SECONDS.sleep(5);
-        twitterStream.shutdown();
+        FilterQuery fq = new FilterQuery();
+        fq.follow(1687345548);
+        //add keywords
+        twitterStream.filter(fq);
+
+//        TimeUnit.SECONDS.sleep(10);
+//        twitterStream.shutdown();
+
         return Tweets;
     }
 
