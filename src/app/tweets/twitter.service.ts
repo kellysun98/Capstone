@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Tweets } from './tweet';
+
+declare let EventSource: any
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,12 @@ export class TwitterService {
   api_url = 'http://localhost:8080/tweets';
 
   constructor(private http: HttpClient) { }
-  getTweets(): Observable<Tweets[]> {
-    return this.http.get<Tweets[]>(this.api_url);
+  getTweets(): Observable<any[]> {
+    return this.http.get<any[]>(this.api_url);
   }
+
+  getEventSource(url): EventSource{
+    return new EventSource(url);
+  }
+
 }
