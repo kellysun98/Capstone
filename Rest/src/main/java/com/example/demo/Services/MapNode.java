@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.time.LocalTime;
 import java.util.*;
 
 import static com.example.demo.Services.Graph.getDistance;
@@ -25,15 +26,20 @@ public class MapNode implements Comparable<MapNode>{ //hi
     public boolean isHospital; // whether node is hospital
     public boolean isShoppers; // whether node is shoppers
     public boolean isMall; //whether node is mall
-    public int nodetype;// 5 = walk way, 0 = street car, 3 = bus, 1 = subway
-    public ArrayList<Date> arrivalTime;
-    public String ttcName;
 
     /** Subway Node properties (May delete later)
      * */
-    public boolean isSubway;
-    public String time;
-    public int lineNumber;
+    public int nodetype;// 5 = walk way, 0 = street car, 3 = bus, 1 = subway
+    public ArrayList<Date> arrivalTime;
+    public String ttcName;
+    public String time; //
+    public Hashtable<LocalTime,int[]> ttcOccupancy = new Hashtable<LocalTime,int[]>(); // store data from bus_weekday.csv
+                                                                            // int[] = [occupancyPercent,passengerCount]
+    public double passengerCount;
+    public double occupancyPercent;
+    public double rFactor=5.52; // convert passenger count to pedestrian count
+                                // 1 indoor person = 5.52 outdoor people
+
 
 
     public double getPedCount(){
