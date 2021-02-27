@@ -368,16 +368,13 @@ public class Planner { //hi
                 return 100000000;
             }
 
-            return dist_W * (((dis)/5000.0)*60.0 + edgelength);
+            return risk_W * node.passengerCount * node.rFactor+ dist_W * (((dis)/5000.0)*60.0 + edgelength);
 
         }
         return risk_W * node.pedCount + dist_W * (((dis)/5000.0)*60.0 + edgelength);
 
     }
-    public double get_Cost_notSure(MapEdge edge, double dist_W, double risk_W){
-        return risk_W * edge.destinationNode.normalized_pedCount + dist_W * edge.normalized_length;
 
-    }
     /** For walking option
      * */
     public ArrayList<MapNode> getNodeList(HashMap<MapNode, MapNode> parents, MapNode goalNode){

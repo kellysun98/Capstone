@@ -12,10 +12,10 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.lang.*;
+import java.time.LocalTime;
 
 
 public class Graph { //hi
@@ -49,6 +49,8 @@ public class Graph { //hi
     public double min_euclid = -1;
     public double max_pedCont = -1;
     public double min_pedCount = -1;
+
+    public Date systemTime;
 
     // members for subway
 //    public SubwayGraph subwayGraph;
@@ -156,7 +158,6 @@ public class Graph { //hi
         MapEdge.graph = this;
         buildGraph_avoidHospital();
     }
-
 
     public void loadFiles(String osmFilePath, String accidentsFilePath){
         // load osm file
@@ -395,6 +396,44 @@ public class Graph { //hi
 //        }
 //        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
 //    }
+    /** load bus_weekday.csv
+     * */
+    public void loadTTCOccupancy(int ttctype, Hashtable<LocalTime,int[]> ttcpasscount){
+        BufferedReader br = null;
+        String line = "";
+        DecimalFormat df = new DecimalFormat("#.###");
+        df.setRoundingMode(RoundingMode.FLOOR);
+        int occupancy_percent = -1;
+        int passenger_count = -1;
+        String filepath = null;
+        if (ttctype == 0)
+            filepath = "./data/streetcar_weekday.csv";
+        else if (ttctype == 1)
+            filepath = "./data/subway_weekday.csv";
+        else if (ttctype == 3)
+            filepath = "./data/bus_weekday.csv";
+
+        try {
+            br = new BufferedReader(new FileReader(filepath));
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] entry = line.split(",");
+                LocalTime ttctime = LocalTime.parse(entry[0],DateTimeFormatter.ofPattern("H:m"));
+                occupancy_percent = Integer.parseInt(entry[1]);
+                passenger_count = Integer.parseInt(entry[2]);
+                int[] arr;
+                arr = new int[2];
+                arr[0] = occupancy_percent;
+                arr[1] = passenger_count;
+                ttcpasscount.put(ttctime, arr);
+            }
+        }catch (FileNotFoundException e) {
+//            e.printStackTrace();
+        } catch (IOException e) {
+//            e.printStackTrace();
+        }
+
+    }
 
     /** 最新的buildGraph function; allow avoid hospital
      * */
@@ -564,6 +603,9 @@ public class Graph { //hi
                 double lon = Double.parseDouble(entry[11]);
                 double lat = Double.parseDouble(entry[12]);
 
+                LocalTime testTime = LocalTime.parse("9:00", DateTimeFormatter.ofPattern("H:m")); // set currTime to 9AM for testing
+
+
                 if(prev_route_id == route_id){
                     if(stop_sequence == prev_seq + 1){
                         if(nodes.containsKey(stop_id)){
@@ -576,6 +618,9 @@ public class Graph { //hi
                             newnode.latitude = lat;
                             newnode.isIndoor = true;
                             newnode.nodetype = route_type;
+                            loadTTCOccupancy(newnode.nodetype, newnode.ttcOccupancy); // load bus_weekday.csv
+                            newnode.passengerCount = newnode.ttcOccupancy.get(testTime)[1]; // assign passengerCount
+                            newnode.occupancyPercent = newnode.ttcOccupancy.get(testTime)[0];
                             newnode.arrivalTime.add(arrival_time);
                             newnode.ttcName = trip_name;
                             long temptime = arrival_time.getTime() - prev_time.getTime();
@@ -585,6 +630,7 @@ public class Graph { //hi
                             nodes.get(prev_id).edges.add(new MapEdge(nodes.get(prev_id), newnode, (temptime)/(60000)));
                             nodes.put(newnode.id, newnode);
                             TTCrouteNodes.put(prev_id, nodes.get(prev_id));
+
 
                             // connect ttc network w/ walking network
                             MapNode walknode;
@@ -615,6 +661,9 @@ public class Graph { //hi
                             newnode.latitude = lat;
                             newnode.isIndoor = true;
                             newnode.nodetype = route_type;
+                            loadTTCOccupancy(newnode.nodetype, newnode.ttcOccupancy); // load bus_weekday.csv
+                            newnode.passengerCount = newnode.ttcOccupancy.get(testTime)[1]; // assign passengerCount
+                            newnode.occupancyPercent = newnode.ttcOccupancy.get(testTime)[0];
                             newnode.arrivalTime.add(arrival_time);
                             newnode.ttcName = trip_name;
 
@@ -649,6 +698,9 @@ public class Graph { //hi
                         newnode.latitude = lat;
                         newnode.isIndoor = true;
                         newnode.nodetype = route_type;
+                        loadTTCOccupancy(newnode.nodetype, newnode.ttcOccupancy); // load bus_weekday.csv
+                        newnode.passengerCount = newnode.ttcOccupancy.get(testTime)[1]; // assign passengerCount
+                        newnode.occupancyPercent = newnode.ttcOccupancy.get(testTime)[0];
                         newnode.arrivalTime.add(arrival_time);
                         newnode.ttcName = trip_name;
 
