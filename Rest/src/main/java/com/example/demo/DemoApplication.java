@@ -36,6 +36,9 @@ public class DemoApplication { //hi
 	public String endCheck = new String();
 	public userPreference old_userPref;
 	public boolean streamshutdown = false;
+
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
