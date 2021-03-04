@@ -159,6 +159,7 @@ public class KSP {
             ArrayList<ArrayList<Double>> mn = new ArrayList<>();
             ArrayList<Double> risk = new ArrayList<>();
             String risk_toString = new String();
+            ArrayList<String> ttcnames = new ArrayList<>(); // stop name of each MapNode
             for (int i = 1; i<node_list.size(); i++) {
                 ArrayList<Double> al1 = new ArrayList<>();
                 ArrayList<Double> al2 = new ArrayList<>();
@@ -168,8 +169,15 @@ public class KSP {
                 Double middle_lat = (first.latitude+second.latitude)/2+count/80000;
                 Double longitude = node_list.get(i-1).longitude+count/80000;
                 Double latitude = node_list.get(i-1).latitude+count/80000;
-                Double risk1 = node_list.get(i-1).pedCount;
-                Double risk2 = node_list.get(i).pedCount;
+                Double risk1 = 0.0;
+                String ttcname = "";
+                if(node_list.get(i).nodetype == 5){
+                     risk1 += node_list.get(i).pedCount;
+                }
+                else{
+                    risk1 += (node_list.get(i).passengerCount * 5.52);
+                    ttcname += node_list.get(i).ttcName;
+                }
 
                 al1.add(longitude);
                 al1.add(latitude);
@@ -178,11 +186,13 @@ public class KSP {
                 mn.add(al1);
                 mn.add(al2);
                 risk.add(risk1);
-                risk.add(risk2);
+                ttcnames.add(ttcname);
+                //risk.add(risk2);
             }
             Double cost = p.getTotalLength();
             Double time = Precision.round(p.getTotalTime(),0);
             Double distance = Precision.round(p.getTotalLength()/1000,2);
+            path_map.put("ttcname", new Gson().toJson(ttcnames));
             path_map.put("cost", new Gson().toJson(cost));
             path_map.put("routeNode", new Gson().toJson(mn));
             path_map.put("risk", new Gson().toJson(risk));
@@ -206,6 +216,7 @@ public class KSP {
             List<MapNode> node_list = p.getNodes();
             String mn_toString = new String();
             ArrayList<ArrayList<Double>> mn = new ArrayList<>();
+            ArrayList<Double> risk = new ArrayList<>();
             ArrayList<Integer> nodetypes = new ArrayList<>(); // node type of each MapNode
             String risk_toString = new String();
             ArrayList<String> ttcnames = new ArrayList<>(); // stop name of each MapNode
@@ -222,6 +233,13 @@ public class KSP {
                 int nt2 = node_list.get(i).nodetype;
                 String sn1 = node_list.get(i-1).ttcName;
                 String sn2 = node_list.get(i).ttcName;
+                Double risk1 = 0.0;
+                if(node_list.get(i).nodetype == 5){
+                    risk1 += node_list.get(i).pedCount;
+                }
+                else{
+                    risk1 += (node_list.get(i).passengerCount * 5.52);
+                }
 
                 al1.add(longitude);
                 al1.add(latitude);
@@ -233,6 +251,8 @@ public class KSP {
                 nodetypes.add(nt2);
                 ttcnames.add(sn1);
                 ttcnames.add(sn2);
+                risk.add(risk1);
+
             }
             Double cost = p.getTotalLength();
             Double time = Precision.round(p.getTotalTime(),0);
@@ -244,6 +264,8 @@ public class KSP {
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));
+            path_map.put("risk", new Gson().toJson(risk));
+
             count++;
             solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
         }
