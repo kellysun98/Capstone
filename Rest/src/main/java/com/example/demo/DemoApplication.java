@@ -207,61 +207,6 @@ public class DemoApplication { //hi
 			}
 			return result;
 		}
-//		@GetMapping("/api")
-//		public String getList() {
-//
-//			if (userPref == null){
-//				torontoGraph.avoidHospital=false;
-//				MapNode startNode = getElement(ttcnodeMap, add.getStart_bound());
-//				MapNode endNode = getElement(ttcnodeMap, add.getEnd_bound());
-//				// Prepare for normalization for "covid" heuristic
-//				torontoGraph.prepareNormalization(endNode);
-//
-//				Planner planner = new Planner();
-//				ArrayList<Path> resultList = new ArrayList<Path>();
-//				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
-//				result = KSP.KSPtoJson(resultList);
-//				startCheck = add.getStart_bound();
-//				endCheck = add.getEnd_bound();
-//			}else if ((userPref != null)|| result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))||(!(old_userPref.equals(userPref)))) {
-//				old_userPref = new userPreference(userPref);
-//
-//				// set questionnaire answer(avoid hospital or not)
-//				if (userPref.getQ3().get(0).contains("hospital")){
-//					torontoGraph.avoidHospital=true;
-//				}else{
-//					torontoGraph.avoidHospital=false;
-//				}
-//
-//
-//				MapNode startNode = getElement(ttcnodeMap, add.getStart_bound());
-//				MapNode endNode = getElement(ttcnodeMap, add.getEnd_bound());
-//
-//				Planner planner = new Planner();
-//				ArrayList<Path> resultList = new ArrayList<Path>();
-//				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
-////
-//				result = KSP.KSPtoJson(resultList);
-//				startCheck = add.getStart_bound();
-//				endCheck = add.getEnd_bound();
-//
-//
-//				/** OLD STUFF USELESS KEEP FOR NOW
-//				 *
-//				SubwayNode startNode = getElement_subway(subwaynodeMap, add.getStart_bound());
-//				SubwayNode endNode = getElement_subway(subwaynodeMap, add.getEnd_bound());
-//
-//				Planner planner = new Planner();
-//				ArrayList<SubwayPath>resultList = new ArrayList<SubwayPath>();
-//				resultList.add(planner.plan(startNode,endNode,"distance"));
-////
-//				result = KSP.KSPtoJson_subway(resultList);
-//				startCheck = add.getStart_bound();
-//				endCheck = add.getEnd_bound();
-//				 */
-//			}
-//			return result;
-//		}
 
 		@GetMapping("/api2")
 		public String gettwoList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end) {
