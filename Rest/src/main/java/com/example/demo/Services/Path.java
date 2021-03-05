@@ -62,25 +62,6 @@ public class Path implements Comparable<Path>{ //hi
     public double getTotalLength(){return totalLength;}
 
     public double getTotalTime() {
-        this.totalTime = 0;
-        MapEdge tempedge = null;
-
-        for (int i=0; i< nodes.size()-1;i++){
-            System.out.println("node type: " + nodes.get(i).nodetype);
-            System.out.println("node name: " + nodes.get(i).ttcName);
-
-
-            for(MapEdge e : nodes.get(i).edges){
-                if(e.destinationNode.id == nodes.get(i+1).id){
-
-                    tempedge = e;
-                    break;
-                }
-            }
-            System.out.println("edge time: " + tempedge.length);
-
-            this.totalTime += tempedge.length;
-        }
         return this.totalTime;
 //        return Math.floor(this.totalTime * 1e2)/ 1e2;  //rounded time
     }
