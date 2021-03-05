@@ -368,7 +368,7 @@ public class Planner { //hi
                 return 100000000;
             }
 
-            return risk_W * node.passengerCount * node.rFactor+ dist_W * (((dis)/5000.0)*60.0 + edgelength);
+            return risk_W * node.passengerCount * node.rFactor+ dist_W * (((dis)/22000.0)*60.0 + edgelength);
 
         }
         return risk_W * node.pedCount + dist_W * (((dis)/5000.0)*60.0 + edgelength);
