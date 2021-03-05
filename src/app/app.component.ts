@@ -480,6 +480,25 @@ export class AppComponent {
     return color;
   }
 
+  getColor4(risk){
+    var color: string;
+    if(risk>0 && risk <=1){
+      var color = 'rgba(0, 204, 0, 1)'; //safe
+      var risk_description = 'low'
+    } else if(risk > 2 && risk <=4){
+      var color = 'rgba(240, 255, 0, 1)'; //medium
+      var risk_description = 'medium'
+    } else if (risk > 4 && risk <= 6){
+      var color = 'rgba(230, 126, 34, 1)'
+      var risk_description = 'high'
+    }
+    else{
+      var color = 'rgba(255, 0, 0, 1)'; //dangerous
+      var risk_description = 'dangerous'
+    }
+    return color;
+  }
+
   getGeomPed(route, time, risk, description, mapnode, myroutes){
     for (var i = 1; i < route.length; i++){
       route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
