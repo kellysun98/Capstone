@@ -480,6 +480,25 @@ export class AppComponent {
     return color;
   }
 
+  getColor4(risk){
+    var color: string;
+    if(risk>0 && risk <=1){
+      var color = 'rgba(0, 204, 0, 1)'; //safe
+      var risk_description = 'low'
+    } else if(risk > 2 && risk <=4){
+      var color = 'rgba(240, 255, 0, 1)'; //medium
+      var risk_description = 'medium'
+    } else if (risk > 4 && risk <= 6){
+      var color = 'rgba(230, 126, 34, 1)'
+      var risk_description = 'high'
+    }
+    else{
+      var color = 'rgba(255, 0, 0, 1)'; //dangerous
+      var risk_description = 'dangerous'
+    }
+    return color;
+  }
+
   getGeomPed(route, time, risk, description, mapnode, myroutes){
     for (var i = 1; i < route.length; i++){
       route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
@@ -561,7 +580,7 @@ export class AppComponent {
         textBaseline: 'top',
         offsetY: 6,
         backgroundFill: new ol.style.Fill({
-          color: 'rgba(255,204,51,0.5)'
+          color: 'rgba(255,255,255, 0.5)'
         }),
         backgroundStroke: new ol.style.Stroke({
           width: 1,
@@ -572,7 +591,7 @@ export class AppComponent {
     });
     var filteredAry = ttcname.filter(function(e) { return e !== "null" }).filter((v, i, a) => a.indexOf(v) === i);
     if (filteredAry != []){
-    nullstyle.getText().setText('total time:' + time + "min \n Transit:" + filteredAry);}
+    nullstyle.getText().setText('total time:' + time + "min");} //\n Transit:" + filteredAry
     else {nullstyle.getText().setText('total time:' + time + "min ")}
     featureLine.setStyle(nullstyle);
     myroutes.push(featureLine)
@@ -671,9 +690,14 @@ export class AppComponent {
           this.response = res; 
           for (let result of Object.values(this.response)){
               var res_length = Object.keys(this.response[0]).length;
+              if (res_length>=5){
+                var iter_len = 5
+              }else{
+                var iter_len = res_length
+              }
               var myroutes = [];
           //console.log("res_lenght is " + res_length) 
-              for(var amen = 0; amen<res_length; amen++){ 
+              for(var amen = 0; amen<iter_len; amen++){ 
               // for(let index in this.response[amen]['routeNode']){
                 // for (let key of Object.keys(this.response[index])){
                 var route = JSON.parse(this.response[0][amen]['routeNode']);
