@@ -580,7 +580,7 @@ export class AppComponent {
         textBaseline: 'top',
         offsetY: 6,
         backgroundFill: new ol.style.Fill({
-          color: 'rgba(255,204,51,0.5)'
+          color: 'rgba(255,255,255, 0.5)'
         }),
         backgroundStroke: new ol.style.Stroke({
           width: 1,
@@ -591,7 +591,7 @@ export class AppComponent {
     });
     var filteredAry = ttcname.filter(function(e) { return e !== "null" }).filter((v, i, a) => a.indexOf(v) === i);
     if (filteredAry != []){
-    nullstyle.getText().setText('total time:' + time + "min \n Transit:" + filteredAry);}
+    nullstyle.getText().setText('total time:' + time + "min");} //\n Transit:" + filteredAry
     else {nullstyle.getText().setText('total time:' + time + "min ")}
     featureLine.setStyle(nullstyle);
     myroutes.push(featureLine)
@@ -690,9 +690,14 @@ export class AppComponent {
           this.response = res; 
           for (let result of Object.values(this.response)){
               var res_length = Object.keys(this.response[0]).length;
+              if (res_length>=5){
+                var iter_len = 5
+              }else{
+                var iter_len = res_length
+              }
               var myroutes = [];
           //console.log("res_lenght is " + res_length) 
-              for(var amen = 0; amen<res_length; amen++){ 
+              for(var amen = 0; amen<iter_len; amen++){ 
               // for(let index in this.response[amen]['routeNode']){
                 // for (let key of Object.keys(this.response[index])){
                 var route = JSON.parse(this.response[0][amen]['routeNode']);
