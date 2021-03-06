@@ -113,7 +113,7 @@ public class DemoApplication { //hi
 	class nodeController{
 
 		//get tweets
-		@GetMapping("/tweets")
+		@GetMapping("/tweets1")
 		public SseEmitter getTweets(){
 			twitter twitter = new twitter();
 			HashMap<String, String> tweets = new HashMap<String, String>();
