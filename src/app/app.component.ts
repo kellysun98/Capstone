@@ -196,7 +196,7 @@ export class AppComponent {
 
  
     this.forEachFeatureAtPixel(args.pixel, function(feature,layer ) {  
-      //remove  
+      //remove previous highlighter
     var source = layer.getSource();
     var allRoutes = source.getFeatures();
     for (var i = 0; i < allRoutes.length; i++) {
@@ -205,7 +205,7 @@ export class AppComponent {
       }
     }
 
-
+      //add new highlighter
       if(feature.get('name') != undefined && feature.get('name').includes('route')){
         var routeName = feature.get('name');
     
@@ -242,20 +242,7 @@ export class AppComponent {
     });
   });
 }
-  removePreviousHighlight() {
-  //remove previous highlighter 
-    this.map.getLayers().forEach(function(layer) {
-  if (layer.get('name') != undefined && layer.get('name') === 'ped-lines') {
-    var source = layer.getSource();
-    var allRoutes = source.getFeatures();
-    for (var i = 0; i < allRoutes.length; i++) {
-      if(allRoutes[i].get('name') !== undefined && allRoutes[i].get('name') === 'highlighter'){
-        source.removeFeature(allRoutes[i]);
-      }
-    }
-  }
-}); 
-  }
+
 
   updateSetting(event) {
     this.gridsize = event.value;
