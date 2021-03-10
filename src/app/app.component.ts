@@ -169,89 +169,98 @@ export class AppComponent {
 
     var selected = new ol.interaction.Select({
       condition: click,
-      // layer: function(layer, resolution){
-      //   if(layer.get('name').includes('lines')){
-      //     return layer
-      //   }
-      // }
+ 
     }); // ref to currently selected interaction
     this.map.addInteraction(selected);
-      // var selectPointerMove = new Select({
-    //   condition: pointerMove,
-    // });
-    // var changeInteraction = function () {
-    //   if (selected !== null) {
-    //     this.removeInteraction(selected);
-    //     selected = selectPointerMove;
-    //     if (selected !== null) {
-    //       this.addInteraction(selected);}
-    //   } 
-    // }
+
 
 
     this.map.on('pointermove', function(evt) {    //change pointer when on a feature 
       this.getTargetElement().style.cursor = this.hasFeatureAtPixel(evt.pixel) ? 'pointer' : '';
-      // if (selected !== null) {
-        //selected.setStyle(undefined);
-      //   selected = null;
-      // }
-      // this.forEachFeatureAtPixel(evt.pixel, function (f) {
-      //   selected = f;
-      //   f.setStyle(highlightStyle);
-      //   return true;
-      // });
-    //   this.forEachFeatureAtPixel(evt.pixel, function(feature,layer) {
-    //     console.log(feature.get('name'));
-    //     if ( feature.get('name') === "markericon" ) {
-    //          content.innerHTML = '<p>You clicked here:</p>'
-    //          popup.setPosition(evt.coordinate);
-    //     }  
-    // });
-  });
+    });
+
   var featureOverlay = new ol.layer.Vector({
     source: new ol.source.Vector({}),
     map: this.map,
     style: highlightStyle,
   });
 
+  
 
   this.map.on('click', function (args) {
     console.log(args.coordinate);
     var lonlat = ol.proj.transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
     console.log(lonlat);
-    //var lon = lonlat[0];
-    //var lat = lonlat[1];
-    //alert(`lat: ${lat} long: ${lon}`);
-    //console.log(args.pixel);
-    this.forEachFeatureAtPixel(args.pixel, function(feature,layer) {   //display route info when clicked on 
-      console.log(feature.get('name'));
+    
+  
+
+ 
+    this.forEachFeatureAtPixel(args.pixel, function(feature,layer ) {  
+      //remove  
+    var source = layer.getSource();
+    var allRoutes = source.getFeatures();
+    for (var i = 0; i < allRoutes.length; i++) {
+      if(allRoutes[i].get('name') !== undefined && allRoutes[i].get('name') === 'highlighter'){
+        source.removeFeature(allRoutes[i]);
+      }
+    }
+
+
+      if(feature.get('name') != undefined && feature.get('name').includes('route')){
+        var routeName = feature.get('name');
+    
+          //find all features with the same name
+          var source = layer.getSource();
+          var allRoutes = source.getFeatures();
+          for (var i = 0; i < allRoutes.length; i++) {
+              // var highlightsList = [];
+              if(allRoutes[i].get('name') !== undefined && allRoutes[i].get('name') === routeName){
+                var highlights = allRoutes[i].clone();
+                highlights.set('name','highlighter');
+                var highlightStyle = new ol.style.Style({
+                  fill: new ol.style.Fill({
+                      color: 'rgba(128,0,0,0.3)', weight: 15
+                    }),
+                  stroke: new ol.style.Stroke({
+                      color: 'rgba(128,0,0,0.3)', width: 15
+                    }),
+                });
+                highlights.setStyle(highlightStyle);
+                source.addFeature(highlights);
+                
+              }
+          }          
+        }  
+        
+
       if ( feature.get('name') === 'additional_line') {
            featureOverlay.getSource().clear()
            featureOverlay.getSource().addFeature(feature);
            console.log("feature added to overlay")
-      
-           //content.innerHTML = '<p>route information:</p><code>' + feature.get('description') + '</code>';
-           //popup.setPosition(args.coordinate);
-      }  
+      }
+        
     });
   });
 }
+  removePreviousHighlight() {
+  //remove previous highlighter 
+    this.map.getLayers().forEach(function(layer) {
+  if (layer.get('name') != undefined && layer.get('name') === 'ped-lines') {
+    var source = layer.getSource();
+    var allRoutes = source.getFeatures();
+    for (var i = 0; i < allRoutes.length; i++) {
+      if(allRoutes[i].get('name') !== undefined && allRoutes[i].get('name') === 'highlighter'){
+        source.removeFeature(allRoutes[i]);
+      }
+    }
+  }
+}); 
+  }
 
   updateSetting(event) {
     this.gridsize = event.value;
   }
 
-    // openDialog(): void {
-  //   const dialogRef = this.dialog.open(QuestionaireComponent, {
-  //     width: '500px',
-  //     height: '500px',
-  //     data: {}
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     this.email = result;
-  //   });
-  // }
 
   initBackEnd(){
     console.log('init started')
@@ -499,25 +508,44 @@ export class AppComponent {
     return color;
   }
 
-  getGeomPed(route, time, risk, description, mapnode, myroutes){
+  getGeomPed(amen, route, time, risk, description, mapnode, myroutes){
+    //createing a layer feature which connects the full route 
+    //and displays as transprant when not selected
     for (var i = 1; i < route.length; i++){
       route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
+      
       var featureLine = new ol.Feature({
         geometry: new ol.geom.LineString([route[i-1],route[i]]),
+        name: 'route'+amen
       });
+
+      var highlightLine = new ol.Feature({
+        geometry: new ol.geom.LineString([route[i-1],route[i]]),
+        name: 'highlight'+amen
+      });
+
       var linestyle = new ol.style.Style({
         fill: new ol.style.Fill({
             color: this.getColor(risk[i-1]), weight: 5
         }),
         stroke: new ol.style.Stroke({
           color: this.getColor(risk[i-1]), width: 5
-        }),
-  
+        })
       });
-      
+
+      var highlightstyle = new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: 'rgba(255,255,0,0.5)', weight: 5
+        }),
+        stroke: new ol.style.Stroke({
+          color: 'rgba(255,255,0,0.5)', width: 5
+        })
+      });
       featureLine.setStyle(linestyle);
-      myroutes.push(featureLine) 
+      myroutes.push(featureLine);
+
     }
+
   }
 
   getGeom(route, time, risk, description, mapnode, myroutes){
@@ -557,7 +585,8 @@ export class AppComponent {
         });
         
         featureLine.setStyle(linestyle);
-        myroutes.push(featureLine) 
+        
+        myroutes.push(featureLine);
       }
     }
     //console.log(myroutes);
@@ -696,6 +725,7 @@ export class AppComponent {
                 var iter_len = res_length
               }
               var myroutes = [];
+              var myhighlighter = [];
           //console.log("res_lenght is " + res_length) 
               for(var amen = 0; amen<iter_len; amen++){ 
               // for(let index in this.response[amen]['routeNode']){
@@ -715,19 +745,20 @@ export class AppComponent {
             // var medium = 'rgba(255, 152, 51, 1)';
             // var dangerous = 'rgba(255, 0, 0, 1)';
           
-                this.getGeomPed(route, time, risk, description, mapnode, myroutes);
+                this.getGeomPed(amen, route, time, risk, description, mapnode, myroutes);
                 this.DynamicColoring(route, time, risk, description,myroutes)  //display text
               }
               var vectorSource = new ol.source.Vector({
                 features: myroutes,
               }); //multiple routes added 
 
+
               var indicator = 0;
                this.map.getLayers().forEach(function(layer) {
                  if (layer.get('name') != undefined && layer.get('name') === 'ped-lines') {
                    myroutes.forEach((feature) => {
                      layer.getSource().addFeature(feature);            
-                   });    
+                   });      
                      indicator = 1;   
                      console.log("feature added to existing layer"); 
                  }

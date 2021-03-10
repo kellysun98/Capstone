@@ -43,6 +43,9 @@
             <div>
                 <button (click)="openWelcome()" style="text-decoration:underline; padding: 0; border: none; background: none; margin-left: 35px!important; margin-top:10px!important; color:blue">Go Back to Questionnaire</button>
             </div>
+            <!-- <div>
+                <button (click)="initBackEnd()" style="text-decoration:underline; padding: 0; border: none; background: none; margin-left: 35px!important; margin-top:10px!important; color:blue">Init</button>
+            </div> -->
         </div>
         <ng-container *ngIf="show">
             <app-mybar (selectedTab)="showLine($event)"></app-mybar>
