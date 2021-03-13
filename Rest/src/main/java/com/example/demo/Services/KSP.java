@@ -75,7 +75,7 @@ public class KSP {
         Planner planner = new Planner();
 //        double distWeight = 1;
 //        double riskWeight = 0;
-        ArrayList<Integer> weight = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 100, 200, 300, 400, 500,1000,2000,3000,4000));
+        ArrayList<Integer> weight = new ArrayList<>(Arrays.asList(0, 1, 10, 50, 100, 500, 1000, 2000,4000));
         boolean add = true;
         for (int i : weight){
             //double riskWeight = i/(double)K;
@@ -121,7 +121,7 @@ public class KSP {
         Planner planner = new Planner();
 //        double distWeight = 1;
 //        double riskWeight = 0;
-        ArrayList<Integer> weight = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 100, 200, 300, 400, 500,1000,2000,3000,4000));
+        ArrayList<Integer> weight = new ArrayList<>(Arrays.asList(0, 1, 10, 50, 100, 500, 1000, 2000,4000));
         //ArrayList<Integer> weight = new ArrayList<>(Arrays.asList(0));
 
         //for (int i=0;i<K;i++){
