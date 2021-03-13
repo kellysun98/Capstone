@@ -76,7 +76,7 @@ public class KSP {
 //        double distWeight = 1;
 //        double riskWeight = 0;
         ArrayList<Integer> weight = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 100, 200, 300, 400, 500,1000,2000,3000,4000));
-        //for (int i=0;i<K;i++){
+        boolean add = true;
         for (int i : weight){
             //double riskWeight = i/(double)K;
             double riskWeight = i;
@@ -95,8 +95,16 @@ public class KSP {
                 result.add(temp);
                 result_dist.add(temp.getTotalLength());
             }else if(!result_dist.contains(temp.getTotalLength())){
-                result.add(temp);
-                result_dist.add(temp.getTotalLength());
+                for( Path prev_path: result){
+                    if(Math.abs(prev_path.totalTime - temp.totalTime) < 1.5){
+                        add = false;
+                    }
+                }
+                if(add){
+                    result.add(temp);
+                    result_dist.add(temp.getTotalLength());
+                }
+                add = true;
             }
         }
         Path safestp = planner.AStar_avoidHospital(graph, src, dest, costFunction, 1, 0);
@@ -123,6 +131,7 @@ public class KSP {
             double distWeight = 1;
             //System.out.println("distWeight:"+String.valueOf(distWeight));
             //System.out.println("riskWeight:"+String.valueOf(riskWeight));
+            boolean add = true;
             Path temp = new Path();
             if (graph.avoidHospital==true) { // Case 1: 躲避医院
                 temp = planner.AStar_avoidHospital(graph, src, dest, costFunction, riskWeight, distWeight);
@@ -135,8 +144,16 @@ public class KSP {
                 result.add(temp);
                 result_dist.add(temp.getTotalLength());
             }else if(!result_dist.contains(temp.getTotalLength())){
-                result.add(temp);
-                result_dist.add(temp.getTotalLength());
+                for( Path prev_path: result){
+                    if(Math.abs(prev_path.totalTime - temp.totalTime) < 1.5){
+                        add = false;
+                    }
+                }
+                if(add){
+                    result.add(temp);
+                    result_dist.add(temp.getTotalLength());
+                }
+                add = true;
                 }
             }
         //Path safestp = planner.AStar_avoidHospital(graph, src, dest, costFunction, 1, 0);
