@@ -1,9 +1,10 @@
-export interface Route {
+export interface Transit {
     routeNode: Array<any>;
     cost: number;
     nodetype: Array<number>;
     distance: number;
-    ttcname: number;
+    ttcname: string;
+    nstop: number;
     description: string;
     risk: Array<any>;
     time: number;

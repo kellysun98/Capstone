@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {MatTabChangeEvent, MatTabsModule} from '@angular/material/tabs';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
+import {MatGridListModule} from '@angular/material/grid-list';
 import {MatSliderModule} from '@angular/material/slider';
 import { DataService } from '../data.service';
 import { RouteService } from '../route.service';
 import {Route} from '../route'
+import {Transit} from '../transit'
 import { take } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
@@ -17,14 +19,18 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 export class MybarComponent implements OnInit {
   @Input() transitTypeChild: any;
   @Output() selectedTab = new EventEmitter<number>();
-  route: Route[]=[];
+  bus: Transit[]=[];
+  walk: Route[]=[];
   selectedIndex: number;
   response: any;
 
   ngOnInit(): void {
-    this.routeService.getRouteInfo().pipe(take(1)).subscribe( data => {this.route = data; 
-      //console.log(this.route)
+    this.routeService.getTransitInfo().pipe(take(1)).subscribe( data => {this.bus = data; 
+      console.log(this.bus)
     } )
+    this.routeService.getWalkingInfo().pipe(take(1)).subscribe( data => { this.walk = data;
+      console.log(this.walk)
+    })
     // this.newMessage();
     // this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
     // this.sliderService.currentActive.subscribe(active => console.log(active));
