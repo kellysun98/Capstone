@@ -208,6 +208,122 @@ public class DemoApplication { //hi
 			return result;
 		}
 
+		@GetMapping("/publictransit")
+		public String getTransitList() {
+			String ttc_result = new String();
+
+			if (userPref == null){
+				torontoGraph.avoidHospital=false;
+				// Walking mode start&end
+				MapNode startNode = getElement(nodeMap, add.getStart_bound());
+				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
+				// Public transit mode start & end
+				MapNode ttcstartNode = getElement(nodeMap, add.getStart_bound());
+				MapNode ttcendNode = getElement(nodeMap, add.getEnd_bound());
+
+				// Prepare for normalization for "covid" heuristic
+				torontoGraph.prepareNormalization(endNode);
+
+				Planner planner = new Planner();
+				// Public transit mode find route
+				ArrayList<Path> ttc_resultList = new ArrayList<Path>();
+				ttc_resultList = KSP.Diverse_K_TTC(torontoGraph, ttcstartNode, ttcendNode, "distance", 10);
+
+//				walk_result = KSP.KSPtoJson(resultList);
+				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+
+				startCheck = add.getStart_bound();
+				endCheck = add.getEnd_bound();
+
+			}else if ((userPref != null)|| result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))||(!(old_userPref.equals(userPref)))) {
+				old_userPref = new userPreference(userPref);
+
+				// set questionnaire answer(avoid hospital or not)
+				if (userPref.getQ3().get(0).contains("hospital")){
+					torontoGraph.avoidHospital=true;
+				}else{
+					torontoGraph.avoidHospital=false;
+				}
+				// Walking mode start&end
+				MapNode startNode = getElement(nodeMap, add.getStart_bound());
+				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
+				// Public transit mode start & end
+				MapNode ttcstartNode = getElement(nodeMap, add.getStart_bound());
+				MapNode ttcendNode = getElement(nodeMap, add.getEnd_bound());
+
+				Planner planner = new Planner();
+				// Public transit mode find route
+				ArrayList<Path> ttc_resultList = new ArrayList<Path>();
+				ttc_resultList = KSP.Diverse_K_TTC(torontoGraph, ttcstartNode, ttcendNode, "distance", 10);
+
+//				walk_result = KSP.KSPtoJson(resultList);
+				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+
+				startCheck = add.getStart_bound();
+				endCheck = add.getEnd_bound();
+			}
+			return ttc_result;
+		}
+
+		@GetMapping("/walking")
+		public String getWalkingList() {
+			String walk_result = new String();
+			if (userPref == null){
+				torontoGraph.avoidHospital=false;
+				// Walking mode start&end
+				MapNode startNode = getElement(nodeMap, add.getStart_bound());
+				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
+				// Public transit mode start & end
+				MapNode ttcstartNode = getElement(nodeMap, add.getStart_bound());
+				MapNode ttcendNode = getElement(nodeMap, add.getEnd_bound());
+
+				// Prepare for normalization for "covid" heuristic
+				torontoGraph.prepareNormalization(endNode);
+
+				Planner planner = new Planner();
+				// Walking mode find route
+				ArrayList<Path> resultList = new ArrayList<Path>();
+				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
+
+				walk_result = KSP.KSPtoJson(resultList);
+//				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+//				result = KSP.Merge2ResultLists(resultList,ttc_resultList);
+
+				startCheck = add.getStart_bound();
+				endCheck = add.getEnd_bound();
+
+			}else if ((userPref != null)|| result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))||(!(old_userPref.equals(userPref)))) {
+				old_userPref = new userPreference(userPref);
+
+				// set questionnaire answer(avoid hospital or not)
+				if (userPref.getQ3().get(0).contains("hospital")){
+					torontoGraph.avoidHospital=true;
+				}else{
+					torontoGraph.avoidHospital=false;
+				}
+				// Walking mode start&end
+				MapNode startNode = getElement(nodeMap, add.getStart_bound());
+				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
+				// Public transit mode start & end
+				MapNode ttcstartNode = getElement(nodeMap, add.getStart_bound());
+				MapNode ttcendNode = getElement(nodeMap, add.getEnd_bound());
+
+				Planner planner = new Planner();
+				// Walking mode find route
+				ArrayList<Path> resultList = new ArrayList<Path>();
+				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
+
+				walk_result = KSP.KSPtoJson(resultList);
+//				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+//				result = KSP.Merge2ResultLists(resultList,ttc_resultList);
+
+				startCheck = add.getStart_bound();
+				endCheck = add.getEnd_bound();
+			}
+			return walk_result;
+		}
+
+
 		@GetMapping("/api2")
 		public String gettwoList(@RequestParam(required = false) String bound_start, @RequestParam(required = false) String bound_end) {
 

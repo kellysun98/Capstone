@@ -1,37 +1,133 @@
 
 <mat-tab-group dynamicHeight (selectedTabChange)="tabChange($event)" [(selectedIndex)]="selectedIndex">
     <mat-tab label="Walking">
-        <ul>
-            <!-- <li>
-                <mat-label>{{route[0].time}} mins</mat-label>
-                <mat-label> current best route </mat-label>
-                <mat-icon style="margin-left:120px;">keyboard_arrow_right</mat-icon>
+        <hr style="border-top:none">
+        <mat-grid-list cols = "9" rowHeight = "110px">
+            <mat-grid-tile colspan = "2">
+                <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{walk[0].time}} mins</mat-label>
+            </mat-grid-tile>
+            <mat-grid-tile colspan = "7">
+                <li style="list-style-type: none;">
+                <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
+                <span> {{walk[0].walkingtime}} mins </span>
                 <br>
-                <p style = "float:right; font-size:small; margin-right: 60px;color:blue; line-height:0.5">{{route[0].distance}} km</p>
-        </li> -->
+                <mat-label class = "description"> Best Walking Route </mat-label>
+                </li>
+            </mat-grid-tile>          
+        </mat-grid-list>
+        <br>
+        <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{walk[0].distance}} km</span>
+
+        <hr>
+        <mat-grid-list cols = "9" rowHeight = "110px">
+            <mat-grid-tile colspan = "2">
+                <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{walk[1].time}} mins</mat-label>
+            </mat-grid-tile>
+            <mat-grid-tile colspan = "7">
+                <li style="list-style-type: none;">
+                <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
+                <span> {{walk[1].walkingtime}} mins </span>
+                <br>
+                <mat-label class = "description"> Best Walking Route </mat-label>
+                </li>
+            </mat-grid-tile>          
+        </mat-grid-list>
+        <br>
+        <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{walk[1].distance}} km</span>
         
-            <hr>
-            <!-- <li>
-                <mat-label>{{route[1].time}} mins</mat-label>
-                {{route[1].description}}
-                <mat-icon style="margin-left:120px;">keyboard_arrow_right</mat-icon>
+        <hr>
+        <mat-grid-list cols = "9" rowHeight = "110px">
+            <mat-grid-tile colspan = "2">
+                <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{walk[2].time}} mins</mat-label>
+            </mat-grid-tile>
+            <mat-grid-tile colspan = "7">
+                <li style="list-style-type: none;">
+                <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
+                <span> {{walk[2].walkingtime}} mins </span>
                 <br>
-                <p style = "float:right; font-size:small; margin-right: 60px;color:blue; line-height:0.5">{{route[1].distance}} km</p>
-              
-            </li>
-            <hr>
-            <li>
-                <mat-label>{{route[2].time}} mins</mat-label>
-                {{route[2].description}}
-                <mat-icon style="margin-left:120px;">keyboard_arrow_right</mat-icon>
-                <br>
-                <p style = "float:right; font-size:small; margin-right: 60px;color:blue; line-height:0.5">{{route[2].distance}} km</p>
-            </li> -->
+                <mat-label class = "description"> Best Walking Route </mat-label>
+                </li>
+            </mat-grid-tile>          
+        </mat-grid-list>
+        <br>
+        <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{walk[2].distance}} km</span>
 
-            <hr>
+        <hr style="border-top:none">
 
-
-        </ul>
     </mat-tab>
-    <mat-tab label="Transit"> TODO </mat-tab>
+    
+    <mat-tab label="Transit"> 
+        <!-- <ul> -->
+            <hr style="border-top:none">
+            <mat-grid-list cols = "9" rowHeight = "110px">
+                <mat-grid-tile colspan = "2">
+                    <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[0].time}} mins</mat-label>
+                </mat-grid-tile>
+                <mat-grid-tile colspan = "7">
+                    <li style="list-style-type: none;">
+                    <span style="margin-bottom: 20px;"> # {{bus[0].ttcname}} : {{bus[0].nstop}} stops</span>
+                    <br>
+                    <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
+                    <span> {{bus[0].walkingtime}} mins </span>
+                    <span> -- </span>
+                    <!-- <br> -->
+                    <mat-icon style="color:  #2A0968; display: inline-flex; vertical-align: middle;"> directions_transit</mat-icon>
+                    <span> {{bus[0].ttctime}} mins </span>
+                    <br>
+                    <mat-label class = "description"> Best Transit Route </mat-label>
+                    </li>
+                </mat-grid-tile>          
+            </mat-grid-list>
+            <br>
+            <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{bus[0].distance}} km</span>
+
+            <hr>
+            <mat-grid-list cols = "9" rowHeight = "110px">
+                <mat-grid-tile colspan = "2">
+                    <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[1].time}} mins</mat-label>
+                </mat-grid-tile>
+                <mat-grid-tile colspan = "7">
+                    <li style="list-style-type: none;">
+                    <span style="margin-bottom: 20px;"> Transit: {{bus[1].ttcname}} </span>
+                    <br>
+                    <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
+                    <span> {{bus[1].walkingtime}} mins </span>
+                    <span> -- </span>
+                    <!-- <br> -->
+                    <mat-icon style="color:  #2A0968; display: inline-flex; vertical-align: middle;"> directions_transit</mat-icon>
+                    <span> {{bus[1].ttctime}} mins </span>
+                    <br>
+                    <mat-label class = "description"> Optional Route </mat-label>
+                    </li>
+                </mat-grid-tile>          
+            </mat-grid-list>
+            <br>
+            <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{bus[1].distance}} km</span>
+            
+            <hr>
+            <mat-grid-list cols = "9" rowHeight = "110px">
+                <mat-grid-tile colspan = "2">
+                    <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[2].time}} mins</mat-label>
+                </mat-grid-tile>
+                <mat-grid-tile colspan = "7">
+                    <li style="list-style-type: none;">
+                    <span style="margin-bottom: 20px;"> Transit: {{bus[2].ttcname}} </span>
+                    <br>
+                    <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
+                    <span> {{bus[2].walkingtime}} mins </span>
+                    <span> -- </span>
+                    <!-- <br> -->
+                    <mat-icon style="color:  #2A0968; display: inline-flex; vertical-align: middle;"> directions_transit</mat-icon>
+                    <span> {{bus[2].ttctime}} mins </span>
+                    <br>
+                    <mat-label class = "description"> Optional Route </mat-label>
+                    </li>
+                </mat-grid-tile>         
+            </mat-grid-list>
+            <br>
+            <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{bus[2].distance}} km</span>
+            <hr style="border-top:none">
+
+        <!-- </ul> -->
+         </mat-tab>
 </mat-tab-group>
