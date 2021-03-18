@@ -54,6 +54,19 @@ body {
     height: 100%;
 }
 
+.mat-grid-tile .mat-figure {
+    top: 0;
+    left: 20px !important;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    display: flex;
+    align-items: baseline !important;
+    justify-content: left !important;
+    height: 100%;
+    padding: 0;
+}
+
 .mat-accent .mat-slider-thumb {
     height: 30px;
     width: 30px;
