@@ -216,6 +216,8 @@ public class KSP {
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));
+            path_map.put("walkingtime", new Gson().toJson(0));
+            path_map.put("ttctime", new Gson().toJson(0));
             count++;
             solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
         }
@@ -266,22 +268,36 @@ public class KSP {
                 mn.add(al2);
                 nodetypes.add(nt1);
                 nodetypes.add(nt2);
-                ttcnames.add(sn1);
-                ttcnames.add(sn2);
+                if(sn1 != null){
+                    ttcnames.add(sn1);
+                }else{
+                    continue;
+                }
+                if(sn2 != null & sn2!=sn1){
+                    ttcnames.add(sn2);
+                }else{
+                    continue;
+                }
                 risk.add(risk1);
 
             }
             Double cost = p.getTotalLength();
             Double time = Precision.round(p.getTotalTime(),0);
             Double distance = Precision.round(p.getTotalLength()/1000,2);
+            Double walkingtime = Precision.round(p.walkingTime,0); //Total walking time of route under public transit mode
+            Double ttctime = Precision.round(p.ttcTime,0); //Total time on public transit
+            Set<String> set = new HashSet<String>(ttcnames);
             path_map.put("cost", new Gson().toJson(cost));
             path_map.put("routeNode", new Gson().toJson(mn));
             path_map.put("nodetype", new Gson().toJson(nodetypes));
             path_map.put("ttcname",new Gson().toJson(ttcnames));
+            path_map.put("nstop", new Gson().toJson(ttcnames.size()));
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));
             path_map.put("risk", new Gson().toJson(risk));
+            path_map.put("walkingtime", new Gson().toJson(walkingtime));
+            path_map.put("ttctime", new Gson().toJson(ttctime));
 
             count++;
             solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
@@ -327,10 +343,15 @@ public class KSP {
             Double distance = Precision.round(p.getTotalLength()/1000,2);
             path_map.put("cost", new Gson().toJson(cost));
             path_map.put("routeNode", new Gson().toJson(mn));
+            path_map.put("nodetype", new Gson().toJson(0));
+            path_map.put("ttcname", new Gson().toJson(0));
             path_map.put("risk", new Gson().toJson(risk));
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));
+            path_map.put("walkingtime", new Gson().toJson(0));
+            path_map.put("ttctime", new Gson().toJson(0));
+
             count++;
             solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
         }
@@ -384,6 +405,7 @@ public class KSP {
             path_map.put("routeNode", new Gson().toJson(mn));
             path_map.put("nodetype", new Gson().toJson(nodetypes));
             path_map.put("ttcname",new Gson().toJson(ttcnames));
+            path_map.put("risk", new Gson().toJson(0));
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));

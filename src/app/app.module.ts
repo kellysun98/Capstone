@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import {MatGridListModule} from '@angular/material/grid-list';
 import { QuestionaireComponent } from './questionaire/questionaire.component';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatSelectModule} from '@angular/material/select';
@@ -52,7 +53,8 @@ import { TweetsComponent } from './tweets/tweets.component';
     MatSidenavModule,
     MatTabsModule,
     MatListModule,
-    MatSliderModule
+    MatSliderModule,
+    MatGridListModule
   ],
   exports: [MatFormFieldModule],
   providers: [],
