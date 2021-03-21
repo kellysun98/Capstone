@@ -370,7 +370,8 @@ public class KSP {
             ArrayList<ArrayList<Double>> mn = new ArrayList<>();
             ArrayList<Integer> nodetypes = new ArrayList<>(); // node type of each MapNode
             String risk_toString = new String();
-            ArrayList<String> ttcnames = new ArrayList<>(); // stop name of each MapNode
+            ArrayList<String> linenumbers = new ArrayList<>(); // line number of each MapNode
+            ArrayList<String> stopnames =  new ArrayList<>(); // stop name of each MapNode
             for (int i = 1; i<node_list.size(); i++) {
                 ArrayList<Double> al1 = new ArrayList<>();
                 ArrayList<Double> al2 = new ArrayList<>();
@@ -382,8 +383,10 @@ public class KSP {
                 Double latitude = node_list.get(i-1).latitude+count/80000;
                 int nt1 = node_list.get(i-1).nodetype;
                 int nt2 = node_list.get(i).nodetype;
-                String sn1 = node_list.get(i-1).ttcName;
-                String sn2 = node_list.get(i).ttcName;
+                String ln1 = node_list.get(i-1).ttcName;
+                String ln2 = node_list.get(i).ttcName;
+                String sn1 = node_list.get(i-1).stopName;
+                String sn2 = node_list.get(i).stopName;
 
                 al1.add(longitude);
                 al1.add(latitude);
@@ -393,8 +396,10 @@ public class KSP {
                 mn.add(al2);
                 nodetypes.add(nt1);
                 nodetypes.add(nt2);
-                ttcnames.add(sn1);
-                ttcnames.add(sn2);
+                linenumbers.add(ln1);
+                linenumbers.add(ln2);
+                stopnames.add(sn1);
+                stopnames.add(sn2);
             }
             Double cost = p.getTotalLength();
             Double time = Precision.round(p.getTotalTime(),0);
@@ -404,13 +409,14 @@ public class KSP {
             path_map.put("cost", new Gson().toJson(cost));
             path_map.put("routeNode", new Gson().toJson(mn));
             path_map.put("nodetype", new Gson().toJson(nodetypes));
-            path_map.put("ttcname",new Gson().toJson(ttcnames));
+            path_map.put("linenumber",new Gson().toJson(linenumbers));
             path_map.put("risk", new Gson().toJson(0));
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));
             path_map.put("walkingtime",new Gson().toJson(walkingtime));
             path_map.put("ttctime",new Gson().toJson(ttctime));
+            path_map.put("stopname", new Gson().toJson(stopnames));
             count++;
             solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
         }
