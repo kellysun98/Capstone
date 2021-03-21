@@ -27,6 +27,7 @@ public class MapNode implements Comparable<MapNode>{ //hi
     public boolean isShoppers; // whether node is shoppers
     public boolean isMall; //whether node is mall
 
+
     /** Subway Node properties (May delete later)
      * */
     public int nodetype;// 5 = walk way, 0 = street car, 3 = bus, 1 = subway
@@ -34,7 +35,8 @@ public class MapNode implements Comparable<MapNode>{ //hi
     public String ttcName;
     public String time; //
     public Hashtable<LocalTime,int[]> ttcOccupancy = new Hashtable<LocalTime,int[]>(); // store data from bus_weekday.csv
-                                                                            // int[] = [occupancyPercent,passengerCount]
+                                                                                // int[] = [occupancyPercent,passengerCount]
+    public String stopName;
     public double passengerCount;
     public double occupancyPercent;
     public double rFactor=5.52; // convert passenger count to pedestrian count
@@ -65,6 +67,7 @@ public class MapNode implements Comparable<MapNode>{ //hi
         isShoppers = false;
         isMall = false;
         nodetype = -1;
+        stopName = "";
 
     }
     public MapNode (){
@@ -81,6 +84,7 @@ public class MapNode implements Comparable<MapNode>{ //hi
         nodetype =-1;
         arrivalTime = new ArrayList<>();
         ttcName = "";
+        stopName = "";
     }
     /** Set Function for isIndoor, isHospital, isShoppers
      * */
@@ -104,6 +108,7 @@ public class MapNode implements Comparable<MapNode>{ //hi
         isHospital = false;
         isShoppers = false;
         isMall = false;
+        stopName = "";
 //        euclid = getDistance()
 //        normalized_pedCount = normalize(this.pedCount, graph.min_pedCount, graph.max_pedCont);
     }
@@ -120,6 +125,7 @@ public class MapNode implements Comparable<MapNode>{ //hi
         copy.isHospital = this.isHospital;
         copy.isShoppers = this.isShoppers;
         copy.isMall = this.isMall;
+        copy.stopName = this.stopName;
         return copy;
 
     }
