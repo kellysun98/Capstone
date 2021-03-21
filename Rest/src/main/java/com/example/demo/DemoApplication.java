@@ -288,7 +288,7 @@ public class DemoApplication { //hi
 		@GetMapping("/heatmap")
 		public HashMap<Integer, String> getNeighbourCoord(){
 			HashMap results = new HashMap<Integer, String>();
-			results = getNeighbourhoodCoordinate();
+			//results = getNeighbourhoodCoordinate();
 			return results;
 		}
 
