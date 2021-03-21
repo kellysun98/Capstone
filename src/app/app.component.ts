@@ -504,14 +504,14 @@ export class AppComponent {
     //createing a layer feature which connects the full route 
     //and displays as transprant when not selected
     let avg = (array) => array.reduce((a, b) => a + b) / array.length;
-    var avg_risk = avg(risk).toFixed(2);
+    var avg_risk = (avg(risk)/9 * 100).toFixed(2);
     for (var i = 1; i < route.length; i++){
       route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
       
       var featureLine = new ol.Feature({
         geometry: new ol.geom.LineString([route[i-1],route[i]]),
         name: 'route'+amen,
-        description: 'total time:' + time + ', \n route risk: ' + avg_risk,
+        description: 'total time:' + time + ', \n route risk: ' + avg_risk + '%',
       });
 
       // var highlightLine = new ol.Feature({
@@ -545,7 +545,7 @@ export class AppComponent {
 
   getGeom(amen,route, time, risk, description, mapnode, myroutes){
     let avg = (array) => array.reduce((a, b) => a + b) / array.length;
-    var avg_risk = avg(risk).toFixed(2);
+    var avg_risk = (avg(risk)/9 * 100).toFixed(2);
     for (var i = 1; i < route.length; i++){
       route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
       //console.log('initial: ', route[i]);
@@ -568,7 +568,7 @@ export class AppComponent {
         var pedLine = new ol.Feature({
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
           name: 'route_trans'+ amen,
-          description: 'total time:' + time + ', \n route risk: ' + avg_risk,
+          description: 'total time:' + time + ', \n route risk: ' + avg_risk + '%',
         });
        //console.log([route[i-1], route[i]])
 
@@ -589,7 +589,7 @@ export class AppComponent {
         var featureLine = new ol.Feature({
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
           name: 'route_trans'+ amen,
-          description: 'total time:' + time + ', \n route risk: ' + avg_risk,
+          description: 'total time:' + time + ', \n route risk: ' + avg_risk +'%',
         });
        //console.log([route[i-1], route[i]])
         var linestyle = new ol.style.Style({
@@ -641,7 +641,7 @@ export class AppComponent {
      }),
      width: 10,
       text: new ol.style.Text({
-        font: '20px Calibri,sans-serif',
+        font: '14px Calibri,sans-serif',
         textBaseline: 'top',
         offsetY: 6,
         backgroundFill: new ol.style.Fill({
