@@ -25,7 +25,7 @@
             </div> -->
 
             <div>
-                <button mat-raised-button (click)="initBackEnd()">Initialize Navigation</button>
+                <!-- <button mat-raised-button (click)="initBackEnd()">Initialize Navigation</button> -->
                 <!-- <button mat-raised-button (click)="receiveTweet()">Click Me!</button> -->
                 <button mat-raised-button (click)="setMarker(); drawLine2(); toggle(); hideit()">Find My Routes</button>
             </div>
@@ -93,7 +93,7 @@
             </mat-card-content>
         </mat-card>
 
-        <app-tweets></app-tweets>
+        <!-- <app-tweets></app-tweets> -->
 
         <div>
             <mat-slide-toggle [checked]="useDefault" (change)="heatmapControl($event)"> Show COVID-19 Map</mat-slide-toggle>
