@@ -182,7 +182,7 @@ export class AppComponent {
   var featureOverlay = new ol.layer.Vector({
     source: new ol.source.Vector({}),
     map: this.map,
-    style: highlightStyle,
+    //style: highlightStyle,
   });
 
   
@@ -192,8 +192,6 @@ export class AppComponent {
     var lonlat = ol.proj.transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
     console.log(lonlat);
     
-  
-
  
     this.forEachFeatureAtPixel(args.pixel, function(feature,layer ) {  
       //remove previous highlighter
@@ -204,9 +202,9 @@ export class AppComponent {
         source.removeFeature(allRoutes[i]);
       }
     }
-
       //add new highlighter
-      if(feature.get('name') != undefined && feature.get('name').includes('route')){
+      if(feature.get('name') != undefined && (feature.get('name').includes('route') || feature.get('name').includes('route_trans'))){
+        console.log(feature.get('name'));
         var routeName = feature.get('name');
     
           //find all features with the same name
@@ -227,23 +225,30 @@ export class AppComponent {
                 });
                 highlights.setStyle(highlightStyle);
                 source.addFeature(highlights);
-                
               }
-          }          
-        }  
-        
+          }
+          
+          content.innerHTML = '<p>Route Information: \n</p><code>' + feature.get('description') + '</code>';
+          popup.setPosition(args.coordinate);
 
-      if ( feature.get('name') === 'additional_line') {
-           featureOverlay.getSource().clear()
-           featureOverlay.getSource().addFeature(feature);
-           console.log("feature added to overlay")
-      }
+
+        }  
+
+      // if ( feature.get('name').includes('additional_line')) {  //overlay closable pop up box 
+      //   console.log(feature.get('name'));
+      //     //  featureOverlay.getSource().clear()
+      //     //  featureOverlay.
+      //     //  featureOverlay.getSource().addFeature(feature);
+      //     //  console.log("feature added to overlay")
+      //     content.innerHTML = '<p>You clicked here:</p><code>' + feature.get('description') + '</code>';
+      //     popup.setPosition(args.coordinate);
+           
+
+      // }
         
     });
   });
 }
-
-
   updateSetting(event) {
     this.gridsize = event.value;
   }
@@ -498,18 +503,21 @@ export class AppComponent {
   getGeomPed(amen, route, time, risk, description, mapnode, myroutes){
     //createing a layer feature which connects the full route 
     //and displays as transprant when not selected
+    let avg = (array) => array.reduce((a, b) => a + b) / array.length;
+    var avg_risk = avg(risk).toFixed(2);
     for (var i = 1; i < route.length; i++){
       route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
       
       var featureLine = new ol.Feature({
         geometry: new ol.geom.LineString([route[i-1],route[i]]),
-        name: 'route'+amen
+        name: 'route'+amen,
+        description: 'total time:' + time + ', \n route risk: ' + avg_risk,
       });
 
-      var highlightLine = new ol.Feature({
-        geometry: new ol.geom.LineString([route[i-1],route[i]]),
-        name: 'highlight'+amen
-      });
+      // var highlightLine = new ol.Feature({
+      //   geometry: new ol.geom.LineString([route[i-1],route[i]]),
+      //   name: 'highlight'+amen
+      // });
 
       var linestyle = new ol.style.Style({
         fill: new ol.style.Fill({
@@ -535,30 +543,53 @@ export class AppComponent {
 
   }
 
-  getGeom(route, time, risk, description, mapnode, myroutes){
+  getGeom(amen,route, time, risk, description, mapnode, myroutes){
+    let avg = (array) => array.reduce((a, b) => a + b) / array.length;
+    var avg_risk = avg(risk).toFixed(2);
     for (var i = 1; i < route.length; i++){
       route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
       //console.log('initial: ', route[i]);
-      if(mapnode[i-1]==5){
-        var featurePoint = new ol.Feature({
-          geometry: new ol.geom.Point(route[i-1]),
-        })
-        var pointStyle = new ol.style.Style({
-          image: new ol.style.Circle({
-            radius: 5,
-            fill: new ol.style.Fill({color: this.getColor(risk[i-1])}),
-            // stroke: new ol.style.Stroke({
-            //   color: [255,0,0], width: 2
-            // })
+      if(mapnode[i-1]==5 && mapnode [i] == 5){ //both are ped routes
+        // var featurePoint = new ol.Feature({
+        //   geometry: new ol.geom.Point(route[i-1]),
+        // })
+        // var pointStyle = new ol.style.Style({
+        //   image: new ol.style.Circle({
+        //     radius: 5,
+        //     fill: new ol.style.Fill({color: this.getColor(risk[i-1])}),
+        //     // stroke: new ol.style.Stroke({
+        //     //   color: [255,0,0], width: 2
+        //     // })
+        //   })
+        // })
+        // featurePoint.setStyle(pointStyle);
+        // myroutes.push(featurePoint)
+
+        var pedLine = new ol.Feature({
+          geometry: new ol.geom.LineString([route[i-1],route[i]]),
+          name: 'route_trans'+ amen,
+          description: 'total time:' + time + ', \n route risk: ' + avg_risk,
+        });
+       //console.log([route[i-1], route[i]])
+
+        var darkStroke = new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: this.getColor(risk[i-1]),
+            width: 8,
+            lineDash: [6,28]
           })
-    
-        })
-        featurePoint.setStyle(pointStyle);
-        myroutes.push(featurePoint)
+        });
+        pedLine.setStyle(darkStroke);
+        myroutes.push(pedLine);
+        console.log("pedline in effect")
+        
+
         //console.log('transformed: ', route[i])
       }else if(mapnode[i-1]!=5 && mapnode[i]!=5){
         var featureLine = new ol.Feature({
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
+          name: 'route_trans'+ amen,
+          description: 'total time:' + time + ', \n route risk: ' + avg_risk,
         });
        //console.log([route[i-1], route[i]])
         var linestyle = new ol.style.Style({
@@ -572,9 +603,26 @@ export class AppComponent {
         });
         
         featureLine.setStyle(linestyle);
-        
         myroutes.push(featureLine);
       }
+ 
+      //additional function for highlight line 
+      // var highlightline = new ol.Feature({
+      //   geometry: new ol.geom.LineString([route[i-1],route[i]]),
+      //   name: 'route_trans'+amen,
+      // });
+      // var nullstyle = new ol.style.Style({
+      //   stroke: new ol.style.Stroke({
+      //     color: 'transparent',
+      //     width: 10
+      //   })
+      // });
+
+
+      // highlightline.setStyle(nullstyle);
+      // myroutes.push(highlightline);
+      // console.log(highlightline.get('name'));
+
     }
     //console.log(myroutes);
   }
@@ -585,12 +633,13 @@ export class AppComponent {
     var featureLine = new ol.Feature({
       geometry: new ol.geom.LineString(route),
       name: 'additional_line',
-      description: 'total time:' + time + ', \n route risk: ' + des,
+      description: 'total time:' + time + ', \n route risk: ' + risk,
     });
     var nullstyle = new ol.style.Style({
       fill: new ol.style.Stroke({
         color: 'transparent'
      }),
+     width: 10,
       text: new ol.style.Text({
         font: '20px Calibri,sans-serif',
         textBaseline: 'top',
@@ -603,12 +652,14 @@ export class AppComponent {
           color: 'rgba(0,0,0,0.5)'
         }),
         padding: [0,2,0,2]
-      })
+      }),
+      zIndex: 999,
+
     });
     var filteredAry = ttcname.filter(function(e) { return e !== "null" }).filter((v, i, a) => a.indexOf(v) === i);
     if (filteredAry != []){
-    nullstyle.getText().setText('total time:' + time + "min");} //\n Transit:" + filteredAry
-    else {nullstyle.getText().setText('total time:' + time + "min ")}
+    nullstyle.getText().setText('total time:\n' + time + "min");} //\n Transit:" + filteredAry
+    else {nullstyle.getText().setText('total time: \n' + time + "min ")}
     featureLine.setStyle(nullstyle);
     myroutes.push(featureLine)
   }
@@ -774,11 +825,12 @@ export class AppComponent {
                 // for (let key of Object.keys(this.response[index])){
                 var route_transit = JSON.parse(this.response[1][amen]['routeNode']);
                 var risk_transit = JSON.parse(this.response[0][amen]['risk']); 
+                
                 route_transit[0] = ol.proj.transform(route_transit[0], 'EPSG:4326', 'EPSG:3857');
                 var time_transit = this.response[1][amen]['time'];
                 var description_transit = this.response[1][amen]['description'];
                 var nodetype = JSON.parse(this.response[1][amen]['nodetype']);
-                var ttcname = JSON.parse(this.response[1][amen]['ttcname']);
+                var ttcname = JSON.parse(this.response[1][amen]['linenumber']);
                 // console.log('print route: ' + route[1]);
                 // console.log('print risk: ' + risk[0]);
                 // console.log('route length: '+ route.length);
@@ -791,7 +843,7 @@ export class AppComponent {
             // var safe = 'rgba(0, 204, 0, 1)';
             // var medium = 'rgba(255, 152, 51, 1)';
             // var dangerous = 'rgba(255, 0, 0, 1)';
-                this.getGeom(route_transit, time_transit, risk_transit, description_transit, nodetype, myroutes_transit);
+                this.getGeom(amen,route_transit, time_transit, risk_transit, description_transit, nodetype, myroutes_transit);
                 this.DynamicColoring(route_transit, time_transit, risk_transit, description_transit,myroutes_transit,ttcname)  //display text
               }
               var vectorSource_transit = new ol.source.Vector({
