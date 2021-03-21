@@ -12,6 +12,7 @@ public class Path implements Comparable<Path>{ //hi
     protected double totalRisk;
     protected double ttcTime;
     protected double walkingTime;
+    protected double pathtype;
 
 
     public int weight = -1;
@@ -32,6 +33,7 @@ public class Path implements Comparable<Path>{ //hi
     public Path(ArrayList<MapNode> input_nodes){
         nodes = input_nodes;
         totalLength = 0;
+        pathtype = 5;
         for (int i=0; i< input_nodes.size()-1;i++){
             totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
             totalRisk += input_nodes.get(i).pedCount;
@@ -41,6 +43,7 @@ public class Path implements Comparable<Path>{ //hi
                 for(MapEdge edge : input_nodes.get(i).edges){
                     if(edge.destinationNode.id == input_nodes.get(i+1).id){
                         ttcTime += edge.length;
+                        pathtype = 1;
                     }
                 }
             }

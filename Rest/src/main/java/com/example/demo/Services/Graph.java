@@ -602,6 +602,8 @@ public class Graph { //hi
                 int route_type = Integer.parseInt(entry[10]);
                 double lon = Double.parseDouble(entry[11]);
                 double lat = Double.parseDouble(entry[12]);
+                String stop_name = entry[13];
+
 
                 LocalTime testTime = LocalTime.parse("9:00", DateTimeFormatter.ofPattern("H:m")); // set currTime to 9AM for testing
 
@@ -623,9 +625,12 @@ public class Graph { //hi
                             newnode.occupancyPercent = newnode.ttcOccupancy.get(testTime)[0];
                             newnode.arrivalTime.add(arrival_time);
                             newnode.ttcName = trip_name;
+                            newnode.stopName = stop_name;
                             long temptime = arrival_time.getTime() - prev_time.getTime();
                             if( temptime < 0.0){
-                                temptime = new Double(0.0).longValue();
+                                //long tempa = arrival_time.getTime();
+                                //long tempb = prev_time.getTime();
+                                temptime = new Double(1.0).longValue();
                             }
                             nodes.get(prev_id).edges.add(new MapEdge(nodes.get(prev_id), newnode, (temptime)/(60000)));
                             nodes.put(newnode.id, newnode);
@@ -666,6 +671,7 @@ public class Graph { //hi
                             newnode.occupancyPercent = newnode.ttcOccupancy.get(testTime)[0];
                             newnode.arrivalTime.add(arrival_time);
                             newnode.ttcName = trip_name;
+                            newnode.stopName = stop_name;
 
                             nodes.put(newnode.id, newnode);
 
@@ -703,6 +709,7 @@ public class Graph { //hi
                         newnode.occupancyPercent = newnode.ttcOccupancy.get(testTime)[0];
                         newnode.arrivalTime.add(arrival_time);
                         newnode.ttcName = trip_name;
+                        newnode.stopName = stop_name;
 
                         nodes.put(newnode.id, newnode);
                         // connect walk net to ttc net
