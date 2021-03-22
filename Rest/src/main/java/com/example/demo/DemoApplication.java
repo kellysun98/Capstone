@@ -211,8 +211,8 @@ public class DemoApplication { //hi
 
 		@GetMapping("/publictransit")
 		public String getTransitList() {
-
-			return KSP.KSPtoJsonTTC(ttc_resultList);
+			String ttc = KSP.KSPtoJsonTTC(ttc_resultList);
+			return ttc;
 		}
 
 		@GetMapping("/walking")

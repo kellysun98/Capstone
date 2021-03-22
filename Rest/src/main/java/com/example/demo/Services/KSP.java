@@ -309,10 +309,10 @@ public class KSP {
             path_map.put("cost", new Gson().toJson(cost));
             path_map.put("routeNode", new Gson().toJson(mn));
             path_map.put("nodetype", new Gson().toJson(nodetypes));
-            path_map.put("ttcname",new Gson().toJson(ttc));
+            path_map.put("ttcname",new Gson().toJson(Integer.parseInt(ttc)));
             path_map.put("nstop", new Gson().toJson(ttc_count));
-            path_map.put("startname", new Gson().toJson(all_names.get(0)));
-            path_map.put("stopname", new Gson().toJson(all_names.get(-1)));
+//            path_map.put("startname", new Gson().toJson(all_names.get(0)));
+//            path_map.put("stopname", new Gson().toJson(all_names.get(-1)));
             path_map.put("time", new Gson().toJson(time));
             path_map.put("description", p.getDescription());
             path_map.put("distance", new Gson().toJson(distance));
