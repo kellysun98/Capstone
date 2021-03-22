@@ -13,6 +13,11 @@ public class Path implements Comparable<Path>{ //hi
     protected double ttcTime;
     protected double walkingTime;
     protected double pathtype;
+    protected String lineNumber;
+    protected String startStop;
+    protected String endStop;
+    protected int numberStop;
+
 
 
     public int weight = -1;
@@ -24,6 +29,7 @@ public class Path implements Comparable<Path>{ //hi
         totalRisk = 0;
         ttcTime = 0;
         walkingTime = 0;
+        lineNumber = "";
     }
 
     /** Path constructor
@@ -34,17 +40,30 @@ public class Path implements Comparable<Path>{ //hi
         nodes = input_nodes;
         totalLength = 0;
         pathtype = 5;
+        numberStop = 0;
+        boolean pre_w = true;
         for (int i=0; i< input_nodes.size()-1;i++){
             totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
             totalRisk += input_nodes.get(i).pedCount;
             if(input_nodes.get(i).nodetype == 5){
                 walkingTime += getDistance(input_nodes.get(i), input_nodes.get(i+1))/5000.0*60;
+                if(!pre_w){
+                    endStop = input_nodes.get(i).stopName;
+                }
+                pre_w = true;
+
             }else{
                 for(MapEdge edge : input_nodes.get(i).edges){
                     if(edge.destinationNode.id == input_nodes.get(i+1).id){
+                        numberStop += 1;
                         ttcTime += edge.length;
                         pathtype = 1;
+                        lineNumber = input_nodes.get(i).ttcName;
                     }
+                    if(pre_w){
+                        startStop = input_nodes.get(i).stopName;
+                    }
+                    pre_w = false;
                 }
             }
         }
