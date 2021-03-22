@@ -47,7 +47,7 @@
                 <button (click)="initBackEnd()" style="text-decoration:underline; padding: 0; border: none; background: none; margin-left: 35px!important; margin-top:10px!important; color:blue">Init</button>
             </div> -->
         </div>
-        <ng-container *ngIf="show">
+        <div *ngIf="!isSearching">
             <app-mybar (selectedTab)="showLine($event)"></app-mybar>
             <!-- <mat-card class="result-card">
                 <mat-card-content>
@@ -63,7 +63,7 @@
                 </div>    
                 </mat-card-content>
               </mat-card>     -->
-        </ng-container>
+            </div>
 
         <mat-card>
             <mat-card-content>
