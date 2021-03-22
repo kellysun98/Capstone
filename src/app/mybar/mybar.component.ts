@@ -25,11 +25,11 @@ export class MybarComponent implements OnInit {
   response: any;
 
   ngOnInit(): void {
-    this.routeService.getTransitInfo().pipe(delay(2000), take(1)).subscribe( data => {
+    this.routeService.getTransitInfo().pipe(take(1)).subscribe( data => {
       this.bus = data; 
       console.log(this.bus)
     } )
-    this.routeService.getWalkingInfo().pipe(delay(2000), take(1)).subscribe( data => { this.walk = data;
+    this.routeService.getWalkingInfo().pipe(take(1)).subscribe( data => { this.walk = data;
       console.log(this.walk)
     })
     // this.newMessage();
