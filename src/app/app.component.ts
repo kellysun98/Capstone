@@ -1140,13 +1140,13 @@ toggleAmenities(amen){
 //   'Yorkdale Shopping Centre'
 // ]
 
-getTweets(): void {
-  const dialogRef = this.dialog.open(TweetsComponent, {
-    width: '500px',
-    height: '500px',
-    data: {}
-  });
-}
+// getTweets(): void {
+//   const dialogRef = this.dialog.open(TweetsComponent, {
+//     width: '500px',
+//     height: '500px',
+//     data: {}
+//   });
+// }
 
 
 }
