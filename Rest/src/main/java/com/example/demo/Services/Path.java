@@ -47,11 +47,6 @@ public class Path implements Comparable<Path>{ //hi
             totalRisk += input_nodes.get(i).pedCount;
             if(input_nodes.get(i).nodetype == 5){
                 walkingTime += getDistance(input_nodes.get(i), input_nodes.get(i+1))/5000.0*60;
-                if(!pre_w){
-                    endStop = input_nodes.get(i).stopName;
-                }
-                pre_w = true;
-
             }else{
                 for(MapEdge edge : input_nodes.get(i).edges){
                     if(edge.destinationNode.id == input_nodes.get(i+1).id){
@@ -59,12 +54,15 @@ public class Path implements Comparable<Path>{ //hi
                         ttcTime += edge.length;
                         pathtype = 1;
                         lineNumber = input_nodes.get(i).ttcName;
+                        if(input_nodes.get(i+1).nodetype == 5){
+                            endStop = input_nodes.get(i+1).stopName;
+                        }
                     }
-                    if(pre_w){
-                        startStop = input_nodes.get(i).stopName;
-                    }
-                    pre_w = false;
                 }
+                if(pre_w){
+                    startStop = input_nodes.get(i).stopName;
+                }
+                pre_w = false;
             }
         }
         setTime(); // set total time of the path in mins
