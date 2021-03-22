@@ -3,7 +3,7 @@ export interface Route {
     cost: number;
     nodetype: Array<number>;
     distance: number;
-    ttcname: number;
+    ttcname: string;
     description: string;
     risk: Array<any>;
     time: number;
