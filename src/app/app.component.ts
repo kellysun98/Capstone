@@ -70,6 +70,7 @@ export class AppComponent {
   info: any;
   valueEmittedFromChildComponent: any;
   userTrans: any;
+  isSearching: boolean;
   amenities_data = [
     {"Covid-19 Assessment center": [
         [43.7230426, -79.601108], [43.7088966, -79.5072457], [43.689953200000005, -79.32493147310899], [43.657436849999996, -79.3903184208715],
@@ -99,6 +100,7 @@ export class AppComponent {
     private route:RouteService){
   }
   ngOnInit() {
+    this.isSearching = true;
     this.openWelcome();
     //this.Heatmap2();
     this.initBackEnd();
@@ -726,7 +728,12 @@ export class AppComponent {
       })
     }
 
+    closeNotification(): void{
+      this.isSearching = true;
+    }
+
   drawLine2(){
+    
 
     this.http.get("http://localhost:8080/getTrans").pipe(take(1))
     .subscribe((trans) => {
@@ -885,7 +892,16 @@ export class AppComponent {
             }
           })
     )).subscribe(
-      //response=>console.log(response)
+      
+      
+      response=>{
+        this.isSearching = false;
+      },
+      error => {},
+    // () => {
+    //   this.isSearching = true;
+    // }
+      
     )
     })
   }
