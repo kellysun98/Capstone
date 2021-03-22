@@ -10,4 +10,6 @@ export interface Transit {
     time: number;
     walkingtime: number;
     ttctime: number;
+    startstop: string;
+    endstop: string;
 }

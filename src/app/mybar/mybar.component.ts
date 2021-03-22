@@ -7,7 +7,7 @@ import { DataService } from '../data.service';
 import { RouteService } from '../route.service';
 import {Route} from '../route'
 import {Transit} from '../transit'
-import { take } from 'rxjs/operators';
+import { delay, take, timeout } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Component({
@@ -25,10 +25,11 @@ export class MybarComponent implements OnInit {
   response: any;
 
   ngOnInit(): void {
-    this.routeService.getTransitInfo().pipe(take(1)).subscribe( data => {this.bus = data; 
+    this.routeService.getTransitInfo().pipe(delay(2000), take(1)).subscribe( data => {
+      this.bus = data; 
       console.log(this.bus)
     } )
-    this.routeService.getWalkingInfo().pipe(take(1)).subscribe( data => { this.walk = data;
+    this.routeService.getWalkingInfo().pipe(delay(2000), take(1)).subscribe( data => { this.walk = data;
       console.log(this.walk)
     })
     // this.newMessage();
