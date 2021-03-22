@@ -55,7 +55,7 @@ public class Path implements Comparable<Path>{ //hi
                         pathtype = 1;
                         lineNumber = input_nodes.get(i).ttcName;
                         if(input_nodes.get(i+1).nodetype == 5){
-                            endStop = input_nodes.get(i+1).stopName;
+                            endStop = input_nodes.get(i).stopName;
                         }
                     }
                 }
