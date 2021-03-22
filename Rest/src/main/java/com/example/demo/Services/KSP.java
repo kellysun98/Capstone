@@ -168,58 +168,61 @@ public class KSP {
     public static String KSPtoJson(ArrayList<Path> ksp_sol) {
         ArrayList solution = new ArrayList<>();
         double count = 0;
-        for (Path p : ksp_sol) {
-            HashMap<String, String> path_map = new HashMap<>();
-            ArrayList<String> return_value = new ArrayList<>();
-            List<MapNode> node_list = p.getNodes();
-            String mn_toString = new String();
-            ArrayList<ArrayList<Double>> mn = new ArrayList<>();
-            ArrayList<Double> risk = new ArrayList<>();
-            String risk_toString = new String();
-            ArrayList<String> ttcnames = new ArrayList<>(); // stop name of each MapNode
-            for (int i = 1; i<node_list.size(); i++) {
-                ArrayList<Double> al1 = new ArrayList<>();
-                ArrayList<Double> al2 = new ArrayList<>();
-                MapNode first = node_list.get(i-1);
-                MapNode second = node_list.get(i);
-                Double middle_lon = (first.longitude+second.longitude)/2+count/80000;
-                Double middle_lat = (first.latitude+second.latitude)/2+count/80000;
-                Double longitude = node_list.get(i-1).longitude+count/80000;
-                Double latitude = node_list.get(i-1).latitude+count/80000;
-                Double risk1 = 0.0;
-                String ttcname = "";
-                if(node_list.get(i).nodetype == 5){
-                     risk1 += node_list.get(i).pedCount;
-                }
-                else{
-                    risk1 += (node_list.get(i).passengerCount * 5.52);
-                    ttcname += node_list.get(i).ttcName;
-                }
 
-                al1.add(longitude);
-                al1.add(latitude);
-                al2.add(middle_lon);
-                al2.add(middle_lat);
-                mn.add(al1);
-                mn.add(al2);
-                risk.add(risk1);
-                ttcnames.add(ttcname);
-                //risk.add(risk2);
+        for (Path p : ksp_sol) {
+            if(p.pathtype == 5){
+                HashMap<String, String> path_map = new HashMap<>();
+                ArrayList<String> return_value = new ArrayList<>();
+                List<MapNode> node_list = p.getNodes();
+                String mn_toString = new String();
+                ArrayList<ArrayList<Double>> mn = new ArrayList<>();
+                ArrayList<Double> risk = new ArrayList<>();
+                String risk_toString = new String();
+                ArrayList<String> ttcnames = new ArrayList<>(); // stop name of each MapNode
+                for (int i = 1; i<node_list.size(); i++) {
+                    ArrayList<Double> al1 = new ArrayList<>();
+                    ArrayList<Double> al2 = new ArrayList<>();
+                    MapNode first = node_list.get(i-1);
+                    MapNode second = node_list.get(i);
+                    Double middle_lon = (first.longitude+second.longitude)/2+count/80000;
+                    Double middle_lat = (first.latitude+second.latitude)/2+count/80000;
+                    Double longitude = node_list.get(i-1).longitude+count/80000;
+                    Double latitude = node_list.get(i-1).latitude+count/80000;
+                    Double risk1 = 0.0;
+                    String ttcname = "";
+                    if(node_list.get(i).nodetype == 5){
+                        risk1 += node_list.get(i).pedCount;
+                    }
+                    else{
+                        risk1 += (node_list.get(i).passengerCount * 5.52);
+                        ttcname += node_list.get(i).ttcName;
+                    }
+
+                    al1.add(longitude);
+                    al1.add(latitude);
+                    al2.add(middle_lon);
+                    al2.add(middle_lat);
+                    mn.add(al1);
+                    mn.add(al2);
+                    risk.add(risk1);
+                    ttcnames.add(ttcname);
+                    //risk.add(risk2);
+                }
+                Double cost = p.getTotalLength();
+                Double time = Precision.round(p.getTotalTime(),0);
+                Double distance = Precision.round(p.getTotalLength()/1000,2);
+                path_map.put("ttcname", new Gson().toJson(ttcnames));
+                path_map.put("cost", new Gson().toJson(cost));
+                path_map.put("routeNode", new Gson().toJson(mn));
+                path_map.put("risk", new Gson().toJson(risk));
+                path_map.put("time", new Gson().toJson(time));
+                path_map.put("description", p.getDescription());
+                path_map.put("distance", new Gson().toJson(distance));
+                path_map.put("walkingtime", new Gson().toJson(0));
+                path_map.put("ttctime", new Gson().toJson(0));
+                count++;
+                solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
             }
-            Double cost = p.getTotalLength();
-            Double time = Precision.round(p.getTotalTime(),0);
-            Double distance = Precision.round(p.getTotalLength()/1000,2);
-            path_map.put("ttcname", new Gson().toJson(ttcnames));
-            path_map.put("cost", new Gson().toJson(cost));
-            path_map.put("routeNode", new Gson().toJson(mn));
-            path_map.put("risk", new Gson().toJson(risk));
-            path_map.put("time", new Gson().toJson(time));
-            path_map.put("description", p.getDescription());
-            path_map.put("distance", new Gson().toJson(distance));
-            path_map.put("walkingtime", new Gson().toJson(0));
-            path_map.put("ttctime", new Gson().toJson(0));
-            count++;
-            solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
         }
         String solution_to_string = new Gson().toJson(solution);
         return solution_to_string;
@@ -230,80 +233,78 @@ public class KSP {
         ArrayList solution = new ArrayList<>();
         double count = 0;
         for (Path p : ksp_sol) {
-            HashMap<String, String> path_map = new HashMap<>();
-            ArrayList<String> return_value = new ArrayList<>();
-            List<MapNode> node_list = p.getNodes();
-            String mn_toString = new String();
-            ArrayList<ArrayList<Double>> mn = new ArrayList<>();
-            ArrayList<Double> risk = new ArrayList<>();
-            ArrayList<Integer> nodetypes = new ArrayList<>(); // node type of each MapNode
-            String risk_toString = new String();
-            ArrayList<String> ttcnames = new ArrayList<>(); // stop name of each MapNode
-            for (int i = 1; i<node_list.size(); i++) {
-                ArrayList<Double> al1 = new ArrayList<>();
-                ArrayList<Double> al2 = new ArrayList<>();
-                MapNode first = node_list.get(i-1);
-                MapNode second = node_list.get(i);
-                Double middle_lon = (first.longitude+second.longitude)/2+count/80000;
-                Double middle_lat = (first.latitude+second.latitude)/2+count/80000;
-                Double longitude = node_list.get(i-1).longitude+count/80000;
-                Double latitude = node_list.get(i-1).latitude+count/80000;
-                int nt1 = node_list.get(i-1).nodetype;
-                int nt2 = node_list.get(i).nodetype;
-                String sn1 = node_list.get(i-1).ttcName;
-                String sn2 = node_list.get(i).ttcName;
-                Double risk1 = 0.0;
-                if(node_list.get(i).nodetype == 5){
-                    risk1 += node_list.get(i).pedCount;
-                }
-                else{
-                    risk1 += (node_list.get(i).passengerCount * 5.52);
-                }
+            if(p.pathtype != 5){
+                HashMap<String, String> path_map = new HashMap<>();
+                ArrayList<String> return_value = new ArrayList<>();
+                List<MapNode> node_list = p.getNodes();
+                String mn_toString = new String();
+                ArrayList<ArrayList<Double>> mn = new ArrayList<>();
+                ArrayList<Double> risk = new ArrayList<>();
+                ArrayList<Integer> nodetypes = new ArrayList<>(); // node type of each MapNode
+                String risk_toString = new String();
+                for (int i = 1; i<node_list.size(); i++) {
+                    ArrayList<Double> al1 = new ArrayList<>();
+                    ArrayList<Double> al2 = new ArrayList<>();
+                    MapNode first = node_list.get(i-1);
+                    MapNode second = node_list.get(i);
+                    Double middle_lon = (first.longitude+second.longitude)/2+count/80000;
+                    Double middle_lat = (first.latitude+second.latitude)/2+count/80000;
+                    Double longitude = node_list.get(i-1).longitude+count/80000;
+                    Double latitude = node_list.get(i-1).latitude+count/80000;
+                    int nt1 = node_list.get(i-1).nodetype;
+                    int nt2 = node_list.get(i).nodetype;
+                    String sn1 = node_list.get(i-1).ttcName;
+                    String sn2 = node_list.get(i).ttcName;
+                    Double risk1 = 0.0;
+                    if(node_list.get(i).nodetype == 5){
+                        risk1 += node_list.get(i).pedCount;
+                    }
+                    else{
+                        risk1 += (node_list.get(i).passengerCount * 5.52);
+                    }
 
-                al1.add(longitude);
-                al1.add(latitude);
-                al2.add(middle_lon);
-                al2.add(middle_lat);
-                mn.add(al1);
-                mn.add(al2);
-                nodetypes.add(nt1);
-                nodetypes.add(nt2);
-                if(sn1 != null){
-                    ttcnames.add(sn1);
-                }else{
-                    continue;
-                }
-                if(sn2 != null & sn2!=sn1){
-                    ttcnames.add(sn2);
-                }else{
-                    continue;
-                }
-                risk.add(risk1);
+                    al1.add(longitude);
+                    al1.add(latitude);
+                    al2.add(middle_lon);
+                    al2.add(middle_lat);
+                    mn.add(al1);
+                    mn.add(al2);
+                    nodetypes.add(nt1);
+                    nodetypes.add(nt2);
 
+                    risk.add(risk1);
+
+                }
+                Double cost = p.getTotalLength();
+                Double time = Precision.round(p.getTotalTime(),0);
+                Double distance = Precision.round(p.getTotalLength()/1000,2);
+                Double walkingtime = Precision.round(p.walkingTime,0); //Total walking time of route under public transit mode
+                Double ttctime = Precision.round(p.ttcTime,0); //Total time on public transit
+                String ttclinenumber = p.lineNumber;
+                //Set<String> set = new HashSet<String>(ttcnames);
+                path_map.put("cost", new Gson().toJson(cost));
+                path_map.put("routeNode", new Gson().toJson(mn));
+                path_map.put("nodetype", new Gson().toJson(nodetypes));
+                path_map.put("ttcname",new Gson().toJson(ttclinenumber));
+                path_map.put("nstop", new Gson().toJson(p.numberStop));
+                path_map.put("time", new Gson().toJson(time));
+                path_map.put("description", p.getDescription());
+                path_map.put("distance", new Gson().toJson(distance));
+                path_map.put("risk", new Gson().toJson(risk));
+                path_map.put("walkingtime", new Gson().toJson(walkingtime));
+                path_map.put("ttctime", new Gson().toJson(ttctime));
+                path_map.put("startstop", new Gson().toJson(p.startStop));
+                path_map.put("endstop", new Gson().toJson(p.endStop));
+
+
+                count++;
+                solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
             }
-            Double cost = p.getTotalLength();
-            Double time = Precision.round(p.getTotalTime(),0);
-            Double distance = Precision.round(p.getTotalLength()/1000,2);
-            Double walkingtime = Precision.round(p.walkingTime,0); //Total walking time of route under public transit mode
-            Double ttctime = Precision.round(p.ttcTime,0); //Total time on public transit
-            Set<String> set = new HashSet<String>(ttcnames);
-            path_map.put("cost", new Gson().toJson(cost));
-            path_map.put("routeNode", new Gson().toJson(mn));
-            path_map.put("nodetype", new Gson().toJson(nodetypes));
-            path_map.put("ttcname",new Gson().toJson(ttcnames));
-            path_map.put("nstop", new Gson().toJson(ttcnames.size()));
-            path_map.put("time", new Gson().toJson(time));
-            path_map.put("description", p.getDescription());
-            path_map.put("distance", new Gson().toJson(distance));
-            path_map.put("risk", new Gson().toJson(risk));
-            path_map.put("walkingtime", new Gson().toJson(walkingtime));
-            path_map.put("ttctime", new Gson().toJson(ttctime));
 
-            count++;
-            solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
         }
         String solution_to_string = new Gson().toJson(solution);
         return solution_to_string;
+
     }
     /** Walking */
     public static ArrayList KSPtoJson_AL(ArrayList<Path> ksp_sol) {
