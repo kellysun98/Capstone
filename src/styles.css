@@ -25,21 +25,25 @@ body {
 }
 
 #container-1 /deep/ .mat-slider.mat-slider-horizontal .mat-slider-track-fill {
-    background-color:lime!important;
-  }
+    background-color: lime!important;
+}
+
 #container-2 /deep/ .mat-slider.mat-slider-horizontal .mat-slider-track-fill {
     background-color: rgb(187, 255, 0)!important;
 }
+
 #container-3 /deep/ .mat-slider.mat-slider-horizontal .mat-slider-track-fill {
     background-color: gold!important;
 }
+
 #container-4 /deep/ .mat-slider.mat-slider-horizontal .mat-slider-track-fill {
     background-color: orange!important;
 }
+
 #container-5 /deep/ .mat-slider.mat-slider-horizontal .mat-slider-track-fill {
     background-color: orangered!important;
 }
-  
+
 .mat-slider-min-value:not(.mat-slider-thumb-label-showing) .mat-slider-thumb {
     background-color: white;
 }
@@ -79,16 +83,18 @@ body {
 .ol-popup {
     position: absolute;
     background-color: white;
-    -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
-    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
     padding: 15px;
     border-radius: 10px;
     border: 1px solid #cccccc;
     bottom: 12px;
     left: -50px;
     min-width: 100px;
-  }
-  .ol-popup:after, .ol-popup:before {
+}
+
+.ol-popup:after,
+.ol-popup:before {
     top: 100%;
     border: solid transparent;
     content: " ";
@@ -96,26 +102,41 @@ body {
     width: 0;
     position: absolute;
     pointer-events: none;
-  }
-  .ol-popup:after {
+}
+
+.ol-popup:after {
     border-top-color: white;
     border-width: 10px;
     left: 48px;
     margin-left: -10px;
-  }
-  .ol-popup:before {
+}
+
+.ol-popup:before {
     border-top-color: #cccccc;
     border-width: 11px;
     left: 48px;
     margin-left: -11px;
-  }
-  .ol-popup-closer {
+}
+
+.ol-popup-closer {
     text-decoration: none;
     position: absolute;
     top: 2px;
     right: 8px;
-  }
-  .ol-popup-closer:after {
+}
+
+.ol-popup-closer:after {
     content: "✖";
-  }
-  
+}
+
+.mat-select-panel mat-option.mat-option {
+    margin: 1rem 0;
+    overflow: visible;
+    line-height: initial;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.mat-option-text.mat-option-text {
+    white-space: normal;
+}
