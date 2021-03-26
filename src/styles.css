@@ -86,7 +86,8 @@ body {
     border: 1px solid #cccccc;
     bottom: 12px;
     left: -50px;
-    min-width: 100px;
+    width: auto;
+    height: auto;
   }
   .ol-popup:after, .ol-popup:before {
     top: 100%;
