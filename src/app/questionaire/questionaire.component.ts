@@ -43,7 +43,7 @@ export class QuestionaireComponent implements OnInit {
   //   { name: 'Biking', value: 'Biking' },
   // ];
   // transportations = new FormControl('', Validators.required);
-  transportationList: string[] = ['Walking', 'Public Transit', 'Biking'];
+  transportationList: string[] = ['Walking', 'Public Transit'];
 
   // periods = new FormControl('', Validators.required);
   periodList: string[] = ['Less than 5 minutes', 'Less than 10 minutes', 'Less than 15 minutes','No limit'];
