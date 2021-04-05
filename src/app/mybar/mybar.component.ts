@@ -7,8 +7,9 @@ import { DataService } from '../data.service';
 import { RouteService } from '../route.service';
 import {Route} from '../route'
 import {Transit} from '../transit'
-import { delay, take, timeout } from 'rxjs/operators';
+import { concatMap, delay, take, timeout } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-mybar',
@@ -23,13 +24,17 @@ export class MybarComponent implements OnInit {
   walk: Route[]=[];
   selectedIndex: number;
   response: any;
-
+  Object = Object;
   ngOnInit(): void {
-    this.routeService.getTransitInfo().pipe(take(1)).subscribe( data => {
+    this.routeService.getTransitInfo().pipe(
+      concatMap( item => of(item).pipe ( delay( 5000 ) ))
+    ).subscribe( data => {
       this.bus = data; 
       console.log(this.bus)
     } )
-    this.routeService.getWalkingInfo().pipe(take(1)).subscribe( data => { this.walk = data;
+    this.routeService.getWalkingInfo().pipe(
+      concatMap( item => of(item).pipe ( delay( 5000 ) ))
+    ).subscribe( data => { this.walk = data;
       console.log(this.walk)
     })
     // this.newMessage();

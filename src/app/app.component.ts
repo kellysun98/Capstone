@@ -103,7 +103,7 @@ export class AppComponent {
     this.isSearching = true;
     this.openWelcome();
     //this.Heatmap2();
-    this.initBackEnd();
+    //this.initBackEnd();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -546,6 +546,7 @@ export class AppComponent {
   }
 
   getGeom(amen,route, time, risk, description, mapnode, myroutes){
+    console.log("line 549 i am in getgeom");
     let avg = (array) => array.reduce((a, b) => a + b) / array.length;
     var avg_risk = (avg(risk)/9 * 100).toFixed(2);
     for (var i = 1; i < route.length; i++){
@@ -742,9 +743,12 @@ export class AppComponent {
       this.map.getLayers().forEach(function(layer){
         if(layer.get('name') != undefined && layer.get('name') === 'ped-lines'){
             layer.setVisible(ped_status);
+            //layer.setVisible(transit_status);
         } 
         if(layer.get('name') != undefined && layer.get('name') === 'transit-lines'){
             layer.setVisible(transit_status);
+            //layer.setVisible(ped_status);
+
           }
         })
       })
@@ -786,6 +790,7 @@ export class AppComponent {
           //if(this.valueEmittedFromChildComponent==0)
 
           this.response = res; 
+          console.log("response array is", this.response);
           for (let result of Object.values(this.response)){
               var res_length = Object.keys(this.response[0]).length;
               if (res_length>=5){
@@ -803,7 +808,7 @@ export class AppComponent {
                 var risk = JSON.parse(this.response[0][amen]['risk']);
                 route[0] = ol.proj.transform(route[0], 'EPSG:4326', 'EPSG:3857');
                 var time = this.response[0][amen]['time'];
-                if (time == 22.0){continue;}  //get rid of 22 in walk  
+                //if (time == 22.0){continue;}  //get rid of 22 in walk  
                 var description = this.response[0][amen]['description'];
                 var mapnode = Array(route.length).fill(5)
                 var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
@@ -819,7 +824,7 @@ export class AppComponent {
                 this.DynamicColoring(route, time, risk, description,myroutes)  //display text
               }
               var vectorSource = new ol.source.Vector({
-                features: myroutes,
+                //features: myroutes,
               }); //multiple routes added 
 
 
@@ -849,26 +854,25 @@ export class AppComponent {
               //   console.log(layer.get('name'));  
               // }); 
               var res_length_transit = Object.keys(this.response[1]).length;
+              //console.log("bus array:", this.response[1]);
+              console.log("res_length_transit", res_length_transit);
               var myroutes_transit = [];
               var routes_walk = [];
               for(var amen = 0; amen<res_length_transit; amen++){ 
-              // for(let index in this.response[amen]['routeNode']){
-                // console.log('first loop: ' + this.response[amen]['routeNode'])
-                // for (let key of Object.keys(this.response[index])){
                 var route_transit = JSON.parse(this.response[1][amen]['routeNode']);
-                var risk_transit = JSON.parse(this.response[0][amen]['risk']); 
-                
+                var risk_transit = JSON.parse(this.response[1][amen]['risk']); 
                 route_transit[0] = ol.proj.transform(route_transit[0], 'EPSG:4326', 'EPSG:3857');
                 var time_transit = this.response[1][amen]['time'];
                 //if (time_transit != 22.0){continue;}  //keep only 22 for transit 
-
+                console.log("now at line 872 for transit")
                 var description_transit = this.response[1][amen]['description'];
+                console.log("now at line 872 for transit")
                 var nodetype = JSON.parse(this.response[1][amen]['nodetype']);
-                var ttcname = JSON.parse(this.response[1][amen]['linenumber']);
+                //console.log("now at line 872 for transit")
+                var ttcname = []//JSON.parse(this.response[1][amen]['linenumber']);
                 // console.log('print route: ' + route[1]);
                 // console.log('print risk: ' + risk[0]);
                 // console.log('route length: '+ route.length);
-
                 var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
                 var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
                 var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';
@@ -880,10 +884,11 @@ export class AppComponent {
                 this.getGeom(amen,route_transit, time_transit, risk_transit, description_transit, nodetype, myroutes_transit);  
                 this.DynamicColoring(route_transit, time_transit, risk_transit, description_transit,myroutes_transit,ttcname)  //display text
               }
+
               var vectorSource_transit = new ol.source.Vector({
-                features: myroutes_transit,
+                features: res_length_transit === 0? myroutes : myroutes_transit,
               }); //multiple routes added 
-              
+
               var indicator = 0;
               this.map.getLayers().forEach(function(layer) {
                 if (layer.get('name') != undefined && layer.get('name') === 'transit-lines') {
@@ -891,7 +896,7 @@ export class AppComponent {
                     layer.getSource().addFeature(feature);            
                   });    
                     indicator = 1;   
-                    console.log("feature added to existing layer"); 
+                    console.log("bus feature added to existing layer"); 
                 }
               });
               if (this.userTrans.includes("Walking")){
@@ -902,11 +907,12 @@ export class AppComponent {
                this.showLine(1)}
   
               if(indicator === 0) {  
-                console.log("new layer created"); 
+                console.log("new layer created for bus"); 
                 var vectorLineLayer_transit = new ol.layer.Vector({
                   source: vectorSource_transit,
                   name: 'transit-lines',
               });
+              console.log("bus layer created");
                 this.map.addLayer(vectorLineLayer_transit);
                if (this.userTrans.includes("Walking")){
                   console.log("both walking and public only");

@@ -2,38 +2,37 @@
 <mat-tab-group dynamicHeight (selectedTabChange)="tabChange($event)" [(selectedIndex)]="selectedIndex">
     <mat-tab label="Walking">
         <hr style="border-top:none">
+        <ng-container *ngFor="let key of Object.keys(walk)">
         <mat-grid-list cols = "9" rowHeight = "110px">
-            <mat-grid-tile colspan = "2">
-                <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{walk[0].time}} mins</mat-label>
-            </mat-grid-tile>
-            <mat-grid-tile colspan = "7">
-                <li style="list-style-type: none;">
-                <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
-                <!-- <span> {{walk[0].walkingtime}} mins </span>
-                <br> -->
-                <mat-label class = "description"> Best Walking Route </mat-label>
-                </li>
-            </mat-grid-tile>          
-        </mat-grid-list>
-        <br>
-        <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{walk[0].distance}} km</span>
+                <mat-grid-tile colspan = "2">
+                    <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{walk[key].time}} mins</mat-label>
+                </mat-grid-tile>
+                <mat-grid-tile colspan = "7">
+                    <li style="list-style-type: none;">
+                    <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
+                    <mat-label class = "description"> Best Walking Route </mat-label>
+                    </li>
+                </mat-grid-tile>          
+            </mat-grid-list>
+            <br>
+            <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{walk[key].distance}} km</span>
+    
+        </ng-container>
 
         <hr>
-        <mat-grid-list cols = "9" rowHeight = "110px">
+        <!-- <mat-grid-list cols = "9" rowHeight = "110px">
             <mat-grid-tile colspan = "2">
                 <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{walk[1].time}} mins</mat-label>
             </mat-grid-tile>
             <mat-grid-tile colspan = "7">
                 <li style="list-style-type: none;">
                 <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
-                <!-- <span> {{walk[1].walkingtime}} mins </span>
-                <br> -->
                 <mat-label class = "description"> Optional Walking Route </mat-label>
                 </li>
             </mat-grid-tile>          
         </mat-grid-list>
         <br>
-        <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{walk[1].distance}} km</span>
+        <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{walk[1].distance}} km</span> -->
         
         <!-- <hr>
         <mat-grid-list cols = "9" rowHeight = "110px">
@@ -57,29 +56,33 @@
     <mat-tab label="Transit"> 
         <!-- <ul> -->
             <hr style="border-top:none">
+            <ng-container *ngFor="let key of Object.keys(bus)">
             <mat-grid-list cols = "9" rowHeight = "150px">
                 <mat-grid-tile colspan = "2">
-                    <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[0].time}} mins</mat-label>
+                    <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[key].time}} mins</mat-label>
                 </mat-grid-tile>
                 <mat-grid-tile colspan = "7">
                     <li style="list-style-type: none;">
-                    <span style="margin-bottom: 20px;"> # {{bus[0].ttcname}} : {{bus[0].nstop}} stops</span>
+                    <span style="margin-bottom: 20px;"> # {{bus[key].ttcname}} : {{bus[key].nstop}} stops</span>
                     <br>
-                    <span style="margin-bottom: 20px;">{{bus[0].startstop}} -- {{bus[0].endstop}}</span>
+                    <span style="margin-bottom: 20px;">{{bus[key].startstop}} -- {{bus[key].endstop}}</span>
                     <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
-                    <span> {{bus[0].walkingtime}} mins </span>
+                    <span> {{bus[key].walkingtime}} mins </span>
                     <span> -- </span>
                     <!-- <br> -->
                     <mat-icon style="color:  #2A0968; display: inline-flex; vertical-align: middle;"> directions_transit</mat-icon>
-                    <span> {{bus[0].ttctime}} mins </span>
+                    <span> {{bus[key].ttctime}} mins </span>
                     <br>
                     <mat-label class = "description"> Best Transit Route </mat-label>
                     </li>
                 </mat-grid-tile>          
             </mat-grid-list>
+            <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{bus[key].distance}} km</span>
+            </ng-container>
             <br>
-            <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{bus[0].distance}} km</span>
-
+            <!-- <div *ngFor="let key of Object.keys(walk)">
+                <p>Key-> {{key}} and value is -> {{walk[key].time}}</p>
+            </div>          -->
             <!-- <hr>
             <mat-grid-list cols = "9" rowHeight = "110px">
                 <mat-grid-tile colspan = "2">
