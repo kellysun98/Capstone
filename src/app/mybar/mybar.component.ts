@@ -27,13 +27,13 @@ export class MybarComponent implements OnInit {
   Object = Object;
   ngOnInit(): void {
     this.routeService.getTransitInfo().pipe(
-      concatMap( item => of(item).pipe ( delay( 5000 ) ))
+      concatMap( item => of(item).pipe ( delay( 3000 ) ))
     ).subscribe( data => {
       this.bus = data; 
       console.log(this.bus)
     } )
     this.routeService.getWalkingInfo().pipe(
-      concatMap( item => of(item).pipe ( delay( 5000 ) ))
+      concatMap( item => of(item).pipe ( delay( 3000 ) ))
     ).subscribe( data => { this.walk = data;
       console.log(this.walk)
     })
