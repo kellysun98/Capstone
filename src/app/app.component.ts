@@ -103,7 +103,7 @@ export class AppComponent {
     this.isSearching = true;
     this.openWelcome();
     //this.Heatmap2();
-    //this.initBackEnd();
+    this.initBackEnd();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
