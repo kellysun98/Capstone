@@ -889,6 +889,10 @@ export class AppComponent {
                 features: res_length_transit === 0? myroutes : myroutes_transit,
               }); //multiple routes added 
 
+              if(res_length_transit===0){
+                alert("No Transit Line Available!")
+              }
+
               var indicator = 0;
               this.map.getLayers().forEach(function(layer) {
                 if (layer.get('name') != undefined && layer.get('name') === 'transit-lines') {
