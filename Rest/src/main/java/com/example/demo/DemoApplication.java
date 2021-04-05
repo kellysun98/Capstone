@@ -172,6 +172,11 @@ public class DemoApplication { //hi
 //				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
 				result = KSP.Merge2ResultLists(resultList,ttc_resultList);
 
+				String walk_result = new String();
+				String ttc_result = new String();
+				walk_result = KSP.Merge2ResultListsDebug(resultList);
+				ttc_result = KSP.Merge2ResultListsDebug(ttc_resultList);
+
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
 
@@ -201,7 +206,13 @@ public class DemoApplication { //hi
 
 //				walk_result = KSP.KSPtoJson(resultList);
 //				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+
 				result = KSP.Merge2ResultLists(resultList,ttc_resultList);
+
+				String walk_result = new String();
+				String ttc_result = new String();
+				walk_result = KSP.Merge2ResultListsDebug(resultList);
+				ttc_result = KSP.Merge2ResultListsDebug(ttc_resultList);
 
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
