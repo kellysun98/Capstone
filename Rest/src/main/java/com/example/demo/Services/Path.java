@@ -5,7 +5,7 @@ import java.util.List;
 
 import static com.example.demo.Services.Graph.getDistance;
 
-public class Path implements Comparable<Path>{ //hi
+public class Path implements Comparable<Path>{
     protected ArrayList<MapNode> nodes;
     protected double totalLength;
     protected double totalTime; // in minutes
@@ -13,11 +13,6 @@ public class Path implements Comparable<Path>{ //hi
     protected double ttcTime;
     protected double walkingTime;
     protected double pathtype;
-    protected String lineNumber;
-    protected String startStop;
-    protected String endStop;
-    protected int numberStop;
-
 
 
     public int weight = -1;
@@ -29,19 +24,16 @@ public class Path implements Comparable<Path>{ //hi
         totalRisk = 0;
         ttcTime = 0;
         walkingTime = 0;
-        lineNumber = "";
     }
 
     /** Path constructor
      * @param input_nodes
      * set totalLength and totalTime of the path
-    * */
+     * */
     public Path(ArrayList<MapNode> input_nodes){
         nodes = input_nodes;
         totalLength = 0;
         pathtype = 5;
-        numberStop = 0;
-        boolean pre_w = true;
         for (int i=0; i< input_nodes.size()-1;i++){
             totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
             totalRisk += input_nodes.get(i).pedCount;
@@ -50,19 +42,10 @@ public class Path implements Comparable<Path>{ //hi
             }else{
                 for(MapEdge edge : input_nodes.get(i).edges){
                     if(edge.destinationNode.id == input_nodes.get(i+1).id){
-                        numberStop += 1;
                         ttcTime += edge.length;
                         pathtype = 1;
-                        lineNumber = input_nodes.get(i).ttcName;
-                        if(input_nodes.get(i+1).nodetype == 5){
-                            endStop = input_nodes.get(i).stopName;
-                        }
                     }
                 }
-                if(pre_w){
-                    startStop = input_nodes.get(i).stopName;
-                }
-                pre_w = false;
             }
         }
         setTime(); // set total time of the path in mins
@@ -111,7 +94,7 @@ public class Path implements Comparable<Path>{ //hi
     public List<MapNode> subList(int start, int end){
         if ((start==0)&&(end==0)){
             return this.nodes.subList(start, start+1);
-    }else{return this.nodes.subList(start, end);}}
+        }else{return this.nodes.subList(start, end);}}
 
     public static Path concatenate(Path head, Path butt){
         ArrayList<MapNode> concat_list = new ArrayList();
@@ -145,3 +128,4 @@ public class Path implements Comparable<Path>{ //hi
         return this.totalLength < o.totalLength ? -1 : 1;
     }
 }
+

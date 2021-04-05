@@ -21,7 +21,7 @@ import static com.example.demo.Services.Graph.getDistance;
 
 
 @SpringBootApplication
-public class DemoApplication { //hi
+public class DemoApplication {
 	public Graph torontoGraph;
 	public HashMap<Double, MapNode> nodeMap;
 	public HashMap<Double, MapNode> ttcnodeMap;
@@ -29,8 +29,8 @@ public class DemoApplication { //hi
 	public Planner planner;
 	public userPreference userPref;
 	public Address add = null;
-//	public String walk_result = new String();
-//	public String ttc_result = new String();
+	// public String walk_result = new String();
+// public String ttc_result = new String();
 	public String result = new String();
 	public String startCheck = new String();
 	public String endCheck = new String();
@@ -45,37 +45,37 @@ public class DemoApplication { //hi
 	}
 	/** getElement for walking
 	 * */
-//	public MapNode getElement(HashMap<Double, MapNode> ttcnodeMap, String bound) {
-//		MapNode res = new MapNode();
-//		double[] focus = new double[]{(-79.4054900 + -79.3886400) / 2, (43.6613600 + 43.6687500) / 2};
-//		double MPERLAT = 111320;
-//		double MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
-//		double dist = 100000;
-//		// 43.668459,43.6698816,-79.3891804,-79.3876308
-//		ArrayList<String> l = new ArrayList<>(Arrays.asList(bound.split(",")));
+// public MapNode getElement(HashMap<Double, MapNode> ttcnodeMap, String bound) {
+//    MapNode res = new MapNode();
+//    double[] focus = new double[]{(-79.4054900 + -79.3886400) / 2, (43.6613600 + 43.6687500) / 2};
+//    double MPERLAT = 111320;
+//    double MPERLON = Math.cos(focus[1] * 3.1415 / 180) * MPERLAT;
+//    double dist = 100000;
+//    // 43.668459,43.6698816,-79.3891804,-79.3876308
+//    ArrayList<String> l = new ArrayList<>(Arrays.asList(bound.split(",")));
 //
-//		for (Double key : ttcnodeMap.keySet()) {
-//			if((ttcnodeMap.get(key).latitude >= Double.parseDouble(l.get(0))) &
-//					(ttcnodeMap.get(key).latitude <= Double.parseDouble(l.get(1))) &
-//					(ttcnodeMap.get(key).longitude >= Double.parseDouble(l.get(2))) &
-//					(ttcnodeMap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
-//				res = ttcnodeMap.get(key);
-//				break;
-//			}
-//		}
-//		if(res.id == -1){
-//			for (Double key : ttcnodeMap.keySet()) {
-//				double dx = (ttcnodeMap.get(key).longitude - (Double.parseDouble(l.get(2)) + Double.parseDouble(l.get(3)))/2) * MPERLON;
-//				double dy = (ttcnodeMap.get(key).latitude - (Double.parseDouble(l.get(0)) + Double.parseDouble(l.get(1)))/2) * MPERLAT;
-//				double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-//				if (tempdist < dist) {
-//					dist = tempdist;
-//					res = ttcnodeMap.get(key);
-//				}
-//			}
-//		}
-//		return res;
-//	}
+//    for (Double key : ttcnodeMap.keySet()) {
+//       if((ttcnodeMap.get(key).latitude >= Double.parseDouble(l.get(0))) &
+//             (ttcnodeMap.get(key).latitude <= Double.parseDouble(l.get(1))) &
+//             (ttcnodeMap.get(key).longitude >= Double.parseDouble(l.get(2))) &
+//             (ttcnodeMap.get(key).longitude <= Double.parseDouble(l.get(3)))) {
+//          res = ttcnodeMap.get(key);
+//          break;
+//       }
+//    }
+//    if(res.id == -1){
+//       for (Double key : ttcnodeMap.keySet()) {
+//          double dx = (ttcnodeMap.get(key).longitude - (Double.parseDouble(l.get(2)) + Double.parseDouble(l.get(3)))/2) * MPERLON;
+//          double dy = (ttcnodeMap.get(key).latitude - (Double.parseDouble(l.get(0)) + Double.parseDouble(l.get(1)))/2) * MPERLAT;
+//          double tempdist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+//          if (tempdist < dist) {
+//             dist = tempdist;
+//             res = ttcnodeMap.get(key);
+//          }
+//       }
+//    }
+//    return res;
+// }
 	public MapNode getElement(HashMap<Double, MapNode> input_hashmap, String bound) {
 		MapNode res = new MapNode();
 		double[] focus = new double[]{(-79.4054900 + -79.3886400) / 2, (43.6613600 + 43.6687500) / 2};
@@ -133,17 +133,17 @@ public class DemoApplication { //hi
 			return emitter;
 		}
 
-//		public String getTweets() {
-//			twitter twitter = new twitter();
-//			HashMap<String, String> tweets = new HashMap<String, String>();
-//			try {
-//				tweets = twitter.streamFeed();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//			System.out.println("Tweets complete");
-//			return new Gson().toJson(tweets);
-//		}
+//    public String getTweets() {
+//       twitter twitter = new twitter();
+//       HashMap<String, String> tweets = new HashMap<String, String>();
+//       try {
+//          tweets = twitter.streamFeed();
+//       } catch (InterruptedException e) {
+//          e.printStackTrace();
+//       }
+//       System.out.println("Tweets complete");
+//       return new Gson().toJson(tweets);
+//    }
 
 		@GetMapping("/api")
 		public String getList() {
@@ -162,15 +162,20 @@ public class DemoApplication { //hi
 
 				Planner planner = new Planner();
 				// Walking mode find route
-//				ArrayList<Path> resultList = new ArrayList<Path>();
+//          ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
 				// Public transit mode find route
-//				ArrayList<Path> ttc_resultList = new ArrayList<Path>();
+//          ArrayList<Path> ttc_resultList = new ArrayList<Path>();
 				ttc_resultList = KSP.Diverse_K_TTC(torontoGraph, ttcstartNode, ttcendNode, "distance", 10);
 
-//				walk_result = KSP.KSPtoJson(resultList);
-//				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+//          walk_result = KSP.KSPtoJson(resultList);
+//          ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
 				result = KSP.Merge2ResultLists(resultList,ttc_resultList);
+
+				String walk_result = new String();
+				String ttc_result = new String();
+				walk_result = KSP.Merge2ResultListsDebug(resultList);
+				ttc_result = KSP.Merge2ResultListsDebug(ttc_resultList);
 
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
@@ -193,15 +198,21 @@ public class DemoApplication { //hi
 
 				Planner planner = new Planner();
 				// Walking mode find route
-//				ArrayList<Path> resultList = new ArrayList<Path>();
+//          ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
 				// Public transit mode find route
-//				ArrayList<Path> ttc_resultList = new ArrayList<Path>();
+//          ArrayList<Path> ttc_resultList = new ArrayList<Path>();
 				ttc_resultList = KSP.Diverse_K_TTC(torontoGraph, ttcstartNode, ttcendNode, "distance", 10);
 
-//				walk_result = KSP.KSPtoJson(resultList);
-//				ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+//          walk_result = KSP.KSPtoJson(resultList);
+//          ttc_result = KSP.KSPtoJsonTTC(ttc_resultList);
+
 				result = KSP.Merge2ResultLists(resultList,ttc_resultList);
+
+				String walk_result = new String();
+				String ttc_result = new String();
+				walk_result = KSP.Merge2ResultListsDebug(resultList);
+				ttc_result = KSP.Merge2ResultListsDebug(ttc_resultList);
 
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
@@ -211,24 +222,13 @@ public class DemoApplication { //hi
 
 		@GetMapping("/publictransit")
 		public String getTransitList() {
-			try{
-				Thread.sleep(5000);
-				System.out.print("finish sleep");
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-			return KSP.KSPtoJsonTTC(ttc_resultList);
+			String ttc = KSP.KSPtoJsonTTC(ttc_resultList);
+			return ttc;
 		}
 
 		@GetMapping("/walking")
 		public String getWalkingList() {
-			try{
-				Thread.sleep(5000);
-				System.out.print("finish sleep");
 
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
 			return KSP.KSPtoJson(resultList);
 		}
 
@@ -314,9 +314,9 @@ public class DemoApplication { //hi
 		public userPreference postPref(@RequestBody userPreference pref){
 			userPref = new userPreference(pref.getQ1(), pref.getQ2(), pref.getQ3());
 
-//			userPref.setQ1(pref.getQ1());
-//			userPref.setQ2(pref.getQ2());
-//			userPref.setQ3(pref.getQ3());
+//       userPref.setQ1(pref.getQ1());
+//       userPref.setQ2(pref.getQ2());
+//       userPref.setQ3(pref.getQ3());
 
 
 			System.out.println("finished fetching user questionnaire answers");
@@ -330,15 +330,15 @@ public class DemoApplication { //hi
 
 		@PostMapping("/address")
 		public Address postAdd(@RequestBody Address address){
-//			System.out.println("Initializing...");
-//			System.out.println(address.getStart_bound());
-//			System.out.println(address.getEnd_bound());
+//       System.out.println("Initializing...");
+//       System.out.println(address.getStart_bound());
+//       System.out.println(address.getEnd_bound());
 
 			add = new Address(address.getStart_bound(), address.getEnd_bound());
 
-//			System.out.println("Finishing...");
-//			System.out.println(add.getStart_bound());
-//			System.out.println(add.getEnd_bound());
+//       System.out.println("Finishing...");
+//       System.out.println(add.getStart_bound());
+//       System.out.println(add.getEnd_bound());
 			return add;
 		}
 
@@ -365,13 +365,14 @@ public class DemoApplication { //hi
 			return temp;
 		}
 
-//		@GetMapping("/subway")
-//		public String GetSubwayStops(@RequestParam String ver){
-//			return new Gson().toJson(torontoSubwayGraph.visual_routes);
-//		}
+//    @GetMapping("/subway")
+//    public String GetSubwayStops(@RequestParam String ver){
+//       return new Gson().toJson(torontoSubwayGraph.visual_routes);
+//    }
 
 
 
 
 	}
 }
+
