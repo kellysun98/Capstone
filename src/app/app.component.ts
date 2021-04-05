@@ -50,8 +50,8 @@ export class AppComponent {
   active: boolean;
   open: boolean;
   heatmap: Object;
-  start_add: String = '7 grenville, toronto';
-  end_add: String = '68 shuter street, toronto';
+  start_add: String = 'Chestnut Residence, Toronto';
+  end_add: String = 'Hart House, University of Toronto';
   latitude: number;
   longitude: number;
   // end_lat: number;
@@ -103,7 +103,7 @@ export class AppComponent {
     this.isSearching = true;
     this.openWelcome();
     //this.Heatmap2();
-    this.initBackEnd();
+    //this.initBackEnd();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -502,20 +502,22 @@ export class AppComponent {
     return color;
   }
 
-  getGeomPed(amen, route, time, risk, description, mapnode, myroutes){
+  getGeomPed(amen, route, time, risk, description_ped, mapnode, myroutes){
     //createing a layer feature which connects the full route 
     //and displays as transprant when not selected
     let avg = (array) => array.reduce((a, b) => a + b) / array.length;
     var avg_risk = (avg(risk)/9 * 100).toFixed(2);
     for (var i = 1; i < route.length; i++){
+      //console.log("now at line 511");
       route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
       
       var featureLine = new ol.Feature({
         geometry: new ol.geom.LineString([route[i-1],route[i]]),
         name: 'route'+amen,
-        description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
+        description: `Estimated Pedestrain Encountered:` + (risk[i]*1.0).toFixed(0) + 
+        `\n\n Total Distance: \n` + description_ped + 'km'
       });
-
+      console.log("risk:", risk[i]*1.0);
       // var highlightLine = new ol.Feature({
       //   geometry: new ol.geom.LineString([route[i-1],route[i]]),
       //   name: 'highlight'+amen
@@ -542,10 +544,13 @@ export class AppComponent {
       myroutes.push(featureLine);
 
     }
+    console.log("route len:", route.length);
+    console.log("risk len:", risk.length)
+    console.log("one ped line done");
 
   }
 
-  getGeom(amen,route, time, risk, description, mapnode, myroutes){
+  getGeom(amen,route, time, risk, description_bus, mapnode, myroutes){
     console.log("line 549 i am in getgeom");
     let avg = (array) => array.reduce((a, b) => a + b) / array.length;
     var avg_risk = (avg(risk)/9 * 100).toFixed(2);
@@ -571,7 +576,8 @@ export class AppComponent {
         var pedLine = new ol.Feature({
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
           name: 'route_trans'+ amen,
-          description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
+          //description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
+          description: 'Estimated Pedestrain Encountered: \n' + (risk[i-1]*1.0).toFixed(0) + '\n Total Distance: \n' + description_bus + 'km'
         });
        //console.log([route[i-1], route[i]])
 
@@ -609,7 +615,8 @@ export class AppComponent {
         var featureLine = new ol.Feature({
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
           name: 'route_trans'+ amen,
-          description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
+          description: 'Estimated Transit Occupancy: \n' + (risk[i-1]/9).toFixed(2) + '% \n Total Distance: \n' + description_bus + 'km'
+          //description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
         });
        //console.log([route[i-1], route[i]])
         var linestyle = new ol.style.Style({
@@ -655,6 +662,8 @@ export class AppComponent {
   DynamicColoring(route, time, risk, des, myroutes, ttcname = []){ //display text box info
     // var myroutes = new Array();
   
+    //console.log("now at line 661");
+
     var featureLine = new ol.Feature({
       geometry: new ol.geom.LineString(route),
       name: 'additional_line',
@@ -806,10 +815,16 @@ export class AppComponent {
                 // for (let key of Object.keys(this.response[index])){
                 var route = JSON.parse(this.response[0][amen]['routeNode']);
                 var risk = JSON.parse(this.response[0][amen]['risk']);
+                console.log("routenode length:", route.length);
+                console.log("route array", route);
+                console.log("risk length:", risk.length);
+
                 route[0] = ol.proj.transform(route[0], 'EPSG:4326', 'EPSG:3857');
                 var time = this.response[0][amen]['time'];
                 //if (time == 22.0){continue;}  //get rid of 22 in walk  
-                var description = this.response[0][amen]['description'];
+                var description = this.response[0][amen]['distance'];
+                //console.log("now at line 815");
+
                 var mapnode = Array(route.length).fill(5)
                 var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
                 var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
@@ -821,11 +836,15 @@ export class AppComponent {
             // var dangerous = 'rgba(255, 0, 0, 1)';
           
                 this.getGeomPed(amen, route, time, risk, description, mapnode, myroutes);
+                //console.log("now at line 831");
+
                 this.DynamicColoring(route, time, risk, description,myroutes)  //display text
               }
               var vectorSource = new ol.source.Vector({
-                //features: myroutes,
-              }); //multiple routes added 
+                features: myroutes,
+              }); 
+              //console.log("now at line 836");
+
 
 
               var indicator = 0;
@@ -838,7 +857,8 @@ export class AppComponent {
                      console.log("feature added to existing layer"); 
                  }
                });
-  
+               //console.log("now at line 850");
+
               if(indicator === 0) {  
                 console.log("new layer created"); 
                 var vectorLineLayer = new ol.layer.Vector({
@@ -861,18 +881,14 @@ export class AppComponent {
               for(var amen = 0; amen<res_length_transit; amen++){ 
                 var route_transit = JSON.parse(this.response[1][amen]['routeNode']);
                 var risk_transit = JSON.parse(this.response[1][amen]['risk']); 
-                route_transit[0] = ol.proj.transform(route_transit[0], 'EPSG:4326', 'EPSG:3857');
+                route_transit[0] = ol.proj.transform(route_transit[1], 'EPSG:4326', 'EPSG:3857');
                 var time_transit = this.response[1][amen]['time'];
                 //if (time_transit != 22.0){continue;}  //keep only 22 for transit 
-                console.log("now at line 872 for transit")
-                var description_transit = this.response[1][amen]['description'];
-                console.log("now at line 872 for transit")
+                var description_transit = this.response[1][amen]['distance'];
                 var nodetype = JSON.parse(this.response[1][amen]['nodetype']);
-                //console.log("now at line 872 for transit")
+                //console.log("now at line 871");
                 var ttcname = []//JSON.parse(this.response[1][amen]['linenumber']);
-                // console.log('print route: ' + route[1]);
-                // console.log('print risk: ' + risk[0]);
-                // console.log('route length: '+ route.length);
+
                 var g_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
                 var b_color = Math.floor(Math.random() * (255 - 0 + 1) + 0);
                 var color = 'rgba(0'+','+g_color+','+b_color+', 0.8)';

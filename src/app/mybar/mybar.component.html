@@ -57,7 +57,7 @@
         <!-- <ul> -->
             <hr style="border-top:none">
             <ng-container *ngFor="let key of Object.keys(bus)">
-            <mat-grid-list cols = "9" rowHeight = "150px">
+            <mat-grid-list cols = "9" rowHeight = "180px">
                 <mat-grid-tile colspan = "2">
                     <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[key].time}} mins</mat-label>
                 </mat-grid-tile>
@@ -65,7 +65,10 @@
                     <li style="list-style-type: none;">
                     <span style="margin-bottom: 20px;"> # {{bus[key].ttcname}} : {{bus[key].nstop}} stops</span>
                     <br>
-                    <span style="margin-bottom: 20px;">{{bus[key].startstop}} -- {{bus[key].endstop}}</span>
+                    <span style="margin-bottom: 20px;">Start At: {{bus[key].startstop}}</span>
+                    <br>
+                    <span style="margin-bottom: 20px;">Get Off At: {{bus[key].endstop}}</span>
+                    <br>
                     <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
                     <span> {{bus[key].walkingtime}} mins </span>
                     <span> -- </span>
