@@ -34,8 +34,15 @@ export class MybarComponent implements OnInit {
     } )
     this.routeService.getWalkingInfo().pipe(
       concatMap( item => of(item).pipe ( delay( 1000 ) ))
-    ).subscribe( data => { this.walk = data;
-      console.log(this.walk)
+    ).subscribe( data => { 
+      this.response = data; 
+      for (var index = 0; index<Object.keys(this.response).length; index++){
+        var risk = JSON.parse(this.response[index]['risk']);
+        if (risk.includes(-1.0)){
+          delete this.response[index]}
+      } 
+      this.walk = this.response;
+      console.log("the new walk is", this.walk)
     })
     // this.newMessage();
     // this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
