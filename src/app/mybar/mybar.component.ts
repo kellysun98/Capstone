@@ -39,9 +39,10 @@ export class MybarComponent implements OnInit {
         this.start = JSON.parse(this.response[index]['startstop']);
         this.end = JSON.parse(this.response[index]['endstop']);
         this.line = JSON.parse(this.response[index]['ttcname']);
+        // this.line_array.push(JSON.parse(this.response[index]['ttcname']));
+        // console.log('line array is: '+this.line_array);
         this.nstop = JSON.parse(this.response[index]['nstop']);
         this.len = this.start.length
-        // this.startstop.push(this.start);
       }
       this.bus = data;
       // console.log('start stops'+this.start)
