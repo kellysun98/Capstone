@@ -473,7 +473,7 @@ export class AppComponent {
     if(risk>0 && risk <=3){
       var color = 'rgba(0, 204, 0, 1)'; //safe
       var risk_description = 'low'
-    } else if(risk > 3 && risk <=6){
+    } else if(risk > 3 && risk <=7.5){
       var color = 'rgba(255, 152, 51, 1)'; //medium
       var risk_description = 'medium'
     }else{
@@ -483,21 +483,18 @@ export class AppComponent {
     return color;
   }
 
-  getColor4(risk){
+  getColorBus(risk){ //route - line with two coordintaes
+    // var myroutes = new Array();
     var color: string;
-    if(risk>0 && risk <=1){
+    if(risk>0 && risk <=35){
       var color = 'rgba(0, 204, 0, 1)'; //safe
       var risk_description = 'low'
-    } else if(risk > 2 && risk <=4){
-      var color = 'rgba(240, 255, 0, 1)'; //medium
+    } else if(risk > 35 && risk <=75){
+      var color = 'rgba(255, 152, 51, 1)'; //medium
       var risk_description = 'medium'
-    } else if (risk > 4 && risk <= 6){
-      var color = 'rgba(230, 126, 34, 1)'
-      var risk_description = 'high'
-    }
-    else{
+    }else{
       var color = 'rgba(255, 0, 0, 1)'; //dangerous
-      var risk_description = 'dangerous'
+      var risk_description = 'high'
     }
     return color;
   }
@@ -515,7 +512,7 @@ export class AppComponent {
         geometry: new ol.geom.LineString([route[i-1],route[i]]),
         name: 'route'+amen,
         description: `Estimated Pedestrain Encountered:` + (risk[i]*1.0).toFixed(0) + 
-        `\n\n Total Distance: \n` + description_ped + 'km'
+        `             Total Distance: \n` + description_ped + 'km'
       });
       console.log("risk:", risk[i]*1.0);
       // var highlightLine = new ol.Feature({
@@ -531,15 +528,6 @@ export class AppComponent {
           color: this.getColor(risk[i-1]), width: 5
         })
       });
-
-      var highlightstyle = new ol.style.Style({
-        fill: new ol.style.Fill({
-            color: 'rgba(255,255,0,0.5)', weight: 5
-        }),
-        stroke: new ol.style.Stroke({
-          color: 'rgba(255,255,0,0.5)', width: 5
-        })
-      });
       featureLine.setStyle(linestyle);
       myroutes.push(featureLine);
 
@@ -551,33 +539,18 @@ export class AppComponent {
   }
 
   getGeom(amen,route, time, risk, description_bus, mapnode, myroutes){
-    console.log("line 549 i am in getgeom");
+    //console.log("line 549 i am in getgeom");
     let avg = (array) => array.reduce((a, b) => a + b) / array.length;
     var avg_risk = (avg(risk)/9 * 100).toFixed(2);
     for (var i = 1; i < route.length; i++){
       route[i] = ol.proj.transform(route[i], 'EPSG:4326', 'EPSG:3857');
       //console.log('initial: ', route[i]);
       if(mapnode[i-1]==5 && mapnode [i] == 5){ //both are ped routes
-        // var featurePoint = new ol.Feature({
-        //   geometry: new ol.geom.Point(route[i-1]),
-        // })
-        // var pointStyle = new ol.style.Style({
-        //   image: new ol.style.Circle({
-        //     radius: 5,
-        //     fill: new ol.style.Fill({color: this.getColor(risk[i-1])}),
-        //     // stroke: new ol.style.Stroke({
-        //     //   color: [255,0,0], width: 2
-        //     // })
-        //   })
-        // })
-        // featurePoint.setStyle(pointStyle);
-        // myroutes.push(featurePoint)
-
         var pedLine = new ol.Feature({
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
           name: 'route_trans'+ amen,
           //description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
-          description: 'Estimated Pedestrain Encountered: \n' + (risk[i-1]*1.0).toFixed(0) + '\n Total Distance: \n' + description_bus + 'km'
+          description: 'Estimated Pedestrain Encountered: \n' + (risk[i-1]*1.0).toFixed(0) + '           Total Distance: \n' + description_bus + 'km'
         });
        //console.log([route[i-1], route[i]])
 
@@ -592,41 +565,23 @@ export class AppComponent {
         myroutes.push(pedLine);
         console.log("pedline in effect")
         
-
-        //console.log('transformed: ', route[i])
       }
-      //additional function for highlight line 
-      // var highlightline = new ol.Feature({
-      //   geometry: new ol.geom.LineString([route[i-1],route[i]]),
-      //   name: 'route_trans'+amen,
-      // });
-      // var nullstyle = new ol.style.Style({
-      //   stroke: new ol.style.Stroke({
-      //     color: 'transparent',
-      //     width: 10
-      //   })
-      // });
-
-
-      // highlightline.setStyle(nullstyle);
-      // myroutes.push(highlightline);
-      // console.log(highlightline.get('name'));
+ 
       else if(mapnode[i-1]!=5 && mapnode[i]!=5){  //transit
         var featureLine = new ol.Feature({
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
           name: 'route_trans'+ amen,
-          description: 'Estimated Transit Occupancy: \n' + (risk[i-1]/9).toFixed(2) + '% \n Total Distance: \n' + description_bus + 'km'
+          description: 'Estimated Transit Occupancy: \n' + (risk[i-1]*1.0).toFixed(2) + '% \n Total Distance: \n' + description_bus + 'km'
           //description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
         });
        //console.log([route[i-1], route[i]])
         var linestyle = new ol.style.Style({
           fill: new ol.style.Fill({
-              color: this.getColor(risk[i-1])
+              color: this.getColorBus(risk[i-1])
           }),
           stroke: new ol.style.Stroke({
-            color: this.getColor(risk[i-1]), width: 11
+            color: this.getColorBus(risk[i-1]), width: 11
           }),
-    
         });
         
         featureLine.setStyle(linestyle);
@@ -635,9 +590,9 @@ export class AppComponent {
 
       if((mapnode[i-1]!=5 && mapnode[i] == 5) || (mapnode[i-1]==5 && mapnode[i] != 5)) {  //5 is walk
         var featurePoint = new ol.Feature({
-          geometry: new ol.geom.Circle(route[mapnode[i-1]!=5 ? i-1 :i],15),
+          geometry: new ol.geom.Circle(route[mapnode[i-1]!=5 ? i-1 :i],30),
           name: 'starting point',
-          description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
+          description: 'ttc stop',
           zIndex: 999
         });
        //console.log([route[i-1], route[i]])
@@ -647,7 +602,7 @@ export class AppComponent {
           }),
           stroke: new ol.style.Stroke({
               color: 'black',
-              width: 4.2
+              width: 7
           }),
     
         });  
@@ -656,7 +611,6 @@ export class AppComponent {
       }
   
     }
-    //console.log(myroutes);
   }
 
   DynamicColoring(route, time, risk, des, myroutes, ttcname = []){ //display text box info
@@ -802,11 +756,7 @@ export class AppComponent {
           console.log("response array is", this.response);
           for (let result of Object.values(this.response)){
               var res_length = Object.keys(this.response[0]).length;
-              if (res_length>=5){
-                var iter_len = 5
-              }else{
-                var iter_len = res_length
-              }
+              var iter_len = res_length
               var myroutes = [];
               var myhighlighter = [];
           //console.log("res_lenght is " + res_length) 
@@ -815,6 +765,8 @@ export class AppComponent {
                 // for (let key of Object.keys(this.response[index])){
                 var route = JSON.parse(this.response[0][amen]['routeNode']);
                 var risk = JSON.parse(this.response[0][amen]['risk']);
+                if (risk.includes(-1.0)){
+                  continue;} //skip if contains bus route
                 console.log("routenode length:", route.length);
                 console.log("route array", route);
                 console.log("risk length:", risk.length);
