@@ -21,6 +21,11 @@ export class MybarComponent implements OnInit {
   @Input() transitTypeChild: any;
   @Output() selectedTab = new EventEmitter<number>();
   bus: Transit[]=[];
+  len: number;
+  line: Array<string>;
+  nstop: Array<number>;
+  start: Array<string>;
+  end: Array<string>;
   walk: Route[]=[];
   selectedIndex: number;
   response: any;
@@ -29,8 +34,18 @@ export class MybarComponent implements OnInit {
     this.routeService.getTransitInfo().pipe(
       concatMap( item => of(item).pipe ( delay( 1000 ) ))
     ).subscribe( data => {
-      this.bus = data; 
-      console.log(this.bus)
+      this.response = data
+      for(var index = 0; index<Object.keys(this.response).length; index++){
+        this.start = JSON.parse(this.response[index]['startstop']);
+        this.end = JSON.parse(this.response[index]['endstop']);
+        this.line = JSON.parse(this.response[index]['ttcname']);
+        this.nstop = JSON.parse(this.response[index]['nstop']);
+        this.len = this.start.length
+        // this.startstop.push(this.start);
+      }
+      this.bus = data;
+      // console.log('start stops'+this.start)
+      // console.log(this.bus)
     } )
     this.routeService.getWalkingInfo().pipe(
       concatMap( item => of(item).pipe ( delay( 1000 ) ))
@@ -42,7 +57,7 @@ export class MybarComponent implements OnInit {
           delete this.response[index]}
       } 
       this.walk = this.response;
-      console.log("the new walk is", this.walk)
+      // console.log("the new walk is", this.walk)
     })
     // this.newMessage();
     // this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
