@@ -13,10 +13,6 @@ public class Path implements Comparable<Path>{ //hi
     protected double ttcTime;
     protected double walkingTime;
     protected double pathtype;
-    protected String lineNumber;
-    protected String startStop;
-    protected String endStop;
-    protected int numberStop;
 
 
 
@@ -27,46 +23,51 @@ public class Path implements Comparable<Path>{ //hi
         nodes = new ArrayList<MapNode>();
         totalLength =0;
         totalRisk = 0;
+
         ttcTime = 0;
         walkingTime = 0;
-        lineNumber = "";
     }
 
     /** Path constructor
      * @param input_nodes
      * set totalLength and totalTime of the path
     * */
+//    public Path(ArrayList<MapNode> input_nodes){
+//        nodes = input_nodes;
+//        totalLength = 0;
+//        pathtype = 5;
+//        for (int i=0; i< input_nodes.size()-1;i++){
+//            totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
+//            totalRisk += input_nodes.get(i).pedCount;
+//            if (input_nodes.get(i).nodetype!=5){
+//                pathtype = -1;
+//            }
+//        }
+//        setTime(); // set total time of the path in mins
+//    }
+
     public Path(ArrayList<MapNode> input_nodes){
         nodes = input_nodes;
         totalLength = 0;
         pathtype = 5;
-        numberStop = 0;
         boolean pre_w = true;
-        for (int i=0; i< input_nodes.size()-1;i++){
-            totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
+        for (int i=0; i< input_nodes.size()-1;i++) {
+            totalLength += getDistance(input_nodes.get(i), input_nodes.get(i + 1));
             totalRisk += input_nodes.get(i).pedCount;
-            if(input_nodes.get(i).nodetype == 5){
-                walkingTime += getDistance(input_nodes.get(i), input_nodes.get(i+1))/5000.0*60;
-            }else{
-                for(MapEdge edge : input_nodes.get(i).edges){
-                    if(edge.destinationNode.id == input_nodes.get(i+1).id){
-                        numberStop += 1;
+
+            if (input_nodes.get(i).nodetype == 5) {
+                walkingTime += getDistance(input_nodes.get(i), input_nodes.get(i + 1)) / 5000.0 * 60;
+            } else {
+                for (MapEdge edge : input_nodes.get(i).edges) {
+                    if (edge.destinationNode.id == input_nodes.get(i + 1).id) {
                         ttcTime += edge.length;
-                        pathtype = 1;
-                        lineNumber = input_nodes.get(i).ttcName;
-                        if(input_nodes.get(i+1).nodetype == 5){
-                            endStop = input_nodes.get(i).stopName;
-                        }
+                        pathtype = -1;
                     }
                 }
-                if(pre_w){
-                    startStop = input_nodes.get(i).stopName;
-                }
-                pre_w = false;
+
             }
         }
         setTime(); // set total time of the path in mins
-
     }
 
 //    public Path(ArrayList<MapNode> input_nodes, double total_cost){
