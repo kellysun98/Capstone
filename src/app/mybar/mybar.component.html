@@ -10,7 +10,7 @@
                 <mat-grid-tile colspan = "7">
                     <li style="list-style-type: none;">
                     <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
-                    <mat-label class = "description"> Best Walking Route </mat-label>
+                    <mat-label class = "description"> {{walk[key].description}} </mat-label>
                     </li>
                 </mat-grid-tile>          
             </mat-grid-list>
@@ -56,32 +56,32 @@
     <mat-tab label="Transit"> 
         <!-- <ul> -->
             <hr style="border-top:none">
-            <ng-container *ngFor="let key of Object.keys(bus)">
             <mat-grid-list cols = "9" rowHeight = "180px">
                 <mat-grid-tile colspan = "2">
-                    <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[key].time}} mins</mat-label>
+                    <mat-label *ngFor = "let key of Object.keys(bus)" style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[key].time}} mins</mat-label>
                 </mat-grid-tile>
                 <mat-grid-tile colspan = "7">
                     <li style="list-style-type: none;">
-                    <span style="margin-bottom: 20px;"> # {{bus[key].ttcname}} : {{bus[key].nstop}} stops</span>
+                    <ng-container *ngFor="let item of [].constructor(len); let index = index">
+                    <span style="margin-bottom: 20px;"> # {{line[index]}} : {{nstop[index]}} stops</span>
                     <br>
-                    <span style="margin-bottom: 20px;">Start At: {{bus[key].startstop}}</span>
+                    <span style="margin-bottom: 20px;">Start At: {{start[index]}}</span>
                     <br>
-                    <span style="margin-bottom: 20px;">Get Off At: {{bus[key].endstop}}</span>
+                    <span style="margin-bottom: 20px;">Get Off At: {{end[index]}}</span>         
                     <br>
+                    </ng-container> 
                     <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
-                    <span> {{bus[key].walkingtime}} mins </span>
+                    <span *ngFor = "let key of Object.keys(bus)"> {{bus[key].walkingtime}} mins </span>
                     <span> -- </span>
                     <!-- <br> -->
                     <mat-icon style="color:  #2A0968; display: inline-flex; vertical-align: middle;"> directions_transit</mat-icon>
-                    <span> {{bus[key].ttctime}} mins </span>
+                    <span *ngFor = "let key of Object.keys(bus)"> {{bus[key].ttctime}} mins </span>
                     <br>
                     <mat-label class = "description"> Best Transit Route </mat-label>
                     </li>
-                </mat-grid-tile>          
+                </mat-grid-tile>
             </mat-grid-list>
-            <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{bus[key].distance}} km</span>
-            </ng-container>
+            <span *ngFor = "let key of Object.keys(bus)" style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{bus[key].distance}} km</span>
             <br>
             <!-- <div *ngFor="let key of Object.keys(walk)">
                 <p>Key-> {{key}} and value is -> {{walk[key].time}}</p>
