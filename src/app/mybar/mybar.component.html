@@ -56,7 +56,7 @@
     <mat-tab label="Transit"> 
         <!-- <ul> -->
             <hr style="border-top:none">
-            <mat-grid-list cols = "9" rowHeight = "180px">
+            <mat-grid-list cols = "9" rowHeight = "200px">
                 <mat-grid-tile colspan = "2">
                     <mat-label *ngFor = "let key of Object.keys(bus)" style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[key].time}} mins</mat-label>
                 </mat-grid-tile>
@@ -65,9 +65,9 @@
                     <ng-container *ngFor="let item of [].constructor(len); let index = index">
                     <span style="margin-bottom: 20px;"> # {{line[index]}} : {{nstop[index]}} stops</span>
                     <br>
-                    <span style="margin-bottom: 20px;">Start At: {{start[index]}}</span>
+                    <span style="margin-bottom: 20px;">Start @: {{start[index]}}</span>
                     <br>
-                    <span style="margin-bottom: 20px;">Get Off At: {{end[index]}}</span>         
+                    <span style="margin-bottom: 20px;">Get Off @: {{end[index]}}</span>         
                     <br>
                     </ng-container> 
                     <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
