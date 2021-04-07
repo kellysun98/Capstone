@@ -1,7 +1,7 @@
 <mat-sidenav-container fullscreen>
     <mat-sidenav #sidenav mode="side" opened>
         <div id="willshow" style="display:none">
-            <button (click)="toggle();hideit()" mat-icon-button color="primary">
+            <button (click)="toggle();hideit();removeRoute()" mat-icon-button color="primary">
                 <mat-icon>keyboard_arrow_left</mat-icon>
             </button>
         </div>

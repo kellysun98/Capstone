@@ -203,6 +203,7 @@ public class KSP {
             Double time = Precision.round(p.getTotalTime(),0);
             Double distance = Precision.round(p.getTotalLength()/1000,2);
             Double totalwalkpedcount_KM = p.totalPedCount/ distance; // total ped count of walk route
+            int total = (int) Math.round(totalwalkpedcount_KM);
 
             path_map.put("ttcname", new Gson().toJson(ttcnames));
             path_map.put("cost", new Gson().toJson(cost));
@@ -213,7 +214,7 @@ public class KSP {
             path_map.put("distance", new Gson().toJson(distance));
             path_map.put("walkingtime", new Gson().toJson(time));
             path_map.put("ttctime", new Gson().toJson(0));
-            path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // total pedcount of walk route
+            path_map.put("totalwalkpedcount",new Gson().toJson(total)); // total pedcount of walk route
 
             count++;
             solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
@@ -305,7 +306,9 @@ public class KSP {
                 Double walkingtime = Precision.round(p.walkingTime,0); //Total walking time of route under public transit mode
                 Double ttctime = Precision.round(p.ttcTime,0); //Total time on public transit
                 Double totalwalkpedcount_KM = p.totalPedCount/ distance; // Total ped count from walking portion of ttc route
+                int total = (int) Math.round(totalwalkpedcount_KM);
                 Double avgoccupancypercent = p.avgOccupancyPercent; // avg occupancy percent
+                int avg = (int) Math.round(avgoccupancypercent);
 
                 path_map.put("cost", new Gson().toJson(cost));
                 path_map.put("routeNode", new Gson().toJson(mn));
@@ -320,8 +323,8 @@ public class KSP {
                 path_map.put("ttctime", new Gson().toJson(ttctime));
                 path_map.put("startstop", new Gson().toJson(startStops));
                 path_map.put("endstop", new Gson().toJson(endStops));
-                path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // Total ped count from walking portion of ttc route
-                path_map.put("avgoccupancypercent",new Gson().toJson(avgoccupancypercent));
+                path_map.put("totalwalkpedcount",new Gson().toJson(total)); // Total ped count from walking portion of ttc route
+                path_map.put("avgoccupancypercent",new Gson().toJson(avg));
 
                 count++;
                 solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]

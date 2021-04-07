@@ -212,8 +212,8 @@ public class DemoApplication { //hi
 		@GetMapping("/publictransit")
 		public String getTransitList() {
 			try{
-				Thread.sleep(5000);
-				System.out.print("finish sleep");
+				Thread.sleep(3500);
+//				System.out.print("finish sleep");
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
@@ -223,8 +223,8 @@ public class DemoApplication { //hi
 		@GetMapping("/walking")
 		public String getWalkingList() {
 			try{
-				Thread.sleep(5000);
-				System.out.print("finish sleep");
+				Thread.sleep(3500);
+//				System.out.print("finish sleep");
 
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
