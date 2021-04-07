@@ -12,7 +12,7 @@ public class SubwayPath extends Path{ //hi
         totalLength = 0;
         for (int i=0; i< input_nodes.size()-1;i++){
             totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
-            totalRisk += input_nodes.get(i).pedCount;
+            totalPedCount += input_nodes.get(i).pedCount;
         }
         setTime(); // set total time of the path in mins
     }
