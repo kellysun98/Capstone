@@ -9,7 +9,8 @@ public class Path implements Comparable<Path>{ //hi
     protected ArrayList<MapNode> nodes;
     protected double totalLength;
     protected double totalTime; // in minutes
-    protected double totalRisk;
+    protected double totalPedCount;
+    protected double avgOccupancyPercent; // avg occupancy percent of ttc path
     protected double ttcTime;
     protected double walkingTime;
     protected double pathtype;
@@ -22,7 +23,8 @@ public class Path implements Comparable<Path>{ //hi
     public Path(){
         nodes = new ArrayList<MapNode>();
         totalLength =0;
-        totalRisk = 0;
+        totalPedCount = 0;
+        avgOccupancyPercent = 0;
 
         ttcTime = 0;
         walkingTime = 0;
@@ -32,41 +34,38 @@ public class Path implements Comparable<Path>{ //hi
      * @param input_nodes
      * set totalLength and totalTime of the path
     * */
-//    public Path(ArrayList<MapNode> input_nodes){
-//        nodes = input_nodes;
-//        totalLength = 0;
-//        pathtype = 5;
-//        for (int i=0; i< input_nodes.size()-1;i++){
-//            totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
-//            totalRisk += input_nodes.get(i).pedCount;
-//            if (input_nodes.get(i).nodetype!=5){
-//                pathtype = -1;
-//            }
-//        }
-//        setTime(); // set total time of the path in mins
-//    }
 
     public Path(ArrayList<MapNode> input_nodes){
         nodes = input_nodes;
         totalLength = 0;
+        totalPedCount = 0;
+        avgOccupancyPercent = 0;
         pathtype = 5;
-        boolean pre_w = true;
+        ttcTime = 0;
+        walkingTime = 0;
+        double occupancypercent_sum = 0.0;
+        int occupancypercent_counter = 0;
         for (int i=0; i< input_nodes.size()-1;i++) {
             totalLength += getDistance(input_nodes.get(i), input_nodes.get(i + 1));
-            totalRisk += input_nodes.get(i).pedCount;
 
             if (input_nodes.get(i).nodetype == 5) {
                 walkingTime += getDistance(input_nodes.get(i), input_nodes.get(i + 1)) / 5000.0 * 60;
+                totalPedCount += input_nodes.get(i).pedCount;
+//                System.out.println("nodepedCount:"+input_nodes.get(i).pedCount);
             } else {
+                pathtype = -1;
+                occupancypercent_sum += input_nodes.get(i).occupancyPercent;
+                occupancypercent_counter ++;
                 for (MapEdge edge : input_nodes.get(i).edges) {
                     if (edge.destinationNode.id == input_nodes.get(i + 1).id) {
-                        ttcTime += edge.length;
-                        pathtype = -1;
+//                        ttcTime += edge.length; // using schedule
+                        ttcTime += 1.5;
+                        break;
                     }
                 }
-
             }
-        }
+        }avgOccupancyPercent = occupancypercent_sum/Double.valueOf(occupancypercent_counter);
+
         setTime(); // set total time of the path in mins
     }
 
