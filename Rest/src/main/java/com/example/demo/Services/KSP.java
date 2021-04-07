@@ -213,7 +213,7 @@ public class KSP {
             path_map.put("distance", new Gson().toJson(distance));
             path_map.put("walkingtime", new Gson().toJson(time));
             path_map.put("ttctime", new Gson().toJson(0));
-//            path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // total pedcount of walk route
+            path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // total pedcount of walk route
 
             count++;
             solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
@@ -320,8 +320,8 @@ public class KSP {
                 path_map.put("ttctime", new Gson().toJson(ttctime));
                 path_map.put("startstop", new Gson().toJson(startStops));
                 path_map.put("endstop", new Gson().toJson(endStops));
-//                path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // Total ped count from walking portion of ttc route
-//                path_map.put("avgoccupancypercent",new Gson().toJson(avgoccupancypercent));
+                path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // Total ped count from walking portion of ttc route
+                path_map.put("avgoccupancypercent",new Gson().toJson(avgoccupancypercent));
 
                 count++;
                 solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
@@ -391,7 +391,7 @@ public class KSP {
             path_map.put("distance", new Gson().toJson(distance));
             path_map.put("walkingtime", new Gson().toJson(time)); // total walking time = total time for walking mode
             path_map.put("ttctime", new Gson().toJson(0));
-//            path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // total pedcount of walk route
+            path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // total pedcount of walk route
 
             count++;
             solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
@@ -500,8 +500,8 @@ public class KSP {
                 path_map.put("ttctime", new Gson().toJson(ttctime));
                 path_map.put("startstop", new Gson().toJson(startStops));
                 path_map.put("endstop", new Gson().toJson(endStops));
-//                path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // Total ped count from walking portion of ttc route
-//                path_map.put("avgoccupancypercent",new Gson().toJson(avgoccupancypercent));
+                path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // Total ped count from walking portion of ttc route
+                path_map.put("avgoccupancypercent",new Gson().toJson(avgoccupancypercent));
 
                 count++;
                 solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
