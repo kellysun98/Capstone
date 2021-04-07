@@ -50,8 +50,8 @@ export class AppComponent {
   active: boolean;
   open: boolean;
   heatmap: Object;
-  start_add: String = 'Chestnut Residence, Toronto';
-  end_add: String = 'Hart House, University of Toronto';
+  start_add: String = '68 Shuter Street, Toronto';
+  end_add: String = 'Medical Science Building, University of Toronto';
   latitude: number;
   longitude: number;
   // end_lat: number;

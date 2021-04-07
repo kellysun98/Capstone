@@ -133,7 +133,7 @@ public class Graph { //hi
     }
 
     public Graph() {
-        this("./data/DT3.osm","./data/Cyclists.csv");
+        this("./data/DT4.osm","./data/Cyclists.csv");
     }
 
     public Graph(String osmFilePath, String accidentsFilePath) {

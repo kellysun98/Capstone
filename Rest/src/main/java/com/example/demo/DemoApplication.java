@@ -346,7 +346,7 @@ public class DemoApplication { //hi
 		public HashMap<String, Double> initTorontoGraph(@RequestParam String init_num){
 
 			System.out.println("initializing graph");
-			torontoGraph = new Graph("./data/DT3.osm", "./data/Cyclists.csv");
+			torontoGraph = new Graph("./data/DT4.osm", "./data/Cyclists.csv");
 			torontoGraph.getPedestrianCountDistribution("2020-09-11 00:00:00","2020-09-25 00:00:00", 3);
 
 			// set questionnaire answer(avoid hospital or not)

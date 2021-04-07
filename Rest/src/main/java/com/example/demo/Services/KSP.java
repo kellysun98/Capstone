@@ -184,15 +184,8 @@ public class KSP {
                 Double middle_lat = (first.latitude+second.latitude)/2+count/80000;
                 Double longitude = node_list.get(i-1).longitude+count/80000;
                 Double latitude = node_list.get(i-1).latitude+count/80000;
-                Double risk1 = 0.0;
                 String ttcname = "";
-//                if(node_list.get(i).nodetype == 5){
-//                    risk1 += node_list.get(i).pedCount;
-//                }
-//                else{
-//                    risk1 += (node_list.get(i).passengerCount * 5.52);
-//                    ttcname += node_list.get(i).ttcName;
-//                }
+
                 Double walk_risk1 = first.pedCount; // pedCount of node 0
                 Double walk_risk1andhalf = (first.pedCount+second.pedCount)/2; // pedCount of node 0.5 -> avg of node 0 & 1
 
@@ -205,11 +198,12 @@ public class KSP {
                 risk.add(walk_risk1);
                 risk.add(walk_risk1andhalf);
                 ttcnames.add(ttcname);
-                //risk.add(risk2);
             }
             Double cost = p.getTotalLength();
             Double time = Precision.round(p.getTotalTime(),0);
             Double distance = Precision.round(p.getTotalLength()/1000,2);
+            Double totalwalkpedcount_KM = p.totalPedCount/ distance; // total ped count of walk route
+
             path_map.put("ttcname", new Gson().toJson(ttcnames));
             path_map.put("cost", new Gson().toJson(cost));
             path_map.put("routeNode", new Gson().toJson(mn));
@@ -219,6 +213,8 @@ public class KSP {
             path_map.put("distance", new Gson().toJson(distance));
             path_map.put("walkingtime", new Gson().toJson(time));
             path_map.put("ttctime", new Gson().toJson(0));
+//            path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // total pedcount of walk route
+
             count++;
             solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
             }
@@ -230,7 +226,9 @@ public class KSP {
     public static String KSPtoJsonTTC(ArrayList<Path> ksp_sol) {
         ArrayList solution = new ArrayList<>();
         double count = 0;
-        for (Path p : ksp_sol) {
+//        for (Path p : ksp_sol) {
+        for (int k=0;k<1;k++) {
+            Path p = ksp_sol.get(k);
             if(p.pathtype != 5){
 //                System.out.println(p.pathtype);
                 HashMap<String, String> path_map = new HashMap<>();
@@ -306,25 +304,24 @@ public class KSP {
                 Double distance = Precision.round(p.getTotalLength()/1000,2);
                 Double walkingtime = Precision.round(p.walkingTime,0); //Total walking time of route under public transit mode
                 Double ttctime = Precision.round(p.ttcTime,0); //Total time on public transit
-                //Set<String> set = new HashSet<String>(ttcnames);
+                Double totalwalkpedcount_KM = p.totalPedCount/ distance; // Total ped count from walking portion of ttc route
+                Double avgoccupancypercent = p.avgOccupancyPercent; // avg occupancy percent
+
                 path_map.put("cost", new Gson().toJson(cost));
                 path_map.put("routeNode", new Gson().toJson(mn));
                 path_map.put("nodetype", new Gson().toJson(nodetypes));
-//                path_map.put("ttcname",new Gson().toJson(ttclinenumber));
-//                path_map.put("nstop", new Gson().toJson(p.numberStop));
                 path_map.put("ttcname",new Gson().toJson(ttclineNumbers));
                 path_map.put("nstop", new Gson().toJson(numberStops));
-
                 path_map.put("time", new Gson().toJson(time));
                 path_map.put("description", p.getDescription());
                 path_map.put("distance", new Gson().toJson(distance));
                 path_map.put("risk", new Gson().toJson(risks));
                 path_map.put("walkingtime", new Gson().toJson(walkingtime));
                 path_map.put("ttctime", new Gson().toJson(ttctime));
-//                path_map.put("startstop", new Gson().toJson(p.startStop));
-//                path_map.put("endstop", new Gson().toJson(p.endStop));
                 path_map.put("startstop", new Gson().toJson(startStops));
                 path_map.put("endstop", new Gson().toJson(endStops));
+//                path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // Total ped count from walking portion of ttc route
+//                path_map.put("avgoccupancypercent",new Gson().toJson(avgoccupancypercent));
 
                 count++;
                 solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
@@ -355,7 +352,6 @@ public class KSP {
                 Double middle_lat = (first.latitude+second.latitude)/2+count/80000;
                 Double longitude = node_list.get(i-1).longitude+count/80000;
                 Double latitude = node_list.get(i-1).latitude+count/80000;
-                Double risk1 = 0.0;
                 String ttcname = "";
                 Double walk_risk1 = first.pedCount; // pedCount of node 0
                 Double walk_risk1andhalf = (first.pedCount+second.pedCount)/2; // pedCount of node 0.5 -> avg of node 0 & 1
@@ -373,18 +369,18 @@ public class KSP {
             Double cost = p.getTotalLength();
             Double time = Precision.round(p.getTotalTime(),0);
             Double distance = Precision.round(p.getTotalLength()/1000,2);
-            Double sumwalkpedcount = p.totalPedCount;
-            Double totalwalkpedcount = p.totalPedCount/ distance;
-            Double avgpedcountpernode = p.totalPedCount/p.nodes.size();
-            Double avgnodepedcountKM = p.totalPedCount/p.nodes.size()*distance;
-            Double avgnodepedcountM = p.totalPedCount/p.nodes.size()*p.totalLength;
+            Double totalwalkpedcount_KM = p.totalPedCount/ distance; // total ped count of walk route
 
-            System.out.println("\nsumWPC:"+sumwalkpedcount);
-            System.out.println("\ntotalWPC/distKM:"+totalwalkpedcount);
-            System.out.println("totalnodes:"+p.nodes.size());
-            System.out.println("avgWPC:"+avgpedcountpernode);
-            System.out.println("avg*KM:"+avgnodepedcountKM);
-            System.out.println("avg*M"+avgnodepedcountM);
+//            Double sumwalkpedcount = p.totalPedCount;
+//            Double avgpedcountpernode = p.totalPedCount/p.nodes.size();
+//            Double avgnodepedcountKM = p.totalPedCount/p.nodes.size()*distance;
+//            Double avgnodepedcountM = p.totalPedCount/p.nodes.size()*p.totalLength;
+//            System.out.println("\nsumWPC:"+sumwalkpedcount);
+//            System.out.println("\ntotalWPC/distKM:"+totalwalkpedcount_KM);
+//            System.out.println("totalnodes:"+p.nodes.size());
+//            System.out.println("avgWPC:"+avgpedcountpernode);
+//            System.out.println("avg*KM:"+avgnodepedcountKM);
+//            System.out.println("avg*M"+avgnodepedcountM);
 
             path_map.put("ttcname", new Gson().toJson(ttcnames));
             path_map.put("cost", new Gson().toJson(cost));
@@ -395,10 +391,7 @@ public class KSP {
             path_map.put("distance", new Gson().toJson(distance));
             path_map.put("walkingtime", new Gson().toJson(time)); // total walking time = total time for walking mode
             path_map.put("ttctime", new Gson().toJson(0));
-//            path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount));
-//            path_map.put("avgpedcountpernode", new Gson().toJson(avgpedcountpernode));
-//            path_map.put("avgnodepedcountKM", new Gson().toJson(avgnodepedcountKM));
-//            path_map.put("avgnodepedcountM", new Gson().toJson(avgnodepedcountM));
+//            path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // total pedcount of walk route
 
             count++;
             solution.add(path_map); //[cost, routeNode, risk, time, description, distance]
@@ -410,7 +403,9 @@ public class KSP {
     public static ArrayList KSPtoJsonTTC_AL(ArrayList<Path> ksp_sol) {
         ArrayList solution = new ArrayList<>();
         double count = 0;
-        for (Path p : ksp_sol) {
+//        for (Path p : ksp_sol) {
+        for (int k=0;k<1;k++) {
+            Path p = ksp_sol.get(k);
             if(p.pathtype != 5){
 //                System.out.println(p.pathtype);
                 HashMap<String, String> path_map = new HashMap<>();
@@ -464,7 +459,6 @@ public class KSP {
                         risk2 = second.occupancyPercent;
                     }
 
-
                     al1.add(longitude);
                     al1.add(latitude);
                     al2.add(middle_lon);
@@ -482,17 +476,16 @@ public class KSP {
                 Double distance = Precision.round(p.getTotalLength()/1000,2);
                 Double walkingtime = Precision.round(p.walkingTime,0); //Total walking time of route under public transit mode
                 Double ttctime = Precision.round(p.ttcTime,0); //Total time on public transit
+                Double totalwalkpedcount_KM = p.totalPedCount/ distance; // Total ped count from walking portion of ttc route
+                Double avgoccupancypercent = p.avgOccupancyPercent; // avg occupancy percent
 
-                Double sumwalkpedcount = p.totalPedCount;
-                Double totalwalkpedcount = p.totalPedCount/ distance;
-                Double avgoccupancypercent = p.avgOccupancyPercent;
-
-                System.out.println("\nTTC begin");
-                System.out.println("sumWPC: "+sumwalkpedcount);
-                System.out.println("totalWPC/dist: "+totalwalkpedcount);
-                System.out.println("avgOP: "+avgoccupancypercent);
-                System.out.println("ttctime: "+ttctime);
-                System.out.println("\nTTC ends");
+//                Double sumwalkpedcount = p.totalPedCount;
+//                System.out.println("\nTTC begin");
+//                System.out.println("sumWPC: "+sumwalkpedcount);
+//                System.out.println("totalWPC/dist: "+totalwalkpedcount);
+//                System.out.println("avgOP: "+avgoccupancypercent);
+//                System.out.println("ttctime: "+ttctime);
+//                System.out.println("\nTTC ends");
 
                 path_map.put("cost", new Gson().toJson(cost));
                 path_map.put("routeNode", new Gson().toJson(mn));
@@ -507,9 +500,8 @@ public class KSP {
                 path_map.put("ttctime", new Gson().toJson(ttctime));
                 path_map.put("startstop", new Gson().toJson(startStops));
                 path_map.put("endstop", new Gson().toJson(endStops));
-//                path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount));
+//                path_map.put("totalwalkpedcount",new Gson().toJson(totalwalkpedcount_KM)); // Total ped count from walking portion of ttc route
 //                path_map.put("avgoccupancypercent",new Gson().toJson(avgoccupancypercent));
-
 
                 count++;
                 solution.add(path_map); //[cost, routeNode, nodetype, ttcname, time, description, distance]
