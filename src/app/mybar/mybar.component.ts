@@ -31,9 +31,16 @@ export class MybarComponent implements OnInit {
   response: any;
   Object = Object;
   ngOnInit(): void {
-    this.routeService.getTransitInfo().pipe(
-      concatMap( item => of(item).pipe ( delay( 1000 ) ))
-    ).subscribe( data => {
+    console.log('im in')
+    this.http.get('http://localhost:8080/api').pipe(take(1)).subscribe(
+      data => {
+        this.response = data;
+        // console.log('im in' + this.response);
+      },
+    (error)=>{console.log(error)},
+    ()=>{
+      this.start, this.line, this.end = [],[],[]
+      this.routeService.getTransitInfo().pipe(take(1)).subscribe( data => {
       this.response = data
       for(var index = 0; index<Object.keys(this.response).length; index++){
         this.start = JSON.parse(this.response[index]['startstop']);
@@ -46,20 +53,28 @@ export class MybarComponent implements OnInit {
       }
       this.bus = data;
       // console.log('start stops'+this.start)
-      // console.log(this.bus)
-    } )
-    this.routeService.getWalkingInfo().pipe(
-      concatMap( item => of(item).pipe ( delay( 1000 ) ))
-    ).subscribe( data => { 
-      this.response = data; 
-      for (var index = 0; index<Object.keys(this.response).length; index++){
-        var risk = JSON.parse(this.response[index]['risk']);
-        if (risk.includes(-1.0)){
-          delete this.response[index]}
-      } 
-      this.walk = this.response;
-      // console.log("the new walk is", this.walk)
-    })
+      console.log('bus')
+      console.log(this.bus)
+    } )})
+
+    this.http.get('http://localhost:8080/api').pipe(take(1)).subscribe(
+      data => {
+        this.response = data;
+        // console.log('im in' + this.response);
+      },
+    (error)=>{console.log(error)},
+    ()=>{
+      this.routeService.getWalkingInfo().pipe(take(1)).subscribe( data => { 
+        this.response = data; 
+        for (var index = 0; index<Object.keys(this.response).length; index++){
+          var risk = JSON.parse(this.response[index]['risk']);
+          if (risk.includes(-1.0)){
+            delete this.response[index]}
+        } 
+        this.walk = this.response;
+        // console.log("the new walk is", this.walk)
+      })})
+    
     // this.newMessage();
     // this.sliderService.currentMessage.subscribe(mess=>console.log(mess));
     // this.sliderService.currentActive.subscribe(active => console.log(active));

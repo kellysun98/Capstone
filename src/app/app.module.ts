@@ -58,7 +58,7 @@ import { TweetsComponent } from './tweets/tweets.component';
   ],
   exports: [MatFormFieldModule],
   providers: [],
-  bootstrap: [AppComponent, QuestionaireComponent, StartlocationComponent],
+  bootstrap: [AppComponent, QuestionaireComponent, StartlocationComponent, MybarComponent],
   entryComponents: [QuestionaireComponent, StartlocationComponent]
 })
 export class AppModule { }

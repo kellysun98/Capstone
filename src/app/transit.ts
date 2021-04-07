@@ -3,7 +3,7 @@ export interface Transit {
     cost: number;
     nodetype: Array<number>;
     distance: number;
-    ttcname: string;
+    ttcname: any;
     nstop: number;
     description: string;
     risk: Array<any>;

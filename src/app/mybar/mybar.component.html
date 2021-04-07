@@ -56,18 +56,19 @@
     <mat-tab label="Transit"> 
         <!-- <ul> -->
             <hr style="border-top:none">
-            <mat-grid-list cols = "9" rowHeight = "200px">
+            <div class="tileContainer">
+            <mat-grid-list style = "width: 100%; height: fit-content !important;" cols = "9" rowHeight = "250px">
                 <mat-grid-tile colspan = "2">
                     <mat-label *ngFor = "let key of Object.keys(bus)" style = "color: white;background-color: #2A0968; padding: 5px;">{{bus[key].time}} mins</mat-label>
                 </mat-grid-tile>
                 <mat-grid-tile colspan = "7">
-                    <li style="list-style-type: none;">
+                    <mat-list style="height: inherit !important;list-style-type: none; overflow: auto;">
                     <ng-container *ngFor="let item of [].constructor(len); let index = index">
                     <span style="margin-bottom: 20px;"> # {{line[index]}} : {{nstop[index]}} stops</span>
                     <br>
-                    <span style="margin-bottom: 20px;">Start @: {{start[index]}}</span>
+                    <span style="margin-bottom: 20px;">Start @ {{start[index]}}</span>
                     <br>
-                    <span style="margin-bottom: 20px;">Get Off @: {{end[index]}}</span>         
+                    <span style="margin-bottom: 20px;">Get Off @ {{end[index]}}</span>         
                     <br>
                     </ng-container> 
                     <mat-icon style="color:  #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
@@ -78,7 +79,7 @@
                     <span *ngFor = "let key of Object.keys(bus)"> {{bus[key].ttctime}} mins </span>
                     <br>
                     <mat-label class = "description"> Best Transit Route </mat-label>
-                    </li>
+                    </mat-list>
                 </mat-grid-tile>
             </mat-grid-list>
             <span *ngFor = "let key of Object.keys(bus)" style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{bus[key].distance}} km</span>
@@ -132,5 +133,6 @@
             <hr style="border-top:none"> -->
 
         <!-- </ul> -->
+        </div>
          </mat-tab>
 </mat-tab-group>

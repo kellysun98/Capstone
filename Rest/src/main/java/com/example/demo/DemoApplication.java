@@ -211,24 +211,21 @@ public class DemoApplication { //hi
 
 		@GetMapping("/publictransit")
 		public String getTransitList() {
-			try{
-				Thread.sleep(5000);
-				System.out.print("finish sleep");
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
+//			try{
+//				Thread.sleep(4000);
+//			} catch (InterruptedException e) {
+//				Thread.currentThread().interrupt();
+//			}
 			return KSP.KSPtoJsonTTC(ttc_resultList);
 		}
 
 		@GetMapping("/walking")
 		public String getWalkingList() {
-			try{
-				Thread.sleep(5000);
-				System.out.print("finish sleep");
-
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
+//			try{
+//				Thread.sleep(4000);
+//			} catch (InterruptedException e) {
+//				Thread.currentThread().interrupt();
+//			}
 			return KSP.KSPtoJson(resultList);
 		}
 

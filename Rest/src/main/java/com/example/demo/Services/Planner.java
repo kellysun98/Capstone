@@ -28,38 +28,6 @@ public class Planner { //hi
 
     public Planner(){}
 
-//    public Path AStar(Graph graph, MapNode startNode, MapNode goalNode, String costFunction, double risk_W, double dist_W) {
-//        this.graph = graph;
-//        HashMap<MapNode, MapNode> parents = new HashMap<>();
-//        HashMap<MapNode, Double> costs = new HashMap<>();
-//        PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>();
-//
-//        startNode.estimatedCost = dynamic_heuristic(startNode, dist_W, risk_W);//dynamic_heuristic(startNode,dist_W, risk_W);
-//        parents.put(startNode, null);
-//        costs.put(startNode, 0.0);
-//        priorityQueue.add(startNode);
-//
-//        while (!priorityQueue.isEmpty()) {
-//            MapNode node = priorityQueue.remove();
-//            if (node.id == goalNode.id) {
-//                Path fastestRoute = new Path(getNodeList(parents, goalNode));
-//                return fastestRoute;
-//            }
-//            for (MapEdge edge : node.edges) {
-//                edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
-//                MapNode nextNode = edge.destinationNode;
-//                double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, dist_W, risk_W); //newCost = g(n)
-//                //System.out.println("newCost: "+newCost);
-//                if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
-//                    parents.put(nextNode, node);
-//                    costs.put(nextNode, newCost);
-//                    nextNode.estimatedCost = dynamic_heuristic(nextNode, dist_W, risk_W) + newCost; // estimatedCost=f(n)=h(n)+g(n);
-//                    priorityQueue.add(nextNode);
-//                }
-//            }
-//        }
-//        return null;
-//    }
     // regular AStar
     public Path AStar(Graph graph, MapNode startNode, MapNode goalNode, String costFunction, double risk_W, double dist_W) {
         this.graph = graph;
@@ -188,6 +156,59 @@ public class Planner { //hi
                         parents.put(nextNode, node);
                         costs.put(nextNode, newCost);
                         nextNode.estimatedCost = dynamic_heuristic(nextNode, goalNode, dist_W, risk_W, graph.getDistance(nextNode, goalNode), edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
+                        priorityQueue.add(nextNode);
+                    }
+                }else{
+                    continue;
+                }
+            }
+        }
+//        System.out.println("goalNode: "+goalNode.id);
+//        System.out.format("goalNode lat long: %f,%f ",goalNode.latitude,goalNode.longitude);
+        return null;
+    }
+    // avoid hospital
+    public Path AStar_avoidHospital_walking(Graph graph, MapNode startNode, MapNode goalNode, String costFunction, double risk_W, double dist_W) {
+        this.graph = graph;
+        HashMap<MapNode, MapNode> parents = new HashMap<>();
+        HashMap<MapNode, Double> costs = new HashMap<>();
+        PriorityQueue<MapNode> priorityQueue = new PriorityQueue<MapNode>();
+
+//        System.out.println("startNode: "+startNode.id);
+//        System.out.format("startNode lat long: %f,%f ",startNode.latitude,startNode.longitude);
+
+        startNode.estimatedCost = dynamic_heuristic_walking(startNode, goalNode, dist_W, risk_W,graph.getDistance(startNode, goalNode),  0);//dynamic_heuristic(startNode,dist_W, risk_W);
+        parents.put(startNode, null);
+        costs.put(startNode, 0.0);
+        priorityQueue.add(startNode);
+
+        while (!priorityQueue.isEmpty()) {
+//            System.out.println("PQ size: "+priorityQueue.size());
+            MapNode node = priorityQueue.remove();
+//            System.out.println("node: "+node.id);
+//            System.out.format("node lat long: %f,%f ",node.latitude,node.longitude);
+            if (node.id == goalNode.id) {
+                Path fastestRoute = new Path(getNodeList(parents, goalNode));
+                return fastestRoute;
+            }
+            for (MapEdge edge : node.edges) {
+                boolean useMe = false;
+                if (edge.destinationNode.isHospital==false) { // nextNode不是hospital
+                    useMe = true;
+                }else if ((node.id == startNode.id)||(getDistance(edge.destinationNode, startNode)<=30.0)) {
+                    useMe = true;
+                }else if ((edge.destinationNode.id== goalNode.id)||(getDistance(edge.destinationNode,goalNode)<=30.0)) { //nextNode is goalNode OR nextNode is 30 meters within goalNode
+                    useMe = true;
+                }
+                if(useMe){
+                    //edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
+                    MapNode nextNode = edge.destinationNode;
+                    double newCost = costs.get(node) + dynamic_heuristic_walking(edge.destinationNode, goalNode, dist_W, risk_W, graph.getDistance(edge.destinationNode, goalNode), edge.length); //newCost = g(n)
+                    //System.out.println("newCost: "+newCost);
+                    if ((!parents.containsKey(nextNode) || newCost < costs.get(nextNode))) {
+                        parents.put(nextNode, node);
+                        costs.put(nextNode, newCost);
+                        nextNode.estimatedCost = dynamic_heuristic_walking(nextNode, goalNode, dist_W, risk_W, graph.getDistance(nextNode, goalNode), edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
                         priorityQueue.add(nextNode);
                     }
                 }else{
@@ -510,36 +531,6 @@ public class Planner { //hi
         return solutions;
     }
 
-//    public HashMap<Integer, String> toHashMap(List<List<List<Double>>> solutions){
-//        Integer count = 1;
-//        HashMap<Integer, String> string_result = new HashMap<>();
-//        for(List<List<Double>> route: solutions){
-//            String route_to_string = new String();
-//            for(List<Double> coord: route){
-//                route_to_string += ("["+coord.get(0).toString()+", "+coord.get(1).toString()+"]" + ",");
-//            }
-//            string_result.put(count,route_to_string.substring(0,route_to_string.length()-1));
-//            count += 1;
-//        }
-//        return string_result;
-//    }
-//    public static HashMap<Integer, Path> toHashMap(List<Path> solutions){
-//        Integer count = 1;
-//        HashMap<Integer, Path> Path_result = new HashMap<>();
-//        for(Path route: solutions){
-//            Path_result.put(count,route);
-//            count += 1;
-//        }
-//        return Path_result;
-//    }
-
-//    public static HashMap<Integer, Path> toHashMap(Path solution){
-//        Integer count = 1;
-//        HashMap<Integer, Path> Path_result = new HashMap<>();
-//        Path_result.put(count,solution);
-//
-//        return Path_result;
-//    }
 
 
 /**
