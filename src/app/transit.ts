@@ -12,4 +12,6 @@ export interface Transit {
     ttctime: number;
     startstop: any;
     endstop: any;
+    totalwalkpedcount: number;
+    avgoccupancypercent: number;
 }

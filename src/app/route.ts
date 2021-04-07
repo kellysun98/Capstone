@@ -9,4 +9,5 @@ export interface Route {
     time: number;
     walkingtime: number;
     ttctime: number;
+    totalwalkpedcount: number;
 }

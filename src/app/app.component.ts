@@ -334,29 +334,49 @@ export class AppComponent {
         var Markers = [{lat: JSON.parse(result[0][0]['lat']), lng: JSON.parse(result[0][0]['lon'])}, {lat: JSON.parse(result[1][0]['lat']), lng: JSON.parse(result[1][0]['lon'])}];
         //console.log(result[0][0]['lat'],result[1][0]['lat']);
         var features = [];
-        for (var i = 0; i < Markers.length; i++) {
-          var item = Markers[i];
-          //console.log(item);
-          var longitude = item.lng;
-          var latitude = item.lat;
-      
-          var iconFeature = new ol.Feature({
-              geometry: new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857')),
-              name: 'markericon'
-          });    
-          
-          var iconStyle = new ol.style.Style({
-              image: new ol.style.Icon(({
-                  anchor: [0.5, 1],
-                  src: "http://cdn.mapmarker.io/api/v1/pin?text=P&size=50&hoffset=1"
-              }))
-          });
+        // for (var i = 0; i < Markers.length; i++) {
+        var item1 = Markers[0];
+        //console.log(item);
+        var longitude1 = item1.lng;
+        var latitude1 = item1.lat;
+    
+        var iconFeature1 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.transform([longitude1, latitude1], 'EPSG:4326', 'EPSG:3857')),
+            name: 'markericon'
+        });    
         
-          iconFeature.setStyle(iconStyle);
-          features.push(iconFeature);
+        var iconStyle1 = new ol.style.Style({
+            image: new ol.style.Icon(({
+                anchor: [0.5, 1],
+                src: 'http://cdn.mapmarker.io/api/v1/pin?text=E&size=50&hoffset=1'
+            }))
+        });
+        
+        iconFeature1.setStyle(iconStyle1);
+
+        var item2 = Markers[1];
+        //console.log(item);
+        var longitude2 = item2.lng;
+        var latitude2 = item2.lat;
+    
+        var iconFeature2 = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.transform([longitude2, latitude2], 'EPSG:4326', 'EPSG:3857')),
+            name: 'markericon'
+        });    
+        
+        var iconStyle2 = new ol.style.Style({
+            image: new ol.style.Icon(({
+                anchor: [0.5, 1],
+                src: 'http://cdn.mapmarker.io/api/v1/pin?text=S&size=50&hoffset=1'
+            }))
+        });
+        iconFeature2.setStyle(iconStyle2);
+
+        features.push(iconFeature2);
+        features.push(iconFeature1);
     
           //features.push(featureLine);
-        }
+        //}
       
         var vectorSource = new ol.source.Vector({
           features: features,
@@ -613,6 +633,15 @@ export class AppComponent {
     }
   }
 
+  removeRoute(){
+    this.map.getLayers().forEach(function(layer) {
+      if (layer.get('name') != undefined && (layer.get('name') === 'ped-lines' || layer.get('name') === 'transit-lines'||layer.get('name') === 'markers')) {
+        layer.getSource().clear();
+        console.log("routes removed")   
+      }
+    });
+  }
+
   DynamicColoring(route, time, risk, des, myroutes, ttcname = []){ //display text box info
     // var myroutes = new Array();
   
@@ -857,9 +886,9 @@ export class AppComponent {
                 features: res_length_transit === 0? myroutes : myroutes_transit,
               }); //multiple routes added 
 
-              if(res_length_transit===0){
-                alert("No Transit Line Available!")
-              }
+              // if(res_length_transit===0){
+              //   alert("No Transit Line Available!")
+              // }
 
               var indicator = 0;
               this.map.getLayers().forEach(function(layer) {

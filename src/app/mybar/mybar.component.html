@@ -2,23 +2,30 @@
     <mat-tab label="Walking">
     <hr style="border-top:none">
     <ng-container *ngFor="let key of Object.keys(walk)">
-    <mat-grid-list cols = "9" rowHeight = "110px">
+    <mat-grid-list cols = "9" rowHeight = "50px">
     <mat-grid-tile colspan = "2">
     <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{walk[key].time}} mins</mat-label>
     </mat-grid-tile>
     <mat-grid-tile colspan = "7">
-    <li style="list-style-type: none;">
-    <mat-icon style="color: #2A0968; margin-top: 20px; margin-bottom: 20px; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
-    <mat-label class = "description"> {{walk[key].description}} </mat-label>
-    </li>
+    <mat-list style="overflow:scroll; list-style-type: none;">
+    <mat-icon style="color: #413458; display: inline-flex; vertical-align: middle;"> directions_walk</mat-icon>
+    <mat-label style="font-size: medium;"> {{walk[key].description}} </mat-label>
+    </mat-list>
     </mat-grid-tile> 
     </mat-grid-list>
+    <span style="font-size: small; font: inherit !important;float:right;margin-right: 20px;"> Estimated Number of Total Pedestrians Encountered: </span>
     <br>
-    <span style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{walk[key].distance}} km</span>
-    
+    <mat-label style="float:right; font-size: small; font: inherit !important;color:white;background-color: #2A0968;margin-right: 20px;">  {{walk[key].totalwalkpedcount}} pedestrians  </mat-label>
+    <br>
+    <br>
+    <span style="font-size: small; font: inherit !important;float:right;margin-right: 20px;"> Total Distance: </span>
+    <br>
+    <mat-label style = "float:right; font-size:small;font: inherit !important; margin-right: 20px; color:white;background-color: #2A0968;line-height:0.5">  {{walk[key].distance}} km  </mat-label>
+    <br>
+    <br>
     </ng-container>
     
-    <hr>
+    <!-- <hr style="border-top:1px solid black"> -->
     <!-- <mat-grid-list cols = "9" rowHeight = "110px">
     <mat-grid-tile colspan = "2">
     <mat-label style = "color: white;background-color: #2A0968; padding: 5px;">{{walk[1].time}} mins</mat-label>
@@ -51,7 +58,7 @@
     <hr style="border-top:none">
     
     </mat-tab>
-    
+    <ng-container *ngIf = "visible">
     <mat-tab label="Transit"> 
     <!-- <ul> -->
     <hr style="border-top:none">
@@ -81,7 +88,21 @@
     </mat-list>
     </mat-grid-tile>
     </mat-grid-list>
-    <span *ngFor = "let key of Object.keys(bus)" style = "float:right; font-size:small; margin-right: 16px;color:blue; line-height:0.5">{{bus[key].distance}} km</span>
+    <br>
+    <br>
+    <span style="font-size: small; font: inherit !important;float:right;margin-right: 20px;">Estimated Number of Total Pedestrians Encountered: </span>
+    <br>
+    <span *ngFor = "let key of Object.keys(bus)" style="float:right; font-size: small; font: inherit !important;color:white;background-color: #2A0968;margin-right: 20px;">  {{bus[key].totalwalkpedcount}} pedestrians  </span>
+    <br>
+    <br>
+    <span style="font-size: small; font: inherit !important;float:right;margin-right: 20px;">Estimated Average of Bus Occupancy Percentage: </span>
+    <br>
+    <span *ngFor = "let key of Object.keys(bus)" style="float:right; font-size: small; font: inherit !important;color:white;background-color: #2A0968;margin-right: 20px;">  {{bus[key].avgoccupancypercent}} %  </span>
+    <br>
+    <br>
+    <span style="font-size: small; font: inherit !important;float:right;margin-right: 20px;">Total Distance: </span>
+    <br>
+    <span *ngFor = "let key of Object.keys(bus)" style="float:right; font-size: small; font: inherit !important;color:white;background-color: #2A0968;margin-right: 20px;">{{bus[key].distance}} km</span>
     <br>
     <!-- <div *ngFor="let key of Object.keys(walk)">
     <p>Key-> {{key}} and value is -> {{walk[key].time}}</p>
@@ -134,4 +155,5 @@
     <!-- </ul> -->
     </div>
     </mat-tab>
+    </ng-container>
    </mat-tab-group>
