@@ -140,10 +140,14 @@ public class MapNode implements Comparable<MapNode>{ //hi
 
     public static HashMap<String, Double> MapNodetoHash (Collection<MapNode> k){
         HashMap resultmap = new HashMap<String, Double>();  //DT3.0SM
-        double minlat=43.6467000;
-        double minlon=-79.3938000;
-        double maxlat=43.6629000;
-        double maxlon=-79.3731000;
+//        double minlat=43.6467000;
+//        double minlon=-79.3938000;
+//        double maxlat=43.6629000;
+//        double maxlon=-79.3731000;
+        double minlat=43.6523000;
+        double minlon=-79.4013000;
+        double maxlat=43.6663000;
+        double maxlon=-79.3735000;
         double dlon = (maxlon- minlon)/30;
         double dlat = (maxlat -minlat)/30;
         double lon, lat= 0.0;
