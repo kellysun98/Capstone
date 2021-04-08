@@ -22,13 +22,13 @@ public class PSQLConnect {
 //    public static String user = "REMOVED";
 //    public static String password = "REMOVED";
 
-//    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto";
-//    public static String user = "REMOVED";
-//    public static String password = "REMOVED";
-
-    public static String url = "jdbc:REMOVEDql://localhost:5432/Toronto";
+    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto";
     public static String user = "REMOVED";
-    public static String password = "capstone";
+    public static String password = "REMOVED";
+//
+//    public static String url = "jdbc:REMOVEDql://localhost:5432/Toronto";
+//    public static String user = "REMOVED";
+//    public static String password = "capstone";
 
     public static MapNode getNodebyID(String id){
         MapNode node = new MapNode();

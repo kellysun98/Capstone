@@ -92,6 +92,7 @@ export class AppComponent {
   
   
   // private slider:DataService
+  
 
   constructor(
     private _twitterService: TwitterService,
@@ -103,7 +104,7 @@ export class AppComponent {
     this.isSearching = true;
     this.openWelcome();
     //this.Heatmap2();
-    // this.initBackEnd();
+    this.initBackEnd();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -270,7 +271,7 @@ export class AppComponent {
         continue;}
         var pointFeature = new ol.Feature({
             geometry: new ol.geom.Point(ol.proj.transform(tempkey, 'EPSG:4326', 'EPSG:3857')),
-            weight: res[coord] == "NaN"? 0 : res[coord]/9,
+            weight: res[coord] == "NaN"? 2/9 : res[coord]/9,
         });
         //console.log("coord is " + coord);
         //console.log("weight is " + pointFeature.getWeight());
