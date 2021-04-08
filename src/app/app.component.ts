@@ -103,7 +103,7 @@ export class AppComponent {
     this.isSearching = true;
     this.openWelcome();
     //this.Heatmap2();
-    this.initBackEnd();
+    //this.initBackEnd();
     var mousePositionControl = new ol.control.MousePosition({
       coordinateFormat: ol.coordinate.createStringXY(4),
       projection: 'EPSG:4326',
@@ -230,7 +230,7 @@ export class AppComponent {
               }
           }
           
-          content.innerHTML = '<p style="text-align:center;">Route Information: \n</p><code>' + feature.get('description') + '</code>';
+          content.innerHTML = '<p style="text-align:center;">Route Information: \n</p><code>' + feature.get('description') + '<br/>'+ feature.get('description2') + '</code>';
           popup.setPosition(args.coordinate);
 
 
@@ -531,10 +531,8 @@ export class AppComponent {
       var featureLine = new ol.Feature({
         geometry: new ol.geom.LineString([route[i-1],route[i]]),
         name: 'route'+amen,
-        description: `Estimated Pedestrain Encountered:` + (risk[i]*1.0).toFixed(0) + 
-        `             Total Distance: \n` + description_ped + 'km'
-      });
-      console.log("risk:", risk[i]*1.0);
+        description: 'Estimated Pedestrains Encountered on Segment:' + '    '+ (risk[i]*1.0).toFixed(0),
+        description2: 'Total Distance: ' + '    '+description_ped + 'km'      });
       // var highlightLine = new ol.Feature({
       //   geometry: new ol.geom.LineString([route[i-1],route[i]]),
       //   name: 'highlight'+amen
@@ -570,7 +568,8 @@ export class AppComponent {
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
           name: 'route_trans'+ amen,
           //description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
-          description: 'Estimated Pedestrain Encountered: \n' + (risk[i-1]*1.0).toFixed(0) + '           Total Distance: \n' + description_bus + 'km'
+          description: 'Estimated Pedestrain Encountered on Segment: \n' + '    '+ (risk[i-1]*1.0).toFixed(0),
+          description2:'Total Distance: \n' + '    '+ description_bus + 'km'
         });
        //console.log([route[i-1], route[i]])
 
@@ -591,7 +590,8 @@ export class AppComponent {
         var featureLine = new ol.Feature({
           geometry: new ol.geom.LineString([route[i-1],route[i]]),
           name: 'route_trans'+ amen,
-          description: 'Estimated Transit Occupancy: \n' + (risk[i-1]*1.0).toFixed(2) + '% \n Total Distance: \n' + description_bus + 'km'
+          description: 'Estimated Transit Occupancy: \n' + '    '+ (risk[i-1]*1.0).toFixed(2) +'%',
+          description2:'Total Distance: \n' + '    '+ description_bus + 'km'       
           //description: 'Total time: \n' + time + 'min \n Route risk: \n' + avg_risk + '%',
         });
        //console.log([route[i-1], route[i]])
