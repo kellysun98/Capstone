@@ -72,8 +72,8 @@
 			<version>2.4.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.REMOVEDql</groupId>
-			<artifactId>REMOVEDql</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
