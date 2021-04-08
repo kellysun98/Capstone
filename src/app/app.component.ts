@@ -375,6 +375,20 @@ export class AppComponent {
 
         features.push(iconFeature2);
         features.push(iconFeature1);
+
+        const lon_centre = (longitude1 + longitude2)/2;
+        const lat_centre = (latitude1 + latitude2)/2;
+     
+        var view = this.map.getView();
+        view.setCenter(ol.proj.fromLonLat([lon_centre, lat_centre]));
+        const lon_diff = longitude1 - longitude2;
+        const lat_diff = latitude1 - latitude2;
+        const diff = Math.max(Math.abs(lon_diff), Math.abs(lat_diff))
+        console.log(diff);
+        const zoomIndex = 0.0368/diff+11.32;
+        view.setZoom(zoomIndex);
+        
+
     
           //features.push(featureLine);
         //}
@@ -410,7 +424,6 @@ export class AppComponent {
     
       )    
   }
-
   sliderLine(){
   
     this.http.get('http://localhost:8080/api').subscribe(
