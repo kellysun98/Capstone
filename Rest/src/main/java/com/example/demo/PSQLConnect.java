@@ -18,7 +18,11 @@ import java.sql.*;
 public class PSQLConnect {
 //kelly's db conn
 
-    public static String url = "jdbc:REMOVEDql://localhost:5432/torontodata";
+//    public static String url = "jdbc:REMOVEDql://localhost:5432/torontodata";
+//    public static String user = "REMOVED";
+//    public static String password = "REMOVED";
+
+    public static String url = "jdbc:REMOVEDql://localhost:5432/toronto";
     public static String user = "REMOVED";
     public static String password = "REMOVED";
 
@@ -181,12 +185,12 @@ public class PSQLConnect {
 
     public static void main(String[] args) {
 
-        /*
-        HashMap<Integer, String> test = getNeighbourhoodCoordinate();
-        test.entrySet().forEach(entry->{
-            System.out.println(entry.getKey() + ":   " + entry.getValue());
-        });
-        /*
+
+//        HashMap<Integer, String> test = getNeighbourhoodCoordinate();
+//        test.entrySet().forEach(entry->{
+//            System.out.println(entry.getKey() + ":   " + entry.getValue());
+//        });
+
         /*
         ArrayList<ArrayList<Double>> test2 = getPedestrianCount("08:00:00", "10:00:00");
         for (ArrayList list : test2) {
