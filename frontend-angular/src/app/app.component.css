@@ -1,0 +1,87 @@
+/* @import '~@angular/material/prebuilt-themes/indigo-pink.css'; */
+
+
+/* @import url(https://openlayers.org/en/v4.6.5/css/ol.css); */
+
+.map {
+    width: 100%;
+    height: 100%;
+}
+
+.fullscreen:-webkit-full-screen {
+    height: 100%;
+    margin: 0;
+}
+
+.fullscreen:-ms-fullscreen {
+    height: 100%;
+}
+
+.fullscreen:fullscreen {
+    height: 100%;
+}
+
+.fullscreen {
+    margin-bottom: 10px;
+    width: 100%;
+    height: 400px;
+}
+
+.map .ol-rotate {
+    top: 3em;
+}
+
+mat-sidenav {
+    width: 450px;
+}
+
+.mat-dialog-title {
+    text-align: center;
+    margin-top: 30px;
+    color: purple;
+    font-size: 20px;
+}
+
+.mat-raised-button {
+    text-align: center;
+    color: white;
+    background-color: purple;
+    margin-left: 35px;
+}
+
+.mat-button {
+    margin-left: 35px;
+}
+
+.mat-slide-toggle {
+    margin-left: 35px;
+}
+
+mat-slider {
+    width: 300px;
+}
+
+.notification {
+    z-index: 100;
+    position: absolute;
+    margin-top: 30px;
+    margin-left: 700px;
+}
+
+tr {
+    height: 30px;
+    vertical-align: center;
+    text-align: center;
+}
+
+td {
+    text-align: center;
+}
+
+table {
+    width: 250px;
+}
+
+.close-notification {
+    border: none;
+}

@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 
 import static com.example.demo.Services.Graph.normalize;
 
-public class MapEdge {
+public class MapEdge { //hi
     public MapRoute mapRoute;
     public MapNode destinationNode;
     public MapNode sourceNode;
@@ -17,6 +17,9 @@ public class MapEdge {
     public boolean isHospital; // whether edge is hospital
     public boolean isShoppers; // whether edge is shoppers
     public boolean isMall; //whether edge is mall
+
+    public MapEdge() {
+    }
 
     // Get source node id of MapEdge
     public double getSourceNodeID(){return this.sourceNode.id;}
@@ -40,7 +43,7 @@ public class MapEdge {
         this.mapRoute = mapRoute;
         this.sourceNode = sourceNode;
         this.destinationNode = destinationNode;
-        this.length = graph.getDistance(this.sourceNode, this.destinationNode); // Set weight of the edge as distance from src to dest MapNode
+        this.length = graph.getDistance(this.sourceNode, this.destinationNode)/5000 * 60; // Set weight of the edge as distance from src to dest MapNode
 //        this.normalized_length = normalize(this.length, graph.min_length, graph.max_length);
 //        try {
         double lon = Double.parseDouble(df.format(destinationNode.longitude));
@@ -54,6 +57,22 @@ public class MapEdge {
 //            accidentsCount = null;
 //        }
     }
+    public MapEdge(MapNode sourceNode, MapNode destinationNode, long time) {
+        this.sourceNode = sourceNode;
+        this.destinationNode = destinationNode;
+        this.length = (double) time;
+        double lon = Double.parseDouble(df.format(destinationNode.longitude));
+        double lat = Double.parseDouble(df.format(destinationNode.latitude));
+        this.isIndoor = (sourceNode.isIndoor) && (destinationNode.isIndoor);
+        this.isHospital = (sourceNode.isHospital) && (destinationNode.isHospital);
+        this.isShoppers = (sourceNode.isShoppers) && (destinationNode.isShoppers);
+        this.isMall = (sourceNode.isMall) && (destinationNode.isMall);
+//            accidentsCount = graph.accidents.get(lon).get(lat);
+//        } catch (NullPointerException e){
+//            accidentsCount = null;
+//        }
+    }
+
     public double getNormalized_length(){
         return this.normalized_length;
     }

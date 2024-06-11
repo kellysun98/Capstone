@@ -21,7 +21,7 @@ import java.util.List;
 import static com.example.demo.Services.Graph.getDistance;
 import static com.example.demo.Services.Graph.normalize;
 
-public class Planner {
+public class Planner { //hi
     public JXMapViewer mapViewer;
     public JFrame frame;
     public Graph graph;
@@ -69,7 +69,7 @@ public class Planner {
     //        System.out.println("startNode: "+startNode.id);
     //        System.out.format("startNode lat long: %f,%f ",startNode.latitude,startNode.longitude);
 
-        startNode.estimatedCost = dynamic_heuristic(startNode, dist_W, risk_W, 0);//dynamic_heuristic(startNode,dist_W, risk_W);
+        startNode.estimatedCost = dynamic_heuristic(startNode, goalNode, dist_W, risk_W, graph.getDistance(startNode, goalNode), 0);//dynamic_heuristic(startNode,dist_W, risk_W);
         parents.put(startNode, null);
         costs.put(startNode, 0.0);
         priorityQueue.add(startNode);
@@ -89,12 +89,12 @@ public class Planner {
     //                    System.out.println("下一个Node不是hospital");
                 //edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
                 MapNode nextNode = edge.destinationNode;
-                double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, dist_W, risk_W, edge.length); //newCost = g(n)
+                double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, goalNode, dist_W, risk_W, graph.getDistance(edge.destinationNode, goalNode), edge.length); //newCost = g(n)
                     //System.out.println("newCost: "+newCost);
                 if ((!parents.containsKey(nextNode) || newCost < costs.get(nextNode))) {
                     parents.put(nextNode, node);
                     costs.put(nextNode, newCost);
-                    nextNode.estimatedCost = dynamic_heuristic(nextNode, dist_W, risk_W, edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
+                    nextNode.estimatedCost = dynamic_heuristic(nextNode, goalNode, dist_W, risk_W, graph.getDistance(nextNode, goalNode), edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
                     priorityQueue.add(nextNode);
                     }
             }
@@ -113,7 +113,7 @@ public class Planner {
 //        System.out.println("startNode: "+startNode.id);
 //        System.out.format("startNode lat long: %f,%f ",startNode.latitude,startNode.longitude);
 
-        startNode.estimatedCost = dynamic_heuristic(startNode, dist_W, risk_W, 0);//dynamic_heuristic(startNode,dist_W, risk_W);
+        startNode.estimatedCost = dynamic_heuristic(startNode, goalNode, dist_W, risk_W,graph.getDistance(startNode, goalNode),  0);//dynamic_heuristic(startNode,dist_W, risk_W);
         parents.put(startNode, null);
         costs.put(startNode, 0.0);
         priorityQueue.add(startNode);
@@ -139,12 +139,12 @@ public class Planner {
                 if(useMe){
                     //edge.normalized_length = normalize(edge.length, graph.min_length, graph.max_length);
                     MapNode nextNode = edge.destinationNode;
-                    double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, dist_W, risk_W, edge.length); //newCost = g(n)
+                    double newCost = costs.get(node) + dynamic_heuristic(edge.destinationNode, goalNode, dist_W, risk_W, graph.getDistance(edge.destinationNode, goalNode), edge.length); //newCost = g(n)
                     //System.out.println("newCost: "+newCost);
                     if ((!parents.containsKey(nextNode) || newCost < costs.get(nextNode))) {
                         parents.put(nextNode, node);
                         costs.put(nextNode, newCost);
-                        nextNode.estimatedCost = dynamic_heuristic(nextNode, dist_W, risk_W, edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
+                        nextNode.estimatedCost = dynamic_heuristic(nextNode, goalNode, dist_W, risk_W, graph.getDistance(nextNode, goalNode), edge.length) + newCost; // estimatedCost=f(n)=h(n)+g(n);
                         priorityQueue.add(nextNode);
                     }
                 }else{
@@ -156,6 +156,46 @@ public class Planner {
 //        System.out.format("goalNode lat long: %f,%f ",goalNode.latitude,goalNode.longitude);
         return null;
     }
+
+    /** A* Search Algorithm for Subway
+     * */
+    public SubwayPath plan(SubwayNode startNode, SubwayNode goalNode, String costFunction){
+        if (costFunction.equals("distance")){
+            HashMap<SubwayNode, SubwayNode> parents = new HashMap<>();
+            HashMap<SubwayNode, Double> costs = new HashMap<>();
+            PriorityQueue<SubwayNode> priorityQueue = new PriorityQueue<>();
+
+            startNode.estimatedCost = heuristics(startNode,goalNode,costFunction);
+            parents.put(startNode,null);
+            costs.put(startNode,0.0);
+            priorityQueue.add(startNode);
+
+            while (!priorityQueue.isEmpty()){
+                SubwayNode node = priorityQueue.remove();
+                if(node.id == goalNode.id){
+                    //                double total_cost = 0;
+                    //                for(double c:costs.values()){total_cost+=c;};
+                    //                Path fastestRoute = new Path(getGeoList(parents,goalNode),total_cost);
+                    SubwayPath fastestRoute = new SubwayPath(getNodeList(parents,goalNode));
+                    return fastestRoute;
+                }
+                for (SubwayEdge edge:node.edges){
+                    SubwayNode nextNode = edge.destinationNode;
+                    double newCost = costs.get(node) + edge.getLength("distance"); //newCost = g(n)
+                    if (!parents.containsKey(nextNode) || newCost < costs.get(nextNode)) {
+                        parents.put(nextNode,node);
+                        costs.put(nextNode,newCost);
+                        nextNode.estimatedCost = heuristics(nextNode,goalNode,costFunction) + newCost; // estimatedCost=f(n)=h(n)+g(n)
+                        priorityQueue.add(nextNode);
+                    }
+                }
+            }
+            return null;
+        }
+        return null;
+    }
+
+
 
     public Path plan(Graph graph, MapNode startNode, MapNode goalNode, String costFunction){
         if (costFunction.equals("distance")){
@@ -298,19 +338,63 @@ public class Planner {
     }
 
     /** calculate heuristic cost based on different weights */
-    public double dynamic_heuristic(MapNode node, double dist_W, double risk_W, double edgelength){
+    public double dynamic_heuristic(MapNode node, MapNode gnode, double dist_W, double risk_W, double dis, double edgelength){
         //return risk_W * node.normalized_pedCount + dist_W * node.normalized_euclid;
-        return risk_W * node.pedCount + dist_W * (node.euclid + edgelength);
-    }
-    public double get_Cost_notSure(MapEdge edge, double dist_W, double risk_W){
-        return risk_W * edge.destinationNode.normalized_pedCount + dist_W * edge.normalized_length;
+
+        //if mapnode: return travel time
+
+        //if subwaynode:
+        // if euclid is shorter: return wait time + travel time
+        // if longer: return large number
+        //return risk_W * node.pedCount + dist_W * (((node.euclid)/5000.0)*60.0 + edgelength);
+
+        if(node.nodetype != 5){
+            if(node.edges.isEmpty()){
+                return 100000000;
+            }
+            MapNode tempnode = null;
+            for(MapEdge e : node.edges){
+                if(e.destinationNode.nodetype != 5){
+                    tempnode = e.destinationNode;
+                    break;
+                }
+            }
+            if(tempnode != null){
+                if(graph.getDistance(tempnode, gnode) > dis){
+                    return 100000000;
+                }
+            }
+            if(tempnode == null){
+                return 100000000;
+            }
+
+            return risk_W * node.passengerCount * node.rFactor+ dist_W * (((dis)/22000.0)*60.0 + edgelength);
+
+        }
+        return risk_W * node.pedCount + dist_W * (((dis)/5000.0)*60.0 + edgelength);
 
     }
 
+    /** For walking option
+     * */
     public ArrayList<MapNode> getNodeList(HashMap<MapNode, MapNode> parents, MapNode goalNode){
         ArrayList<MapNode> geoList = new ArrayList<>();
         geoList.add(goalNode);
         MapNode thisNode = goalNode;
+        while(thisNode != null){
+            geoList.add(thisNode);
+            thisNode = parents.get(thisNode);
+        }
+        Collections.reverse(geoList);
+        return geoList;
+    }
+
+    /** For subway
+     * */
+    public ArrayList<SubwayNode> getNodeList(HashMap<SubwayNode, SubwayNode> parents, SubwayNode goalNode){
+        ArrayList<SubwayNode> geoList = new ArrayList<>();
+        geoList.add(goalNode);
+        SubwayNode thisNode = goalNode;
         while(thisNode != null){
             geoList.add(thisNode);
             thisNode = parents.get(thisNode);

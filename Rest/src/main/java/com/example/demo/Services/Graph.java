@@ -10,15 +10,23 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.lang.*;
+import java.time.LocalTime;
 
 
-public class Graph {
+public class Graph { //hi
     public Document osmDoc;
     public double[] focus;
     public HashMap<Double, MapNode> nodes;
-    public HashMap<Double, MapNode> routeNodes;
+    public HashMap<Double, MapNode> routeNodes; // HashMap of only walking network
+    public HashMap<Double, MapNode> TTCrouteNodes; // HashMap of connected walking&public transit networks
+
+    public HashMap<Double, SubwayNode> subwaynodes;
+    public HashMap<Double, SubwayNode> subwayrouteNodes;
     public HashMap<Double, Building> buildings; // HashMap of building boundaries; key= way id; value =
     public HashMap<Double, MapRoute> routes;
     public HashMap<Double,HashMap<Double,Integer>> accidents; //longitude, latitude
@@ -41,6 +49,11 @@ public class Graph {
     public double min_euclid = -1;
     public double max_pedCont = -1;
     public double min_pedCount = -1;
+
+    public Date systemTime;
+
+    // members for subway
+//    public SubwayGraph subwayGraph;
 
     public void getPedestrianCountDistribution(String startTime, String endTime, int k){
         ArrayList<ArrayList<Double>> pedCountMap = PSQLConnect.getPedestrianCount(startTime, endTime);
@@ -122,7 +135,7 @@ public class Graph {
     }
 
     public Graph() {
-        this("./data/DT2.osm","./data/Cyclists.csv");
+        this("./data/DT3.osm","./data/Cyclists.csv");
     }
 
     public Graph(String osmFilePath, String accidentsFilePath) {
@@ -130,10 +143,14 @@ public class Graph {
         accidents = new HashMap<>();
         nodes = new HashMap<>();
         routeNodes = new HashMap<>();
+        TTCrouteNodes = new HashMap<>();
+        subwaynodes = new HashMap<>();
+        subwayrouteNodes = new HashMap<>();
         routes = new HashMap<>();
         buildings = new HashMap<>();
         hospitalNodes = new ArrayList<>();
         avoidHospital = false;
+//        subwayGraph = new SubwayGraph(osmFilePath); // 在Graph里面建subwayGraph
 
         loadFiles(osmFilePath, accidentsFilePath);
         getFocus();
@@ -141,7 +158,6 @@ public class Graph {
         MapEdge.graph = this;
         buildGraph_avoidHospital();
     }
-
 
     public void loadFiles(String osmFilePath, String accidentsFilePath){
         // load osm file
@@ -185,6 +201,9 @@ public class Graph {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // load TTC and bus route csv file
+
 
 //        // load uber json file
 //        JSONParser parser = new JSONParser();
@@ -377,9 +396,49 @@ public class Graph {
 //        }
 //        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
 //    }
+    /** load bus_weekday.csv
+     * */
+    public void loadTTCOccupancy(int ttctype, Hashtable<LocalTime,int[]> ttcpasscount){
+        BufferedReader br = null;
+        String line = "";
+        DecimalFormat df = new DecimalFormat("#.###");
+        df.setRoundingMode(RoundingMode.FLOOR);
+        int occupancy_percent = -1;
+        int passenger_count = -1;
+        String filepath = null;
+        if (ttctype == 0)
+            filepath = "./data/streetcar_weekday.csv";
+        else if (ttctype == 1)
+            filepath = "./data/subway_weekday.csv";
+        else if (ttctype == 3)
+            filepath = "./data/bus_weekday.csv";
 
-    //最新的buildGraph function; allow avoid hospital
+        try {
+            br = new BufferedReader(new FileReader(filepath));
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] entry = line.split(",");
+                LocalTime ttctime = LocalTime.parse(entry[0],DateTimeFormatter.ofPattern("H:m"));
+                occupancy_percent = Integer.parseInt(entry[1]);
+                passenger_count = Integer.parseInt(entry[2]);
+                int[] arr;
+                arr = new int[2];
+                arr[0] = occupancy_percent;
+                arr[1] = passenger_count;
+                ttcpasscount.put(ttctime, arr);
+            }
+        }catch (FileNotFoundException e) {
+//            e.printStackTrace();
+        } catch (IOException e) {
+//            e.printStackTrace();
+        }
+
+    }
+
+    /** 最新的buildGraph function; allow avoid hospital
+     * */
     public void buildGraph_avoidHospital() {
+        System.out.println("why call me?");
         NodeList nodeList = osmDoc.getElementsByTagName("node");
         NodeList routeList = osmDoc.getElementsByTagName("way");
 
@@ -387,6 +446,7 @@ public class Graph {
             boolean isShoppers = false; // set Shoppers node
             Element node = (Element) nodeList.item(i);
             MapNode newNode = new MapNode(node);
+            newNode.nodetype = 5;
             nodes.put(newNode.id, newNode);
         }
         // Find all hospitals
@@ -426,10 +486,11 @@ public class Graph {
             }
         }
         ArrayList<MapNode> debug_list = hospitalNodes;
-        // Build ways
+        // Build ways (including subway route)
         for (int i = 0; i < routeList.getLength(); i++) {
             Element route = (Element) routeList.item(i);
             boolean isHighway = false;
+            boolean isSubway = false;
             boolean isIndoor = false;
             boolean isMall = false;
             boolean oneWay = false;
@@ -505,32 +566,187 @@ public class Graph {
                 }
                 newRoute.nodeIds = nodeIdList;
                 routes.put(newRoute.routeId, newRoute);
+
+
                 for (double nodeId : nodeIdList) {
                     routeNodes.put(nodeId, nodes.get(nodeId));
+                    TTCrouteNodes.put(nodeId,nodes.get(nodeId));
                 }
             }
-
-//            if (isMall){
-//                NodeList nodesInRoute = route.getElementsByTagName("nd");
-//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
-//                    Element nd = (Element) nodesInRoute.item(j);
-//                    nodes.get(Double.parseDouble(nd.getAttribute("ref"))).setisHospital(true);
-//                }
-//            }
-//            if (isBuilding){
-//                ArrayList<MapNode> nodeContainer = new ArrayList<>();
-//                NodeList nodesInRoute = route.getElementsByTagName("nd");
-//                for (int j = 0; j < nodesInRoute.getLength(); j++) {
-//                    Element nd = (Element) nodesInRoute.item(j);
-//                    nodeContainer.add(nodes.get(Double.parseDouble(nd.getAttribute("ref"))));
-//                }
-//                Building newBuilding = new Building(route, routeName, routeType,nodeContainer);
-//                buildings.put(newBuilding.getbuildingID(), newBuilding);
-//            }
-
         }
         System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
+
+        //excel file ttc data
+        // load toronto police csv file
+        BufferedReader br = null;
+        String line = "";
+        DecimalFormat df = new DecimalFormat("#.###");
+        df.setRoundingMode(RoundingMode.FLOOR);
+        int prev_route_id = -1;
+        int prev_seq = -1;
+        Date prev_time = new Date();
+        Double prev_id = -1.0;
+        try {
+            br = new BufferedReader(new FileReader("./data/ttc data.csv"));
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] entry = line.split(",");
+                String trip_id = entry[0];
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+                Date arrival_time = sdf.parse(entry[1]);
+                String stop_id = entry[3];
+
+                int stop_sequence = Integer.parseInt(entry[4]);
+                int route_id = Integer.parseInt(entry[6]);
+                String trip_name = entry[8];
+                int route_type = Integer.parseInt(entry[10]);
+                double lon = Double.parseDouble(entry[11]);
+                double lat = Double.parseDouble(entry[12]);
+                String stop_name = entry[13];
+
+
+                LocalTime testTime = LocalTime.parse("9:00", DateTimeFormatter.ofPattern("H:m")); // set currTime to 9AM for testing
+
+
+                if(prev_route_id == route_id){
+                    if(stop_sequence == prev_seq + 1){
+                        if(nodes.containsKey(stop_id)){
+                            nodes.get(Double.parseDouble(stop_id)).arrivalTime.add(arrival_time);
+                        }
+                        else{
+                            MapNode newnode = new MapNode();
+                            newnode.id = Double.parseDouble(stop_id);
+                            newnode.longitude = lon;
+                            newnode.latitude = lat;
+                            newnode.isIndoor = true;
+                            newnode.nodetype = route_type;
+                            loadTTCOccupancy(newnode.nodetype, newnode.ttcOccupancy); // load bus_weekday.csv
+                            newnode.passengerCount = newnode.ttcOccupancy.get(testTime)[1]; // assign passengerCount
+                            newnode.occupancyPercent = newnode.ttcOccupancy.get(testTime)[0];
+                            newnode.arrivalTime.add(arrival_time);
+                            newnode.ttcName = trip_name;
+                            newnode.stopName = stop_name;
+                            long temptime = arrival_time.getTime() - prev_time.getTime();
+                            if( temptime < 0.0){
+                                //long tempa = arrival_time.getTime();
+                                //long tempb = prev_time.getTime();
+                                temptime = new Double(1.0).longValue();
+                            }
+                            nodes.get(prev_id).edges.add(new MapEdge(nodes.get(prev_id), newnode, (temptime)/(60000)));
+                            nodes.put(newnode.id, newnode);
+                            TTCrouteNodes.put(prev_id, nodes.get(prev_id));
+
+
+                            // connect ttc network w/ walking network
+                            MapNode walknode;
+                            for (Double i : routeNodes.keySet()){//(Double i : routeNodes.keySet()){
+                                walknode = routeNodes.get(i);
+                                double dist = getDistance(walknode,newnode);
+                                if (dist <=10.0){
+                                    TTCrouteNodes.get(walknode.id).edges.add(new MapEdge(nodes.get(walknode.id), newnode, (new Double((dist/5000.0)*60.0)).longValue()));
+//                                    walknode.edges.add(new MapEdge(walknode,newnode,(new Double((dist/5000.0)*60.0)).longValue()));
+//                                    TTCrouteNodes.put(walknode.id,walknode);
+                                    nodes.get(newnode.id).edges.add(new MapEdge(nodes.get(newnode.id),nodes.get(walknode.id),(new Double((dist/5000.0)*60.0)).longValue()));
+                                    TTCrouteNodes.put(newnode.id,newnode);
+                                }
+
+                            }
+
+                        }
+
+                    }
+                    else{
+                        if(nodes.containsKey(Double.parseDouble(stop_id))){
+                            nodes.get(Double.parseDouble(stop_id)).arrivalTime.add(arrival_time);
+                        }
+                        else{
+                            MapNode newnode = new MapNode();
+                            newnode.id = Double.parseDouble(stop_id);
+                            newnode.longitude = lon;
+                            newnode.latitude = lat;
+                            newnode.isIndoor = true;
+                            newnode.nodetype = route_type;
+                            loadTTCOccupancy(newnode.nodetype, newnode.ttcOccupancy); // load bus_weekday.csv
+                            newnode.passengerCount = newnode.ttcOccupancy.get(testTime)[1]; // assign passengerCount
+                            newnode.occupancyPercent = newnode.ttcOccupancy.get(testTime)[0];
+                            newnode.arrivalTime.add(arrival_time);
+                            newnode.ttcName = trip_name;
+                            newnode.stopName = stop_name;
+
+                            nodes.put(newnode.id, newnode);
+
+                            // connect walk net to ttc net
+                            MapNode walknode;
+                            for (Double i : routeNodes.keySet()){//(Double i : routeNodes.keySet()){
+                                walknode = routeNodes.get(i);
+                                double dist = getDistance(walknode,newnode);
+                                if (dist <=10.0){
+                                    TTCrouteNodes.get(walknode.id).edges.add(new MapEdge(nodes.get(walknode.id), newnode, (new Double((dist/5000.0)*60.0)).longValue()));
+//                                    walknode.edges.add(new MapEdge(walknode,newnode,(new Double((dist/5000.0)*60.0)).longValue()));
+//                                    TTCrouteNodes.put(walknode.id,walknode);
+                                    nodes.get(newnode.id).edges.add(new MapEdge(nodes.get(newnode.id),nodes.get(walknode.id),(new Double((dist/5000.0)*60.0)).longValue()));
+                                    TTCrouteNodes.put(newnode.id,newnode);
+                                }
+                            }
+                        }
+
+                    }
+                }
+                else{
+                    if(nodes.containsKey(stop_id)){
+                        //nodes.get(prev_id).arrivalTime.add(arrival_time);
+                        System.out.println("error 610");
+                    }
+                    else{
+                        MapNode newnode = new MapNode();
+                        newnode.id = Double.parseDouble(stop_id);
+                        newnode.longitude = lon;
+                        newnode.latitude = lat;
+                        newnode.isIndoor = true;
+                        newnode.nodetype = route_type;
+                        loadTTCOccupancy(newnode.nodetype, newnode.ttcOccupancy); // load bus_weekday.csv
+                        newnode.passengerCount = newnode.ttcOccupancy.get(testTime)[1]; // assign passengerCount
+                        newnode.occupancyPercent = newnode.ttcOccupancy.get(testTime)[0];
+                        newnode.arrivalTime.add(arrival_time);
+                        newnode.ttcName = trip_name;
+                        newnode.stopName = stop_name;
+
+                        nodes.put(newnode.id, newnode);
+                        // connect walk net to ttc net
+                        MapNode walknode;
+                        for (Double i : routeNodes.keySet()){//(Double i : routeNodes.keySet()){
+                            walknode = routeNodes.get(i);
+                            double dist = getDistance(walknode,newnode);
+                            if (dist <=10.0){
+                                TTCrouteNodes.get(walknode.id).edges.add(new MapEdge(nodes.get(walknode.id), newnode, (new Double((dist/5000.0)*60.0)).longValue()));
+//                                walknode.edges.add(new MapEdge(walknode,newnode,-1));
+//                                TTCrouteNodes.put(walknode.id,walknode);
+                                nodes.get(newnode.id).edges.add(new MapEdge(nodes.get(newnode.id),nodes.get(walknode.id),(new Double((dist/5000.0)*60.0)).longValue()));
+                                TTCrouteNodes.put(newnode.id,newnode);
+                            }
+                        }
+                    }
+                }
+
+                prev_seq = stop_sequence;
+                prev_route_id = route_id;
+                prev_id = Double.parseDouble(stop_id);
+                prev_time = arrival_time;
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(String.format("number of connected temp route nodes: %d", TTCrouteNodes.size()));
     }
+
+
+
     /** Original buildGraph
      * */
 //    public void buildGraph() {
@@ -602,8 +818,7 @@ public class Graph {
 //        }
 //        System.out.println(String.format("number of highway nodes: %d", routeNodes.size()));
 //    }
-
-    private void getFocus() {
+    protected void getFocus() {
         NodeList boundsList = osmDoc.getElementsByTagName("bounds");
         Element bounds = (Element) boundsList.item(0);
         double minLat = Double.parseDouble(bounds.getAttribute("minlat"));
