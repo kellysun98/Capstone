@@ -112,11 +112,48 @@ public class MapNode implements Comparable<MapNode>{
     }
 
     public static HashMap<String, Double> MapNodetoHash (Collection<MapNode> k){
-        HashMap resultmap = new HashMap<String, Double>();
-        for (MapNode x: k){
-            String coord= "[" + x.longitude + "," + x.latitude + "]";
-            resultmap.put(coord, x.pedCount);
+        HashMap resultmap = new HashMap<String, Double>();  //DT3.0SM
+        double minlat=43.6467000;
+        double minlon=-79.3938000;
+        double maxlat=43.6629000;
+        double maxlon=-79.3731000;
+        double dlon = (maxlon- minlon)/30;
+        double dlat = (maxlat -minlat)/30;
+        double lon, lat= 0.0;
+        double cutoff = 0.5*(Math.sqrt(Math.pow(dlon, 2) + Math.pow(dlat, 2)));
+
+        ArrayList<Double> pedCount = new ArrayList<>(Arrays.asList(0.0,0.0));
+        HashMap<ArrayList<Double>, ArrayList<Double>> tempNodeMap = new HashMap<ArrayList<Double>, ArrayList<Double>>();
+        for (lon = minlon; lon <= maxlon; lon += dlon){
+             for (lat = minlat; lat <= maxlat; lat += dlat){
+                 ArrayList<Double> tempCoord = new ArrayList<>(Arrays.asList(lon,lat));
+                 tempNodeMap.put(tempCoord,pedCount);
+             }
         }
+
+        for (MapNode x: k) {
+            //<bounds minlat="43.6467000" minlon="-79.3938000" maxlat="43.6629000" maxlon="-79.3731000"/> osm3
+
+            if (x.pedCount < 10) {
+                for (ArrayList<Double> y : tempNodeMap.keySet()) {
+                    double dx = (x.longitude - y.get(0));
+                    double dy = (x.latitude - y.get(1));
+//                    System.out.print(y.get(0));
+//                    System.out.print(y.get(1));
+                    if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) <= cutoff){
+                        ArrayList<Double> tempCount = new ArrayList<>(Arrays.asList(tempNodeMap.get(y).get(0) + x.pedCount, tempNodeMap.get(y).get(1) + 1));
+                        //System.out.print(tempCount);
+                        tempNodeMap.replace(y, tempCount);
+                        break;
+                    }
+                }
+            }
+        }
+        for (ArrayList<Double> y: tempNodeMap.keySet()){
+            String coord= "[" + y.get(0) + "," + y.get(1) + "]";
+            resultmap.put(coord, tempNodeMap.get(y).get(0)/tempNodeMap.get(y).get(1));
+        }
+        //System.out.print(resultmap);
         return resultmap;
     }
 

@@ -75,15 +75,27 @@ public class DemoApplication {
 		@GetMapping("/api")
 		public String getList() {
 
+			if (userPref == null){
+				torontoGraph.avoidHospital=false;
+				MapNode startNode = getElement(nodeMap, add.getStart_bound());
+				MapNode endNode = getElement(nodeMap, add.getEnd_bound());
+				// Prepare for normalization for "covid" heuristic
+				torontoGraph.prepareNormalization(endNode);
 
-			if (result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))||(!(old_userPref.equals(userPref)))) {
+				Planner planner = new Planner();
+				ArrayList<Path> resultList = new ArrayList<Path>();
+				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
+				result = KSP.KSPtoJson(resultList);
+				startCheck = add.getStart_bound();
+				endCheck = add.getEnd_bound();
+			}else if ((userPref != null)|| result.isEmpty() || (!add.getStart_bound().equals(startCheck) || !add.getEnd_bound().equals(endCheck))||(!(old_userPref.equals(userPref)))) {
 				// Get start and end node of this tour (Address)
 //			System.out.println("start bound: "+ add.getStart_bound());
 //			System.out.println("end bound: "+add.getEnd_bound());
 				old_userPref = new userPreference(userPref);
 
 				// set questionnaire answer(avoid hospital or not)
-				if ((userPref != null)&&(userPref.getQ3().get(0).contains("hospital"))){
+				if (userPref.getQ3().get(0).contains("hospital")){
 					torontoGraph.avoidHospital=true;
 				}else{
 					torontoGraph.avoidHospital=false;
@@ -97,38 +109,16 @@ public class DemoApplication {
 				Planner planner = new Planner();
 				ArrayList<Path> resultList = new ArrayList<Path>();
 				resultList = KSP.Diverse_K(torontoGraph, startNode, endNode, "distance", 10);
-				for (Path p : resultList){
-					System.out.println("covid risk="+p.weight);
-				}
-				System.out.println("resultList length="+resultList.size());
+//				for (Path p : resultList){
+//					System.out.println("covid risk="+p.weight);
+//				}
+//				System.out.println("resultList length="+resultList.size());
 //				int temp = 0;
-				/**
-				if (userPref != null) { // Case 1: user填写了questionnaire
-					double timeLimit = userPref.getTimefromQ2();
-
-					if (userPref.getQ3().contains("I don't have a specific concern")) { // Case 1.1: user不care covid risk, 直接叫ksp with distance
-						long timeStart = System.currentTimeMillis();
-						resultList = KSP.ksp(torontoGraph, startNode, endNode, "distance", 10);
-						long timeFinish = System.currentTimeMillis();
-						System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
-
-					} else { // Case 1.2: user在q3 check off了一些东西，证明他care about covid risk, 同时user在q2选择了: 1)具体detour time limit 或者 2)他没选detour time limit then we default set timeLimit = -1
-						long timeStart = System.currentTimeMillis();
-						resultList = KSP.detour_ksp(torontoGraph, startNode, endNode, "covid", 10, timeLimit);
-						long timeFinish = System.currentTimeMillis();
-						System.out.println("Search took " + (timeFinish - timeStart) / 1000.0 + " seconds.");
-					}
-
-				} else { // Case 2: user skip了questionnaire，默认为他only care about distance, 给他三条距离最短的路线
-					resultList = KSP.ksp(torontoGraph, startNode, endNode, "distance", 10);
-				} */
 				result = KSP.KSPtoJson(resultList);
 				startCheck = add.getStart_bound();
 				endCheck = add.getEnd_bound();
-				return result;
-			} else{
-				return result;
 			}
+			return result;
 		}
 
 		@GetMapping("/api2")
@@ -223,15 +213,15 @@ public class DemoApplication {
 
 		@PostMapping("/address")
 		public Address postAdd(@RequestBody Address address){
-			System.out.println("Initializing...");
-			System.out.println(address.getStart_bound());
-			System.out.println(address.getEnd_bound());
+//			System.out.println("Initializing...");
+//			System.out.println(address.getStart_bound());
+//			System.out.println(address.getEnd_bound());
 
 			add = new Address(address.getStart_bound(), address.getEnd_bound());
 
-			System.out.println("Finishing...");
-			System.out.println(add.getStart_bound());
-			System.out.println(add.getEnd_bound());
+//			System.out.println("Finishing...");
+//			System.out.println(add.getStart_bound());
+//			System.out.println(add.getEnd_bound());
 			return add;
 		}
 
