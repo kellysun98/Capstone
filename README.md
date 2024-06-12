@@ -2,8 +2,8 @@
 
 **Dingyuhan Wang, Yingzhi Liang, Yixin Sun, Qiaoyi Yan**
 
-**University of Toronto**
-**Faculty of Applied Science and Engineering, Mechanical & Industrial Engineering**
+**University of Toronto,**
+**Faculty of Applied Science and Engineering, Mechanical & Industrial Engineering,**
 **MIE490 Capstone Design Course**
 
 ## Problem Statement
