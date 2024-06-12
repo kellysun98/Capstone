@@ -28,7 +28,7 @@ public class Path implements Comparable<Path>{
         totalLength = 0;
         for (int i=0; i< input_nodes.size()-1;i++){
             totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
-            totalRisk += input_nodes.get(i).pedCount;
+            totalRisk+= input_nodes.get(i).normalized_pedCount;
         }
         setTime(); // set total time of the path in mins
 
