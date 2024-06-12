@@ -2,9 +2,9 @@
 
 **Dingyuhan Wang, Yingzhi Liang, Yixin Sun, Qiaoyi Yan**
 
-## University of Toronto
-## Faculty of Applied Science and Engineering, Mechanical & Industrial Engineering
-## MIE490 Capstone Design Course
+**University of Toronto**
+**Faculty of Applied Science and Engineering, Mechanical & Industrial Engineering**
+**MIE490 Capstone Design Course**
 
 ## Problem Statement
 During the COVID-19 pandemic, pedestrian travel within the Greater Toronto Area (GTA), whether by walking or using public transit, poses significant risks. Social-distancing and mask-covering practices aim to mitigate these risks, but the crowded nature of downtown Toronto, especially during rush hours, exacerbates the spread of the virus. Existing route-planning applications like Google Maps and OpenrouteService do not offer filtering by crowd density or infection risk, which is crucial for navigating safely during a pandemic.
