@@ -22,7 +22,19 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98830841-eeb6-49cc-9171-ac58fdbfb43c" name="Default Changelist" comment="Yen's Algorithm (WIP 还有错需要修改一下）" />
+    <list default="true" id="98830841-eeb6-49cc-9171-ac58fdbfb43c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/AController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/AController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/DemoApplication 2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/DemoApplication$nodeController 2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Address.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Address.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/AmenityAdPairs.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/AmenityAdPairs.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Building.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/Building.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/test_xml.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/test_xml.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/userPreference.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/classes/com/example/demo/Services/userPreference.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rest/target/test-classes/com/example/demo/DemoApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/Rest/target/test-classes/com/example/demo/DemoApplicationTests.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -67,28 +79,29 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProblemsViewState">
-    <option name="selectedIndex" value="1" />
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="customMavenHome" value="C:\Program Files\IntelliJ IDEA Community Edition 2020.2.2\plugins\maven\lib\maven3" />
+        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
+      </MavenGeneralSettings>
+    </option>
   </component>
   <component name="ProjectId" id="1iEc0KtPM9JYD1mSSmzcN4pqKBi" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="SDKs" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
-  </component>
-  <component name="RunManager" selected="npm.Angular CLI Server">
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "node.js.selected.package.tslint": "(autodetect)"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.Graph">
     <configuration name="DemoApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.demo.DemoApplication" />
       <module name="demo" />
@@ -128,38 +141,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="E2E Tests (myAngular)" type="JavaScriptTestRunnerProtractor">
-      <config-file value="$PROJECT_DIR$/e2e/protractor.conf.js" />
-      <node-interpreter value="project" />
-      <protractor-options value="" />
-      <envs />
-      <scope-kind value="ALL" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Angular Application" type="JavascriptDebugType" uri="http://localhost:4200">
-      <method v="2" />
-    </configuration>
-    <configuration name="Angular CLI Server" type="js.build_tools.npm">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="start" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Graph" />
@@ -178,8 +159,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1601475969856</updated>
-      <workItem from="1610848127045" duration="2038000" />
-      <workItem from="1610850373367" duration="5145000" />
     </task>
     <task id="LOCAL-00001" summary="Yen's Algorithm (WIP 还有错需要修改一下）">
       <created>1602092120399</created>
@@ -197,9 +176,6 @@
     </task>
     <option name="localTasksCounter" value="3" />
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -223,9 +199,9 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Yen's Algorithm (WIP 还有错需要修改一下）" />
     <option name="LAST_COMMIT_MESSAGE" value="Yen's Algorithm (WIP 还有错需要修改一下）" />
   </component>
