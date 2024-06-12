@@ -5,11 +5,21 @@ import java.util.List;
 
 import static com.example.demo.Services.Graph.getDistance;
 
-public class Path implements Comparable<Path>{
-    private ArrayList<MapNode> nodes;
-    private double totalLength;
-    private double totalTime; // in minutes
-    private double totalRisk;
+public class Path implements Comparable<Path>{ //hi
+    protected ArrayList<MapNode> nodes;
+    protected double totalLength;
+    protected double totalTime; // in minutes
+    protected double totalRisk;
+    protected double ttcTime;
+    protected double walkingTime;
+    protected double pathtype;
+    protected String lineNumber;
+    protected String startStop;
+    protected String endStop;
+    protected int numberStop;
+
+
+
     public int weight = -1;
 
 
@@ -17,6 +27,9 @@ public class Path implements Comparable<Path>{
         nodes = new ArrayList<MapNode>();
         totalLength =0;
         totalRisk = 0;
+        ttcTime = 0;
+        walkingTime = 0;
+        lineNumber = "";
     }
 
     /** Path constructor
@@ -26,9 +39,31 @@ public class Path implements Comparable<Path>{
     public Path(ArrayList<MapNode> input_nodes){
         nodes = input_nodes;
         totalLength = 0;
+        pathtype = 5;
+        numberStop = 0;
+        boolean pre_w = true;
         for (int i=0; i< input_nodes.size()-1;i++){
             totalLength+= getDistance(input_nodes.get(i), input_nodes.get(i+1));
-            totalRisk+= input_nodes.get(i).normalized_pedCount;
+            totalRisk += input_nodes.get(i).pedCount;
+            if(input_nodes.get(i).nodetype == 5){
+                walkingTime += getDistance(input_nodes.get(i), input_nodes.get(i+1))/5000.0*60;
+            }else{
+                for(MapEdge edge : input_nodes.get(i).edges){
+                    if(edge.destinationNode.id == input_nodes.get(i+1).id){
+                        numberStop += 1;
+                        ttcTime += edge.length;
+                        pathtype = 1;
+                        lineNumber = input_nodes.get(i).ttcName;
+                        if(input_nodes.get(i+1).nodetype == 5){
+                            endStop = input_nodes.get(i).stopName;
+                        }
+                    }
+                }
+                if(pre_w){
+                    startStop = input_nodes.get(i).stopName;
+                }
+                pre_w = false;
+            }
         }
         setTime(); // set total time of the path in mins
 
@@ -40,20 +75,19 @@ public class Path implements Comparable<Path>{
 //    }
 
     public void setTime(){
-        totalTime = (totalLength/5000.0)*60.0;
+        totalTime = ttcTime + walkingTime;
     }
 
     public List<MapNode> getNodes(){return nodes;}
     public double getTotalLength(){return totalLength;}
 
     public double getTotalTime() {
-        this.totalTime = (this.totalLength/5000.0)*60.0;
         return this.totalTime;
 //        return Math.floor(this.totalTime * 1e2)/ 1e2;  //rounded time
     }
 
     public String getDescription(){
-        String str = "Current best route ";//changed from 要速度还是要命
+        String str = "Suggestive route ";//changed from 要速度还是要命
         return str;
     }
 

@@ -22,7 +22,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98830841-eeb6-49cc-9171-ac58fdbfb43c" name="Default Changelist" comment="" />
+    <list default="true" id="98830841-eeb6-49cc-9171-ac58fdbfb43c" name="Default Changelist" comment="Yen's Algorithm (WIP 还有错需要修改一下）" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -67,12 +67,8 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHome" value="C:\Program Files\IntelliJ IDEA Community Edition 2020.2.2\plugins\maven\lib\maven3" />
-      </MavenGeneralSettings>
-    </option>
+  <component name="ProblemsViewState">
+    <option name="selectedIndex" value="1" />
   </component>
   <component name="ProjectId" id="1iEc0KtPM9JYD1mSSmzcN4pqKBi" />
   <component name="ProjectViewState">
@@ -80,13 +76,19 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../open-street-a-star-master" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
-  <component name="RunManager" selected="Application.Graph">
+  <component name="RunManager" selected="npm.Angular CLI Server">
     <configuration name="DemoApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.demo.DemoApplication" />
       <module name="demo" />
@@ -126,6 +128,38 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="E2E Tests (myAngular)" type="JavaScriptTestRunnerProtractor">
+      <config-file value="$PROJECT_DIR$/e2e/protractor.conf.js" />
+      <node-interpreter value="project" />
+      <protractor-options value="" />
+      <envs />
+      <scope-kind value="ALL" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Angular Application" type="JavascriptDebugType" uri="http://localhost:4200">
+      <method v="2" />
+    </configuration>
+    <configuration name="Angular CLI Server" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Graph" />
@@ -144,6 +178,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1601475969856</updated>
+      <workItem from="1610848127045" duration="2038000" />
+      <workItem from="1610850373367" duration="5145000" />
     </task>
     <task id="LOCAL-00001" summary="Yen's Algorithm (WIP 还有错需要修改一下）">
       <created>1602092120399</created>
@@ -161,6 +197,9 @@
     </task>
     <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -189,104 +228,6 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Yen's Algorithm (WIP 还有错需要修改一下）" />
     <option name="LAST_COMMIT_MESSAGE" value="Yen's Algorithm (WIP 还有错需要修改一下）" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="435" y="260" key="#Notifications" timestamp="1602092597049">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="435" y="260" key="#Notifications/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601727169934" />
-    <state x="435" y="260" key="#Notifications/0.0.1368.872@0.0.1368.872" timestamp="1602092597049" />
-    <state x="166" y="12" key="#Project_Structure" timestamp="1601477497466">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="166" y="12" key="#Project_Structure/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601477497466" />
-    <state x="141" y="92" width="1086" height="712" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601945352887">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="141" y="92" width="1086" height="712" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601945352887" />
-    <state x="490" y="143" key="#com.intellij.ide.util.MemberChooser" timestamp="1602091117877">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="490" y="143" key="#com.intellij.ide.util.MemberChooser/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602091117877" />
-    <state x="415" y="183" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602083679317">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="415" y="183" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602083679317" />
-    <state x="415" y="183" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1602075657798">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="415" y="183" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602075657798" />
-    <state x="466" y="192" key="FileChooserDialogImpl" timestamp="1601948132582">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="466" y="192" key="FileChooserDialogImpl/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601948132582" />
-    <state x="466" y="192" key="FileChooserDialogImpl/0.0.1368.872@0.0.1368.872" timestamp="1601935712341" />
-    <state width="1326" height="80" key="GridCell.Tab.0.bottom" timestamp="1602090989279">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1326" height="80" key="GridCell.Tab.0.bottom/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989279" />
-    <state width="1326" height="280" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1601939907778" />
-    <state width="1326" height="80" key="GridCell.Tab.0.center" timestamp="1602090989279">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1326" height="80" key="GridCell.Tab.0.center/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989279" />
-    <state width="1326" height="280" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1601939907777" />
-    <state width="1326" height="80" key="GridCell.Tab.0.left" timestamp="1602090989278">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1326" height="80" key="GridCell.Tab.0.left/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989278" />
-    <state width="1326" height="280" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1601939907777" />
-    <state width="1326" height="80" key="GridCell.Tab.0.right" timestamp="1602090989279">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1326" height="80" key="GridCell.Tab.0.right/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989279" />
-    <state width="1326" height="280" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1601939907778" />
-    <state width="1326" height="80" key="GridCell.Tab.1.bottom" timestamp="1602090989280">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1326" height="80" key="GridCell.Tab.1.bottom/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989280" />
-    <state width="1326" height="80" key="GridCell.Tab.1.center" timestamp="1602090989280">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1326" height="80" key="GridCell.Tab.1.center/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989280" />
-    <state width="1326" height="80" key="GridCell.Tab.1.left" timestamp="1602090989279">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1326" height="80" key="GridCell.Tab.1.left/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989279" />
-    <state width="1326" height="80" key="GridCell.Tab.1.right" timestamp="1602090989280">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1326" height="80" key="GridCell.Tab.1.right/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602090989280" />
-    <state x="216" y="92" key="Maven.ArtifactSearchDialog" timestamp="1601477393512">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="216" y="92" key="Maven.ArtifactSearchDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601477393512" />
-    <state x="131" y="70" key="MergeDialog" timestamp="1601482398409">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="131" y="70" key="MergeDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601482398409" />
-    <state x="128" y="23" width="1024" height="777" key="SettingsEditor" timestamp="1602442505581">
-      <screen x="0" y="0" width="1280" height="800" />
-    </state>
-    <state x="128" y="23" width="1024" height="777" key="SettingsEditor/0.0.1280.800@0.0.1280.800" timestamp="1602442505581" />
-    <state x="277" y="169" key="Vcs.Push.Dialog.v2" timestamp="1602092477028">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="277" y="169" key="Vcs.Push.Dialog.v2/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602092477028" />
-    <state x="503" y="351" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1602092324242">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="503" y="351" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1602092324242" />
-    <state x="503" y="351" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1368.872@0.0.1368.872" timestamp="1601924910326" />
-    <state x="249" y="165" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1601939924608">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="249" y="165" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1368.872@0.0.1368.872" timestamp="1601939924608" />
-    <state x="430" y="150" key="git4idea.branch.GitSmartOperationDialog" timestamp="1601944523660">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="430" y="150" key="git4idea.branch.GitSmartOperationDialog/0.0.1368.872/2736.250.1920.1040@0.0.1368.872" timestamp="1601944523660" />
-    <state x="430" y="150" key="git4idea.branch.GitSmartOperationDialog/0.0.1368.872@0.0.1368.872" timestamp="1601923316714" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
